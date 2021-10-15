@@ -1,0 +1,10 @@
+# Dedupe and trim original notes:
+	/ssd2/Illumina_data/dedupe/README
+	/ssd2/Illumina_data/dedupe/2021_newsamples_trim20/README
+
+# BWA mem alignment and renaming for somatypus
+	/ssd3/Mar_genome_analysis/bwa_mapping/Mar.3.4.6.p1/README
+	/ssd3/Mar_genome_analysis/bwa_mapping/Mar.3.4.6.p1/all_samples/README
+
+# Somatypus Run
+	/ssd3/Mar_genome_analysis/somatypus/Mar.3.4.6.p1/final_run/README
