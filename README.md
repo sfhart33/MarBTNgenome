@@ -1,9 +1,11 @@
 # myaBTNgenome
 ## Code to accompany publication on genome evolution of soft-shell clam transmissible cancer
 Samuel Hart, University of Washington Molecular and Cellular Biology PhD program
+
 Michael Metzger, Pacfic Northwest Research Institute
 
 If you use any of these methods or data for your own research, please use the following citation:
+
 *Genome evolution of soft-shell clam transmissible cancer*
 
 ### Raw data files are available here: ________________
