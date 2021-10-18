@@ -1,0 +1,193 @@
+Location	Notes	type	long	lat	BTN
+Anse de Saint-Étienne	"2006; Gagne et al 2009, BTN not mentioned, unsure of status. Sampled 600m from shore."	#icon-1899-000000-labelson	-69.9062121	48.2013963	NULL
+Baie du Moulin à Baude	"2006; Gagne et al 2009. BTN not mentioned, unsure of status. Sampled 150m from shore.   Sampled also during 2003; Gagne et al 2006, BTN not mentioned."	#icon-1899-000000-labelson	-69.6619332	48.1562908	NULL
+Anse Saint-Jean	"2006; Gagne et al 2009. BTN not mentioned, status unclear. Sampled 40m from shore."	#icon-1899-000000-labelson	-70.1872986	48.243052	NULL
+Baie Sainte-Catherine	"2006; Gagne et al 2009. BTN status unclear, not mentioned in article. Sampled 225m from shore.     Same site sampled again in 2003; Gagne et al 2006, BTN not mentioned"	#icon-1899-000000-labelson	-69.7245671	48.1095245	NULL
+Long Island Offshore/Burns Point	2013; Meseck et al 2018. No mentioned of BTN in this paper	#icon-1899-000000-labelson	-73.0488639	41.2021685	NULL
+Anse à la Barque	2003; Gagne et al 2006. BTN not mentioned.	#icon-1899-000000-labelson	-69.7362389	48.1453822	NULL
+Tadoussac Harbor	2003; Gagne et al 2006. BTN not mentioned.	#icon-1899-000000-labelson	-69.7111411	48.1408312	NULL
+Odense Fjord Site 2	2003; Gagne et al 2006 site 2. BTN Not mentioned/Status unclear	#icon-1899-000000-labelson	10.4436469	55.467007	NULL
+Odense Fjord Site 1	2003; Gagne et al 2006. Site 1. BTN unclear/not mentioned	#icon-1899-000000-labelson	10.4247641	55.4614599	NULL
+Odense Fjord Site 3	2003; Gagne et al 2006. Site 3. BTN Unclear/Note mentioned	#icon-1899-000000-labelson	10.4290833	55.4400269	NULL
+Odense Fjord Site 4	2003; Gagne et al 2006. Site 4 (I think the actual island/site 4 is underwater now based on the map from the paper). BTN not mentioned/unclear.	#icon-1899-000000-labelson	10.5425365	55.482063	NULL
+Dalby Bay	2003; Gagne et al 2006. BTN Not mentioned/unclear	#icon-1899-000000-labelson	10.6274231	55.5209049	NULL
+"45.12852, -66.46151 Lepreau Basin"	2007; Phillips et al 2018. BTN Status not mentioned.	#icon-1899-000000-labelson	-66.46151	45.12852	NULL
+"45.07734, -66.73714 Beaver Cove"	2009; Phillips et al 2018. Exact Coordinates given. BTN Status unknown.	#icon-1899-000000-labelson	-66.73714	45.07734	NULL
+"45.04906, -66.77008 Deadmans Harbour"	2009; Phillips et al 2018. Exact Coordinates given. BTN Status not mentioned.	#icon-1899-000000-labelson	-66.77008	45.04906	NULL
+"44.89589, -66.99306 Prince Cove"	2008; Phillips et al 2018. Exact coordinates given. BTN Status not mentioned.	#icon-1899-000000-labelson	-66.99306	44.89589	NULL
+"44.97270, -67.05516 Gleason Cove"	2008; Phillips et al 2018. Exact coordinates given. BTN Status not mentioned.	#icon-1899-000000-labelson	-67.05516	44.9727	NULL
+"44.85635, -67.10387 Morong Cove"	2010; Phillips et al 2018. Exact Coordinates Given. BTN Status not mentioned.	#icon-1899-000000-labelson	-67.10387	44.85635	NULL
+"44.81096, -67.16156 Whiting Cove"	2007; Phillips et al 2018. Exact coordinates given. BTN Status not mentioned.	#icon-1899-000000-labelson	-67.16156	44.81096	NULL
+"44.66274, -67.18790 Duck Brook"	2007; Phillips et al 2018. Exact Coordinates Given. BTN Status not mentioned.	#icon-1899-000000-labelson	-67.1879	44.66274	NULL
+"44.37432, -68.07194 Mosquito Harbor"	2007&2012; Phillips et al 2018. Exact coordinates given. BTN Status not mentioned.	#icon-1899-000000-labelson	-68.07194	44.37432	NULL
+"44.48001, -68.11656 Youngs Shore"	2007; Phillips et al 2018. Exact coordinates given. BTN Status unclear.	#icon-1899-000000-labelson	-68.11656	44.48001	NULL
+"44.47189, -68.28261 Raccoon Cove"	2007&2012; Phillips et al 2018. Exact coordinates given. BTN Status not mentioned.	#icon-1899-000000-labelson	-68.28261	44.47189	NULL
+"44.23005, -68.32362 Ship Harbor"	2007; Phillips et al 2018. Exact Coordinates Given. BTN Status unclear.	#icon-1899-000000-labelson	-68.32362	44.23005	NULL
+"44.25485, -68.37732 Duck Cove"	2007; Phillips et al 2018. Exact coordinates given. BTN Status unclear.	#icon-1899-000000-labelson	-68.37732	44.25485	NULL
+"44.22959, -68.53542 Naskeag Harbor"	2008&2012; Phillips et al 2018. Exact Coordinates Given. BTN Status not mentioned.	#icon-1899-000000-labelson	-68.53542	44.22959	NULL
+"44.26508, -68.55417 Herrick Bay"	2007; Phillips et al 2018. Exact Coordinates given. BTN Status not mentioned.	#icon-1899-000000-labelson	-68.55417	44.26508	NULL
+"44.31336, -68.90184 The Narrows"	2015; Phillips et al 2018. Exact coordinates given. BTN Status not mentioned.	#icon-1899-000000-labelson	-68.90184	44.31336	NULL
+"44.13480, -69.09242 Clam Cove"	2015; Phillips et al 2018. Exact Coordinates Given. BTN Status not mentioned.	#icon-1899-000000-labelson	-69.09242	44.1348	NULL
+"43.88363, -69.55011 Poorhouse Cove"	"2009, 2010, 2011, 2012; Phillips et al 2018. Exact Coordinates given. BTN Status not mentioned."	#icon-1899-000000-labelson	-69.55011	43.88363	NULL
+"43.93675, -69.57684 Lowes Cove"	2009; Phillips et al 2018. Exact coordinates given. BTN Status not mentioned.	#icon-1899-000000-labelson	-69.57684	43.93675	NULL
+"43.81715, -69.88579 Dingley Island"	2012; Phillips et al 2018. Exact Coordinates Given. BTN Status not mentioned.	#icon-1899-000000-labelson	-69.88579	43.81715	NULL
+"43.43741, -70.36946 Biddeford Pool"	2009; Phillips et al 2018. Exact Coordinates Given. BTN Status not mentioned.	#icon-1899-000000-labelson	-70.36946	43.43741	NULL
+"43.32035, -70.57177 Webhannet River"	2010; Phillips et al 2018. Exact Coordinates given. BTN Status not mentioned.	#icon-1899-000000-labelson	-70.57177	43.32035	NULL
+"43.10706, -70.66622 Kittery Point"	2012; Phillips et al 2018. Exact Coordinates Given. BTN Status not mentioned.	#icon-1899-000000-labelson	-70.66622	43.10706	NULL
+"41.75067, -70.62692 Buttermilk Bay"	2007; Phillips et al 2018. Exact Coordinates Given. BTN Status not mentioned.	#icon-1899-000000-labelson	-70.62692	41.75067	NULL
+"40.90103, -73.35386 Northport Harbor"	2010&2013; Phillips et al 2018. Exact Coordinates Given. BTN Status not mentioned.	#icon-1899-000000-labelson	-73.35386	40.90103	NULL
+"40.59984, -73.56500 Point Lookout"	2009; Phillips et al 2018. Exact Coordinates Given. BTN Status not mentioned.	#icon-1899-000000-labelson	-73.565	40.59984	NULL
+45°37'N 61°59'W Antigonish	Between 2001-2006; Strasser et al 2009. Approx coordinates given. BTN Status not mentioned.     	#icon-1899-000000-labelson	-61.98333333	45.61666667	NULL
+45°17'N 66°04'W St John	Between 2001-2006; Strasser et al 2009. General Coordinates Given. BTN Status not mentioned.	#icon-1899-000000-labelson	-66.06666667	45.28333333	NULL
+44°57'N 67°10'W Pembroke	Between 2001-2006; Strasser et al 2009. General coordinates given. BTN Status not mentioned.	#icon-1899-000000-labelson	-67.16666667	44.95	NULL
+42°17'N 71°02'W Quincy	Between 2001-2006; Strasser et al 2009. General coordinates given. BTN Status not mentioned.	#icon-1899-000000-labelson	-71.03333333	42.28333333	NULL
+41°42'N 70°20'W Barnstable	Between 2001-2006; Strasser et al 2009. General coordinates given. BTN Status not mentioned.	#icon-1899-000000-labelson	-70.33333333	41.7	NULL
+41°36'N 70°27'W Mashpee	Between 2001-2006; Strasser et al 2009. General coordinates given. BTN Status not mentioned.	#icon-1899-000000-labelson	-70.45	41.6	NULL
+41°47'N 70°00'W Wareham	Between 2001-2006; Strasser et al 2009. General coordinates given. BTN Status not mentioned.	#icon-1899-000000-labelson	-70	41.78333333	NULL
+40°54'N 73°07'W Stony Brook	Between 2001-2006; Strasser et al 2009. General coordinates given. BTN status not mentioned.	#icon-1899-000000-labelson	-73.11666667	40.9	NULL
+38°47'N 76°08'W Miles River	Between 2001-2006; Strasser et al 2009. General coordinates given. BTN Status not mentioned.	#icon-1899-000000-labelson	-76.13333333	38.78333333	NULL
+38°51'N 76°15'W Eastern Bay	between 2001-2006; Strasser et al 2009. General coordinates given. BTN Status not mentioned.	#icon-1899-000000-labelson	-76.25	38.85	NULL
+44°36'N 124°03'W Newport	Between 2001-2006; Strasser et al 2009. General coordinates given. BTN Status not mentioned.	#icon-1899-000000-labelson	-124.05	44.6	NULL
+54°55'N 8°21'E Sylt	Between 2001-2006; Strasser et al 2009. General coordinates given. BTN Status not mentioned.	#icon-1899-000000-labelson	8.35	54.91666667	NULL
+Wadden Sea	Strasser 1999 referenced Beukema et al 1982 and 1992 for sampling. BTN status not mentioned in review.	#icon-1899-000000-labelson	6.9495078	53.5786884	NULL
+West Coast of Sweden	Strasser 1999 referenced Evans&Tallmark 1977 for sampling. BTN status not mentioned in Strasser review.	#icon-1899-000000-labelson	11.7901095	57.5131978	NULL
+Baltic Sea	Strasser 1999 referenced Brey et al 1991 and Powilleit et al 1995 for sampling. BTN status not mentioned in Strasser review.	#icon-1899-000000-labelson	19.863281	58.487952	NULL
+Romanian Black Sea	Strasser 1999 referenced Gomoiu et al 1981 for sampling. BTN status not mentioned in Strasser review.	#icon-1899-000000-labelson	28.8093337	44.4729915	NULL
+Former Russian Coast of the Black Sea	Strasser 1999 referenced Savchuk et al 1976 for sampling. BTN status not mentioned in Strasser review.	#icon-1899-000000-labelson	38.8049705	44.2081753	NULL
+San Francisco Bay	Strasser 1999 referenced Nichols et al 1990 for sampling. BTN status not mentioned in Strasser review.	#icon-1899-000000-labelson	-122.3107517	37.6909682	NULL
+M. japonica - Pacific Ocean West Coast of Japan	"Strasser 1999 referenced Laursen et al 1966, Bernard et al 1979, and Goshima et al 1982 for sampling. BTN status not mentioned in Strasser review. NOTE: M. japonica, not M. arenaria"	#icon-1899-000000-labelson	141.1746394	37.3122819	NULL
+Barents Sea	Strasser 1999 referenced Galkin et al 1998 for sampling. BTN status not mentioned in Strasser review.	#icon-1899-000000-labelson	41.8910999	71.684705	NULL
+White Sea	Strasser 1999 referenced Maksimovich et al 1978 for sampling. BTN status not mentioned in Strasser review.	#icon-1899-000000-labelson	38.1535231	65.6310038	NULL
+Norwegian Coast	Strasser 1999 referenced Stokland et al 1985 for sampling. BTN status not mentioned in Strasser review.	#icon-1899-000000-labelson	6.676996	62.9856879	NULL
+Gulf of Bothnia	Strasser 1999 referenced Lassig et al 1965 for sampling. BTN status not mentioned in Strasser review.	#icon-1899-000000-labelson	19.4691234	62.0730257	NULL
+Portugal	Strasser 1999 referenced Guimaraes&Galhano 1988 for sampling. BTN status not mentioned in Strasser review.	#icon-1899-000000-labelson	-9.5867587	39.399872	NULL
+Georgia	Strasser 1999 referenced Rasmussen&Heard 1995 for sampling. BTN status not mentioned in Strasser review.	#icon-1899-000000-labelson	-81.1787852	31.5310305	NULL
+Bristol Bay	Strasser 1999 referenced Bernard et al 1979 for sampling. BTN status not mentioned in Strasser review..	#icon-1899-000000-labelson	-159.6614112	58.3619368	NULL
+Monterey Bay	"Strasser 1999 referenced MacNeil et al 1965, Bernard et al 1979 for sampling. BTN status not mentioned in Strasser review."	#icon-1899-000000-labelson	-121.8717828	36.8304208	NULL
+Richibucto	2009; St. Once et al 2011. BTN status not mentioned.	#icon-1899-000000-labelson	-64.8659804	46.6817873	NULL
+048°12'N 069°54'W Saguenay	2005; St. Onge et al 2013. General coordinates given. BTN Status not mentioned.	#icon-1899-000000-labelson	-69.9	48.2	NULL
+048°40'N 068°01'W Baie de Metis	2005; St. Onge et al 2013. General coordinates given. BTN Status not mentioned.	#icon-1899-000000-labelson	-68.01666667	48.66666667	NULL
+049°03'N 068°27'W Pointe-aux-Outardes	2010; St. Onge et al 2013. BTN Status not mentioned.	#icon-1899-000000-labelson	-68.45	49.05	NULL
+058°18'N 063°59'W Mingan	2005; St. Onge et al 2013. General coordinates given. BTN Status not mentioned.	#icon-1899-000000-labelson	-63.98333333	58.3	NULL
+047°36'N 057°39'W Little Barasway Bay	2005; St. Onge et al 2013. General coordinates given. BTN Status not mentioned.	#icon-1899-000000-labelson	-57.65	47.6	NULL
+047°26'N 061°47'W Havre-aux-Maisons	2005; St. Onge et al 2013. General coordinates given. BTN Status not mentioned.	#icon-1899-000000-labelson	-61.78333333	47.43333333	NULL
+046°28'N 063°42'W Malpeque Bay	2010; St. Onge et al 2013. General Coordinates Given. BTN Status not mentioned.	#icon-1899-000000-labelson	-63.7	46.46666667	NULL
+047°20'N 064°60'W Tabusintac	2010; St. Onge et al 2013. General coordinates given. BTN Status not mentioned. 	#icon-1899-000000-labelson	-65	47.33333333	NULL
+046°50'N 064°56'W Kouchibouguac	2009; St. Onge et al 2013. General Coordinates Given. BTN Status not mentioned.	#icon-1899-000000-labelson	-64.93333333	46.83333333	NULL
+046°45'N 064°55'W St.-Louis-de-Kent	2009; St. Onge et al 2013. General Coordinates Given. BTN Status not mentioned.	#icon-1899-000000-labelson	-64.91666667	46.75	NULL
+046°43'N 064°53'W Richibucto	2009; St. Onge et al 2013. General coordinates given. BTN Status not mentioned.	#icon-1899-000000-labelson	-64.88333333	46.71666667	NULL
+046°31'N 064°41'W Bouctouche	2010; St. Onge et al 2013. General coordinates given. BTN Status not mentioned.	#icon-1899-000000-labelson	-64.68333333	46.51666667	NULL
+046°38'N 060°25'W Ingonish Harbour	2010; St. Onge et al 2013. General coordinates given. BTN status not mentioned.	#icon-1899-000000-labelson	-60.41666667	46.63333333	NULL
+043°52'N 064°48'W Port-Mouton	2010; St. Onge et al 2013. General coordinates given. BTN Status not mentioned. 	#icon-1899-000000-labelson	-64.8	43.86666667	NULL
+Solomons Island	Date not specified; Morgan et al 1978. BTN Status not mentioned.	#icon-1899-000000-labelson	-76.4515437	38.3186597	NULL
+St Johns Bay near Boothbay Harbor	"Date not specified; Morgan et al 1978. BTN status not mentioned. Specifies St Johns Bay (can't find on a current map) near Boothbay harbor, ME."	#icon-1899-000000-labelson	-69.6253977	43.852026	NULL
+Mechelinki	2001; Lasota et al 2004. BTN Status not mentioned.	#icon-1899-000000-labelson	18.5117966	54.6086878	NULL
+Hel-45	2001; Lasota et al 2004. BTN status not mentioned.	#icon-1899-000000-labelson	18.8007998	54.6083804	NULL
+Lomma	2001; Lasota et al 2004. BTN Status not mentioned.	#icon-1899-000000-labelson	13.0593374	55.6736215	NULL
+Lerhamn	2001; Lasota et al 2004. BTN Status not mentioned.	#icon-1899-000000-labelson	12.5193251	56.2565263	NULL
+Oosterschelde	2001; Lasota et al 2004. BTN status not mentioned. 	#icon-1899-000000-labelson	4.1859249	51.4535166	NULL
+Veerse Meer	2001; Lasota et al 2004. BTN Status not mentioned.	#icon-1899-000000-labelson	3.8892192	51.5506411	NULL
+Gironde	2001; Lasota et al 2004. BTN status not mentioned	#icon-1899-000000-labelson	-0.9318944	45.5479833	NULL
+Westport	Sampling date not mentioned; Palacious et al 1994. BTN status not mentioned.	#icon-1899-000000-labelson	-124.1239743	46.9032271	NULL
+Aberdeen	Sampling date not mentioned; Palacious et al 1994. BTN status not mentioned.	#icon-1899-000000-labelson	-123.84978	46.9630796	NULL
+Moon Island	Sampling date not mentioned; Palacious et al 1994. BTN Status not mentioned.	#icon-1899-000000-labelson	-123.9329469	46.9725908	NULL
+Point New	1988/1989/1990; Palacious et al 2000. BTN status not mentioned.	#icon-1899-000000-labelson	-124.0176711	46.9911999	NULL
+Bowerman Basin	1988/1989/1990; Palacious et al 2000. BTN status not mentioned.	#icon-1899-000000-labelson	-123.9326316	46.9795973	NULL
+Mouth of Grass Creek	1988/1989/1990; Palacious et al 2000. BTN Status not mentioned.	#icon-1899-000000-labelson	-124.0042226	47.0037492	NULL
+Mouth of Chenois Creek	1988/1989/2000; Palacious et al 2000. BTN status not mentioned.	#icon-1899-000000-labelson	-124.0265978	47.0304186	NULL
+"44°10'43.1""N 28°39'35""E Modern Beach, Constanta, Romania"	2011; Krapal et al 2012. BTN status not mentioned.	#icon-1899-000000-labelson	28.65972222	44.17863889	NULL
+"43°48'33.5""N, 28°35'13.8""E Marina Beach, Magnolia, Romania"	2011; Krapal et al 2012. BTN status not mentioned.	#icon-1899-000000-labelson	28.58716667	43.80930556	NULL
+Long Island Sound Waters	Sample date not specified; Levinton et al 1973	#icon-1899-000000-labelson	-72.9460566	41.0748454	NULL
+Murmansk	Sampling Date not mentioned; Zhang et al 2018. BTN status not mentioned.	#icon-1899-000000-labelson	33.0855849	68.9733113	NULL
+Chesapeake Bay 	Sampling date not mentioned; Zhang et al 2018. BTN status not mentioned. Exact location not mentioned.	#icon-1899-000000-labelson	-76.1863667	38.0032695	NULL
+Comacchio	Sampling date not specified; DeNoia et al 2020. BTN status not mentioned.	#icon-1899-000000-labelson	12.182135	44.6902831	NULL
+Lisbon	Sampling Date not specified; DeNoia et al 2020. BTN status not mentioned.	#icon-1899-000000-labelson	-9.1239827	38.7098525	NULL
+Brest	Sampling date not specified; DeNoia et al 2020. BTN status not mentioned.	#icon-1899-000000-labelson	-4.4935925	48.3796636	NULL
+Plymouth	Sampling date not specified; DeNoia et al 2020. BTN status not mentioned.	#icon-1899-000000-labelson	-4.1529104	50.3658796	NULL
+Saint Andrews	Sampling date not specified; DeNoia et al 2020. BTN status not mentioned.	#icon-1899-000000-labelson	-2.7945111	56.3452031	NULL
+Le Crotoy	Sampling date not specified; DeNoia et al 2020. BTN status not mentioned.	#icon-1899-000000-labelson	1.6189405	50.2138699	NULL
+Balgzand	Sampling date not specified; DeNoia et al 2020. BTN status not mentioned.	#icon-1899-000000-labelson	4.8154703	52.9426884	NULL
+Sylt	Sampling date not specified; DeNoia et al 2020. BTN status not mentioned. 	#icon-1899-000000-labelson	8.3225949	54.9166544	NULL
+Kiel	Sampling date not specified; DeNoia et al 2020. BTN status not mentioned.	#icon-1899-000000-labelson	10.1452464	54.3269245	NULL
+Bannow Bay	2010/2011; Cross et al 2014. No BTN in Mya in this area. 	#icon-1899-0288D1-labelson	-6.7849971	52.2078582	No
+Flaxfort Head	2011; Cross et al 2014. No BTN found in this area in Mya.	#icon-1899-0288D1-labelson	-8.6993443	51.6491196	No
+Tolchester	1988; Farley et al 1991	#icon-1899-0288D1-labelson	-76.2466139	39.2241794	No
+Bodkin Point	1988; Farley et al 1991	#icon-1899-0288D1-labelson	-76.4307291	39.1323165	No
+Piney Point	"1985, 86, 87, 88; Farley et al 1991.      Also, 1990 in Sunila et al 1992    1989; McLaughlin et al 1992."	#icon-1899-0288D1-labelson	-76.1839778	39.0460264	No
+"Oxford Lab, Tred Avon River"	Farley et al 1991	#icon-1899-0288D1-labelson	-76.1734478	38.6859102	No
+"""Race Track"""	"1985, 86, 87; Farley et al 1991"	#icon-1899-0288D1-labelson	-76.0557223	38.5759818	No
+Buzzard Island	Farley et al 1991	#icon-1899-0288D1-labelson	-76.654652	38.4939856	No
+Brooms Island	1988; Farley et al 1991	#icon-1899-0288D1-labelson	-76.4910638	38.4231792	No
+"""Marumsco Bar"""	Farley et al 1991	#icon-1899-0288D1-labelson	-75.7083598	37.973668	No
+"43°14'49""N 70°36'25""W Ogunquit"	"2010; Taraska et al 2013. Exact coordinates given, though it is on land near the shore."	#icon-1899-0288D1-labelson	-70.60694444	43.24694444	No
+Machias (around)	"2010; Taraska et al 2013. Around Machias area, collected by Spinney Creek Shellfish Inc."	#icon-1899-0288D1-labelson	-67.461376	44.7150789	No
+Yaquina Bay	Sampling date not mentioned; Reno et al 1994. 	#icon-1899-0288D1-labelson	-124.0207275	44.6169707	No
+Crisfield	Sampling date not mentioned; Oprandy et al 1981.	#icon-1899-0288D1-labelson	-75.8538211	37.9834575	No
+"M. japonica - Zaliv Petra Velikogo (Peter the Great Bay, Sea of Japan) "	Sampling date not mentioned; Odintsova et al 2011.	#icon-1899-0288D1-labelson	131.9954946	42.6851457	No
+Bakers Shore	2009/2010; Muttray et al 2012.	#icon-1899-0288D1-labelson	-63.7586707	46.3695397	No
+Souris River	2009/2010; Muttray et al 2012.	#icon-1899-0288D1-labelson	-62.2549553	46.3524514	No
+Darnley Basin	2009/2010; Muttray et al 2012.	#icon-1899-0288D1-labelson	-63.6588799	46.5670001	No
+Tignish Harbour	2009/2010; Muttray et al 2012.	#icon-1899-0288D1-labelson	-63.9893332	46.9618626	No
+"""Indian Hole"" Burgeo"	"2001; Mateo et al 2015 NOTE: Couldn't find ""Indian Hole"" on a map"	#icon-1899-0288D1-labelson	-57.6108046	47.6116984	No
+Alsea Bay	Sampling date not mentioned; House et al 1998	#icon-1899-0288D1-labelson	-124.0433448	44.4365534	No
+False Bay	Unpublished 2018 sample; Metzger Lab	#icon-1899-0288D1-labelson	-123.0682264	48.4899846	No
+Swan Point	1983; Farley et al 1991.  Also sampled in 1988; Sunila et al 1989.	#icon-1899-9C27B0-labelson	-76.2740105	39.1467288	Yes
+Parsons Island	"1984, 85, 86, 87, 88; Farley et al 1991"	#icon-1899-9C27B0-labelson	-76.2463888	38.9099345	Yes
+Three Sisters Islands	"1984, 85, 86, 87, 88; Farley et al 1991"	#icon-1899-9C27B0-labelson	-76.5212106	38.8581243	Yes
+Ranch House	"1985, 86, 87; Farley et al 1991"	#icon-1899-9C27B0-labelson	-76.3021361	39.0396299	Yes
+Sandy Point	"1985, 86, 87; Farley et al 1991"	#icon-1899-9C27B0-labelson	-76.3974032	39.0189027	Yes
+Ferry Point	"1984, 85, 86, 87; Farley et al 1991"	#icon-1899-9C27B0-labelson	-76.2428775	38.976516	Yes
+"""Brick House"""	Farley et al; 1991	#icon-1899-9C27B0-labelson	-76.3608443	38.9507651	Yes
+"""Eastern Bay"""	Farley et al; 1991	#icon-1899-9C27B0-labelson	-76.2831431	38.9349437	Yes
+Wye River	"1986, 87; Farley et al 1991"	#icon-1899-9C27B0-labelson	-76.1671	38.8654081	Yes
+Thomas Point	Farley et al 1991	#icon-1899-9C27B0-labelson	-76.4643202	38.9092113	Yes
+Kent Point	"1985, 86, 87; Farley et al 1991"	#icon-1899-9C27B0-labelson	-76.3757919	38.8390329	Yes
+Claiborne	Farley et al; 1991	#icon-1899-9C27B0-labelson	-76.279104	38.8406286	Yes
+Miles River	"Farley et al, 1991"	#icon-1899-9C27B0-labelson	-76.2062877	38.7842913	Yes
+Poplar Island	"1984, 85, 86; Farley et al, 1991"	#icon-1899-9C27B0-labelson	-76.3868755	38.7662914	Yes
+"""Bar Neck"""	"1985, 86, 87; Farley et al 1991"	#icon-1899-9C27B0-labelson	-76.3236816	38.6838636	Yes
+"""Castle Haven"""	"1985, 86, 87; Farley et al 1991"	#icon-1899-9C27B0-labelson	-76.1595729	38.5978584	Yes
+Annisquam River	"from Farley et al 1991 reference #24, unpublished, collected 1972"	#icon-1899-9C27B0-labelson	-70.6856222	42.6536928	Yes
+Harpswell Neck	1972; Reference #1 from Farley et al 1991	#icon-1899-9C27B0-labelson	-69.9700484	43.8186931	Yes
+Searsport	"Collected 1975; From farley et al 1991, reference #1"	#icon-1899-9C27B0-labelson	-68.9038627	44.463934	Yes
+Sandy Point Island	Collected 1976; Farley et al 1991 from reference #3	#icon-1899-9C27B0-labelson	-71.8919666	41.3292472	Yes
+Quonset Point	"1976; Farley et al 1991, reference #3"	#icon-1899-9C27B0-labelson	-71.4042218	41.5901015	Yes
+Bourne	"1976; Farley et al 1991, from reference #3"	#icon-1899-9C27B0-labelson	-70.5989325	41.7412773	Yes
+Green Pond	"1978; Farley et al 1991, from reference #3. Also in 1982; Reinisch et al 1983"	#icon-1899-9C27B0-labelson	-70.5703704	41.554789	Yes
+New Bedford	"(1983; from Farley et al 1991, reference #10)   Also sampled in (1991; Weinberg et al 1997)       (1986/1987; Leavitt et al 1990)"	#icon-1899-9C27B0-labelson	-70.9151506	41.6495563	Yes
+Stonington	"1984; from Farley et al 1991, reference #27"	#icon-1899-9C27B0-labelson	-71.9058854	41.3358915	Yes
+Westport	"1985; Farley et al 1991, from reference #24"	#icon-1899-9C27B0-labelson	-73.3579049	41.1414717	Yes
+Swan Point	"1985; Farley et al., from reference #28"	#icon-1899-9C27B0-labelson	-76.9194155	38.3062388	Yes
+Cabin Creek	1989; Sunila et al 1992	#icon-1899-9C27B0-labelson	-76.2105783	38.9421016	Yes
+North Falmouth	1981; Reinisch et al 1983	#icon-1899-9C27B0-labelson	-70.6440553	41.6359753	Yes
+Washburn Island	1981; Reinisch et al 1983	#icon-1899-9C27B0-labelson	-70.5372778	41.5611792	Yes
+Bennets Neck	1982; Reinisch et al 1983	#icon-1899-9C27B0-labelson	-70.6216821	41.6984609	Yes
+"""Tin Bridge"""	1982; Reinisch et al 1983	#icon-1899-9C27B0-labelson	-70.6160021	41.6972986	Yes
+Waquoit Bay	1982; Reinisch et al 1983	#icon-1899-9C27B0-labelson	-70.5294985	41.5820733	Yes
+Bentick Cove	2001/02; Mateo et al 2015. 	#icon-1899-9C27B0-labelson	-63.8239331	46.4626627	Yes
+Baltic River	2001/02; Mateo et al 2015. 	#icon-1899-9C27B0-labelson	-63.6644002	46.5331039	Yes
+Mill River	2001/02; Mateo et al 2015.	#icon-1899-9C27B0-labelson	-64.0888612	46.7729036	Yes
+West River	2001/02; Mateo et al 2015.	#icon-1899-9C27B0-labelson	-63.265067	46.1910332	Yes
+North River (General)	2001/02; Mateo et al 2015.        2005; Delaporte et al 2008.     2006; Siah et al 2011.     Sampling date not mentioned; Siah et al 2012.     2007; Siah et al 2008.      2011; Siah et al 2013.          2001?; Mateo et al 2015           Sampling date not mentioned; AboElkhair et al 2012.	#icon-1899-9C27B0-labelson	-63.0611155	46.2752804	Yes
+Milford Point	1988; Brousseau et al 1991	#icon-1899-9C27B0-labelson	-73.1095529	41.1728751	Yes
+"46°15'01""N 63°10'42""W PEI"	2008; LeGrand et al 2014. Exact coordinates specified.         2007; AboElkhair et al 2009. Exact coordinates given.	#icon-1899-9C27B0-labelson	-63.17833333	46.25027778	Yes
+Little Buttermilk Bay	1991; Weinberg et al 1997.      1986/1987; Leavitt et al 1990	#icon-1899-9C27B0-labelson	-70.6060642	41.7627988	Yes
+41°38.0'N 70°55.0'W	"December, year unspecified; Walker et al 2009. Exact coordinates given. but N - N was stated (not real coordinates) instead of what I assume to be N - W."	#icon-1899-9C27B0-labelson	-70.91666667	41.63333333	Yes
+"43°48'1.9""N 70°11'12""W Yarmouth"	"2010; Taraska et al 2013. Exact coordinates given, though it is on land. Low neo."	#icon-1899-9C27B0-labelson	-70.18666667	43.80052778	Yes
+"43°50'37""N 70°6'6""W Freeport"	2010; Taraska et al 2013. Exact Coordinates Given. 	#icon-1899-9C27B0-labelson	-70.10166667	43.84361111	Yes
+"Long Cove, Searsport"	Sampling date not mentioned; Reno et al 1994.   Sampling date not mentioned; Brown et al 1980	#icon-1899-9C27B0-labelson	-68.8923409	44.4645034	Yes
+Barnstable Harbor	Sampling date not mentioned; Reno et al 1994.	#icon-1899-9C27B0-labelson	-70.2661323	41.7167761	Yes
+Allen Harbor	Sampling date not mentioned; Oprandy et al 1981.                 Sampling date not mentioned; Hetrick et al 1981          1977; Cooper et al 1982	#icon-1899-9C27B0-labelson	-71.4131415	41.6225664	Yes
+Ox/Sheep River	2009/2010; Muttray et al 2012.	#icon-1899-9C27B0-labelson	-64.0745989	46.5537895	Yes
+Oyster Launch	2009/2010; Muttray et al 2012.	#icon-1899-9C27B0-labelson	-63.7549799	46.3829831	Yes
+Glover's Shore	2009/2010; Muttray et al 2012	#icon-1899-9C27B0-labelson	-63.7642046	46.3903492	Yes
+Stavert Shore	2009/2010; Muttray et al 2012. 	#icon-1899-9C27B0-labelson	-63.7409895	46.3612477	Yes
+"""Tin Can Island"" Marsh Island"	Sampling Date not mentioned; Miosky et al 1988.	#icon-1899-9C27B0-labelson	-70.9162458	41.6501481	Yes
+Eastern Bay	1989; McLaughlin et al 1992	#icon-1899-9C27B0-labelson	-76.2826675	38.8703031	Yes
+Indian River	2001?; Mateo et al 2015	#icon-1899-9C27B0-labelson	-63.7256401	46.4859363	Yes
+Mudflats on the coast of New Hampshire (nonspecific)	2014; Lesser et al 2020	#icon-1899-9C27B0-labelson	-70.7763399	42.9551113	Yes
+"Sandy Hook ""national park"""	Sampling date not specified; Kleinschuster et al 1996	#icon-1899-9C27B0-labelson	-73.9887047	40.439669	Yes
+Waldoboro	2020; Fulton Fish Market Commercial Order. 	#icon-1899-9C27B0-labelson	-69.3756017	44.0952725	Yes
+Brunswick	"2019,2020; Fulton Fish Market Commercial Order."	#icon-1899-9C27B0-labelson	-69.966996	43.9140162	Yes
+Jonesport	"2019,2020; Fulton Fish Market Commercial Order"	#icon-1899-9C27B0-labelson	-67.6030098	44.5310454	Yes
+Lubec	"2019,2020; Fulton Fish Market Commercial Order"	#icon-1899-9C27B0-labelson	-66.9835907	44.8585863	Yes
