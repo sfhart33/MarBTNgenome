@@ -158,6 +158,8 @@ scaleBar <- function(lon, lat, distanceLon, distanceLat,
     return(res)
 }
 
+
+# COMPILE AND PRINT MAP
 MAP <- ggplot() +
     geom_polygon(data = canada, aes(x=long, y = lat, group = group), 
                  fill = "gray80", color="black") + 
@@ -210,27 +212,7 @@ MAP <- ggplot() +
                fill="white", color = "blue", shape=21, size=7) +
     geom_point(data=MELC, aes(x=long+0.7, y=lat-0.75), 
                fill="white", color = "blue", shape=4, size=4) +
-    # geom_text(data=MELC, aes(x=long+0.45, y=lat-0.75, label = "2"), color = "black", size = 4,fontface = "bold") +
   # PEI
-    # geom_segment(data=PEI2, aes(x = long, y = lat-1.2, xend = long, yend = lat),
-    #              color = "black", size = 1.5) +
-    # geom_point(data=PEI2, aes(x=long, y=lat-1.2), 
-    #            fill="red", color = "black", shape=21, size=7) +
-    # geom_text(data=PEI2, aes(x=long, y=lat-1.2, label = "3"), color = "white", size = 4,fontface = "bold") +
-    # geom_segment(data=PEI2, aes(x = long-0.5, y = lat-0.75, xend = long, yend = lat),
-    #              color = "black", size = 1.5) +
-    # geom_point(data=PEI2, aes(x=long-0.45, y=lat-0.9), 
-    #            fill="red", color = "black", shape=21, size=7) + 
-    # geom_text(data=PEI2, aes(x=long-0.5, y=lat-0.9, label = "2"), color = "white", size = 4,fontface = "bold") +
-    # geom_segment(data=PEI2, aes(x = long-0.9, y = lat-0.5, xend = long, yend = lat),
-    #              color = "black", size = 1.5) +
-    # geom_point(data=PEI2, aes(x=long-0.9, y=lat-0.5), 
-    #            fill="red", color = "black", shape=21, size=7) + 
-    # geom_text(data=PEI2, aes(x=long-0.9, y=lat-0.5, label = "1"), color = "white", size = 4,fontface = "bold") +
-    # geom_segment(data=PEI2, aes(x = long-1.2, y = lat, xend = long, yend = lat),
-    #              color = "black", size = 1.5) +
-    # geom_point(data=PEI2, aes(x=long-1.2, y=lat), 
-    #            fill="white", color = "red", shape=21, size=7) +
     geom_segment(data=PEI2, aes(x = long+1.05, y = lat-0.75, xend = long, yend = lat),
                  color = "black", size = 1.5) +
     geom_point(data=PEI2, aes(x=long+1.05, y=lat-0.75), 
@@ -251,29 +233,30 @@ MAP <- ggplot() +
     geom_point(data=PEI2, aes(x=long-1.05, y=lat-0.75), 
                fill="white", color = "red", shape=21, size=7) + 
 # LABELS
-    geom_text(aes(-62.5, 47, label = "Prince Edward"), size = 3,fontface = "bold") +
-    geom_text(aes(-62.5, 46.7, label = "Island (PEI)"), size = 3, fontface = "bold") +
-    geom_text(aes(-69, 45.5, label = "Maine"), size = 3, fontface = "bold") +
-    geom_text(aes(-75, 43, label = "New York"), size = 3, fontface = "bold") +
-    geom_text(aes(-74.5, 44.5, label = "USA"), size = 5, fontface = "bold") +
-    geom_text(aes(-74.5, 45.5, label = "Canada"), size = 5, fontface = "bold") +
+    geom_text(aes(-63.4, 48, label = "Prince"), size = 4,fontface = "bold") +
+    geom_text(aes(-63.4, 47.6, label = "Edward"), size = 4,fontface = "bold") +
+    geom_text(aes(-63.4, 47.2, label = "Island (PEI)"), size = 4, fontface = "bold") +
+    geom_text(aes(-69, 45.5, label = "Maine"), size = 4, fontface = "bold") +
+    geom_text(aes(-75, 43, label = "New York"), size = 4, fontface = "bold") +
+    geom_text(aes(-74.5, 44.5, label = "USA"), size = 6, fontface = "bold") +
+    geom_text(aes(-74.5, 45.5, label = "Canada"), size = 6, fontface = "bold") +
 # KEY
     #geom_text(aes(-65, 40.8, label = "Observed"), size = 4, fontface = "bold", hjust="left") +
-    geom_text(aes(-67.375, 40.8, label = "Disseminated neoplasia observed"), size = 3, fontface = "bold", hjust="left") +
-    geom_point(aes(-67.875, 40.8), fill="black", color = "black", shape=20, size=6) +
+    geom_text(aes(-69.375, 40.8, label = "Disseminated neoplasia observed"), size = 4, fontface = "bold", hjust="left") +
+    geom_point(aes(-69.875, 40.8), fill="black", color = "black", shape=20, size=6) +
     #geom_text(aes(-65, 39.4, label = "Sequenced"), size = 4, fontface = "bold", hjust="left") +
-    geom_text(aes(-68.25, 40.1, label = "PEI"), size = 3, color = "red", fontface = "bold") +
-    geom_text(aes(-67.5, 40.1, label = "USA"), size = 3, color = "blue", fontface = "bold") +
-    geom_text(aes(-67, 39.4, label = "Cancer sequenced"), size = 3, fontface = "bold", hjust="left") +
-    geom_point(aes(-67.5, 39.4), fill="blue", color = "black", shape=21, size=7) +
-    geom_point(aes(-68.25, 39.4), fill="red", color = "black", shape=21, size=7) +
-    geom_text(aes(-67, 38.7, label = "Healthy clam sequenced"), size = 3, fontface = "bold", hjust="left") +
-    geom_point(aes(-67.5, 38.7), fill="white", color = "blue", shape=21, size=7) +
-    geom_point(aes(-68.25, 38.7), fill="white", color = "red", shape=21, size=7) +
-    geom_text(aes(-67, 38, label = "Healthy clam reference genome"), size = 3, fontface = "bold", hjust="left") +
-    #geom_point(aes(-67.5, 38), fill="white", color = "black", shape=21, size=7) +
-    geom_point(aes(-67.5, 38), fill="white", color = "blue", shape=21, size=7) +
-    geom_point(aes(-67.5, 38), fill="white", color = "blue", shape=4, size=4) +
+    geom_text(aes(-70.35, 40.1, label = "PEI"), size = 4, color = "red", fontface = "bold") +
+    geom_text(aes(-69.4, 40.1, label = "USA"), size = 4, color = "blue", fontface = "bold") +
+    geom_text(aes(-69, 39.4, label = "Cancer sequenced"), size = 4, fontface = "bold", hjust="left") +
+    geom_point(aes(-69.5, 39.4), fill="blue", color = "black", shape=21, size=7) +
+    geom_point(aes(-70.25, 39.4), fill="red", color = "black", shape=21, size=7) +
+    geom_text(aes(-69, 38.7, label = "Healthy clam sequenced"), size = 4, fontface = "bold", hjust="left") +
+    geom_point(aes(-69.5, 38.7), fill="white", color = "blue", shape=21, size=7) +
+    geom_point(aes(-70.25, 38.7), fill="white", color = "red", shape=21, size=7) +
+    geom_text(aes(-69, 38, label = "Healthy clam reference genome"), size = 4, fontface = "bold", hjust="left") +
+    #geom_point(aes(-69.5, 38), fill="white", color = "black", shape=21, size=7) +
+    geom_point(aes(-69.5, 38), fill="white", color = "blue", shape=21, size=7) +
+    geom_point(aes(-69.5, 38), fill="white", color = "blue", shape=4, size=4) +
 # SCALE BAR
     coord_fixed(xlim = c(-77, -62),  ylim = c(38, 48), ratio = 1.2) +
     theme(line = element_blank(),
@@ -285,6 +268,6 @@ MAP <- ggplot() +
             orientation = FALSE)
 MAP
 setwd("c:/users/shart/metzger lab dropbox/sam_data/manuscripts/mya_genome/figures/intro")
-pdf("mya_map_allsamples.pdf")
+pdf("mya_map_allsamples.pdf", height=6,width=6)
 MAP
 dev.off()
