@@ -2,7 +2,7 @@
 ## Code to accompany publication on genome evolution of soft-shell clam transmissible cancer
 Samuel Hart, University of Washington Molecular and Cellular Biology PhD program
 
-Michael Metzger, Pacfic Northwest Research Institute
+Michael Metzger, Pacific Northwest Research Institute
 
 <br/><br/>
 
