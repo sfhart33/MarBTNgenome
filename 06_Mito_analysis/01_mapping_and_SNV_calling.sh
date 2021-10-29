@@ -73,7 +73,7 @@ somatypus -i $WORK -o $OUTPUT -g $GENOME -c 8
 TYPES="SNVs Indels"
 for type in $TYPES
 do
-awk ' $0 ~ /^#CHROM.*/ {print "chr","pos", 
+awk ' $0 ~ /^#CHROM.*/ {print "chr","pos", "ref", "alt"
 	"Href_a", "Husa_a", "Hpei_a", 
 	"Cpei0_a", "Cpei1_a", "Cpei2_a", "Cpei3_a",
 	"Cusa0a_a", "Cusa0b_a", "Cusa1_a", "Cusa2_a", "Cusa3_a", "Cusa4_a", "Cusa5_a",
@@ -112,7 +112,7 @@ awk ' $0 ~ /^#CHROM.*/ {print "chr","pos",
         split($29, Tpei2, ":" );
         split($30, Tpei3, ":" );
         split($31, Cpei3, ":" ); 
-        print $1, $2, 
+        print $1, $2, $4, $5, 
 	Href[6], Husa[6], Hpei[6], 
 	Cpei0[6], Cpei1[6], Cpei2[6], Cpei3[6],
 	Cusa0a[6], Cusa0b[6], Cusa1[6], Cusa2[6], Cusa3[6], Cusa4[6], Cusa5[6],
