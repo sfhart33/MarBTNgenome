@@ -6,8 +6,8 @@
 # install.packages("rnaturalearth")
 # install.packages("raster")
 # install.packages("rnaturalearthhires")
-library(raster)
-library(rnaturalearth)
+# library(raster)
+# library(rnaturalearth)
 library(mapdata)
 library(maptools)
 library(tidyverse)
@@ -167,9 +167,9 @@ MAP <- ggplot() +
                 fill = "gray90", color="black") +     #"white" gray90 antiquewhite
 # RACHAELS OBS DATA
     geom_point(data=btn, aes(x=long, y=lat), 
-               fill="black", color = "black", shape=20, size=6) + 
+               fill="black", color = "black", shape=4, size=1, stroke = 2) + 
     geom_point(data=samples, aes(x=long, y=lat), 
-               fill="black", color = "black", shape=20, size=6) + 
+               fill="black", color = "black", shape=4, size=1, stroke = 2) + 
     # geom_point(data=nobtn, aes(x=long, y=lat), 
     #            fill="white", color = "black", shape=21, size=4) + 
 # SEQUENCED SAMPLES
@@ -205,13 +205,13 @@ MAP <- ggplot() +
     geom_segment(data=MELC, aes(x = long, y = lat-0.75, xend = long, yend = lat),
                  color = "black", size = 1.5) +
     geom_point(data=MELC, aes(x=long, y=lat-0.75), 
-               fill="white", color = "blue", shape=21, size=7) +
+               fill="black", color = "black", shape=21, size=7) +
     geom_segment(data=MELC, aes(x = long+0.7, y = lat-0.75, xend = long, yend = lat),
                  color = "black", size = 1.5) +
     geom_point(data=MELC, aes(x=long+0.7, y=lat-0.75), 
-               fill="white", color = "blue", shape=21, size=7) +
+               fill="black", color = "black", shape=21, size=7) +
     geom_point(data=MELC, aes(x=long+0.7, y=lat-0.75), 
-               fill="white", color = "blue", shape=4, size=4) +
+               fill="white", color = "white", shape=8, size=2, stroke = 2) +
   # PEI
     geom_segment(data=PEI2, aes(x = long+1.05, y = lat-0.75, xend = long, yend = lat),
                  color = "black", size = 1.5) +
@@ -231,7 +231,7 @@ MAP <- ggplot() +
     geom_segment(data=PEI2, aes(x = long-1.05, y = lat-0.75, xend = long, yend = lat),
                  color = "black", size = 1.5) +
     geom_point(data=PEI2, aes(x=long-1.05, y=lat-0.75), 
-               fill="white", color = "red", shape=21, size=7) + 
+               fill="black", color = "black", shape=21, size=7) + 
 # LABELS
     geom_text(aes(-63.4, 48, label = "Prince"), size = 4,fontface = "bold") +
     geom_text(aes(-63.4, 47.6, label = "Edward"), size = 4,fontface = "bold") +
@@ -242,21 +242,21 @@ MAP <- ggplot() +
     geom_text(aes(-74.5, 45.5, label = "Canada"), size = 6, fontface = "bold") +
 # KEY
     #geom_text(aes(-65, 40.8, label = "Observed"), size = 4, fontface = "bold", hjust="left") +
-    geom_text(aes(-69.375, 40.8, label = "Disseminated neoplasia observed"), size = 4, fontface = "bold", hjust="left") +
-    geom_point(aes(-69.875, 40.8), fill="black", color = "black", shape=20, size=6) +
+    geom_text(aes(-69, 39.0, label = "Disseminated neoplasia observed"), size = 4, fontface = "bold", hjust="left") +
+    geom_point(aes(-69.5, 39.0), fill="black", color = "black", shape=4, size=1, stroke = 2) +
     #geom_text(aes(-65, 39.4, label = "Sequenced"), size = 4, fontface = "bold", hjust="left") +
-    geom_text(aes(-70.35, 40.1, label = "PEI"), size = 4, color = "red", fontface = "bold") +
-    geom_text(aes(-69.4, 40.1, label = "USA"), size = 4, color = "blue", fontface = "bold") +
-    geom_text(aes(-69, 39.4, label = "Cancer sequenced"), size = 4, fontface = "bold", hjust="left") +
-    geom_point(aes(-69.5, 39.4), fill="blue", color = "black", shape=21, size=7) +
-    geom_point(aes(-70.25, 39.4), fill="red", color = "black", shape=21, size=7) +
-    geom_text(aes(-69, 38.7, label = "Healthy clam sequenced"), size = 4, fontface = "bold", hjust="left") +
-    geom_point(aes(-69.5, 38.7), fill="white", color = "blue", shape=21, size=7) +
-    geom_point(aes(-70.25, 38.7), fill="white", color = "red", shape=21, size=7) +
-    geom_text(aes(-69, 38, label = "Healthy clam reference genome"), size = 4, fontface = "bold", hjust="left") +
-    #geom_point(aes(-69.5, 38), fill="white", color = "black", shape=21, size=7) +
-    geom_point(aes(-69.5, 38), fill="white", color = "blue", shape=21, size=7) +
-    geom_point(aes(-69.5, 38), fill="white", color = "blue", shape=4, size=4) +
+    geom_text(aes(-69.975, 38.5, label = "PEI"), size = 4, color = "red", fontface = "bold") +
+    geom_text(aes(-69.025, 38.5, label = "USA"), size = 4, color = "blue", fontface = "bold") +
+    geom_text(aes(-68.625, 38, label = "Cancer sequenced"), size = 4, fontface = "bold", hjust="left") +
+    geom_point(aes(-69.125, 38), fill="blue", color = "black", shape=21, size=7) +
+    geom_point(aes(-69.875, 38), fill="red", color = "black", shape=21, size=7) +
+    geom_text(aes(-69, 40.4, label = "Healthy clam sequenced"), size = 4, fontface = "bold", hjust="left") +
+    geom_point(aes(-69.5, 40.4), fill="black", color = "black", shape=21, size=7) +
+    #geom_point(aes(-70.25, 40.4), fill="white", color = "red", shape=21, size=7) +
+    geom_text(aes(-69, 39.7, label = "Healthy clam reference genome"), size = 4, fontface = "bold", hjust="left") +
+    #geom_point(aes(-69.5, 39.7), fill="white", color = "black", shape=21, size=7) +
+    geom_point(aes(-69.5, 39.7), fill="black", color = "black", shape=21, size=7) +
+    geom_point(aes(-69.5, 39.7), fill="white", color = "white", shape=8, size=2, stroke = 2) +
 # SCALE BAR
     coord_fixed(xlim = c(-77, -62),  ylim = c(38, 48), ratio = 1.2) +
     theme(line = element_blank(),
@@ -267,7 +267,7 @@ MAP <- ggplot() +
             dist.unit = "km", legend.size = 4, 
             orientation = FALSE)
 MAP
-setwd("c:/users/shart/metzger lab dropbox/sam_data/manuscripts/mya_genome/figures/intro")
-pdf("mya_map_allsamples.pdf", height=6,width=6)
+setwd("C:/Users/shart/Metzger Lab Dropbox/Sam_data/Manuscripts/Mya_genome/Figures_new")
+pdf("mya_map_allsamples_final.pdf", height=6,width=6)
 MAP
 dev.off()
