@@ -113,8 +113,8 @@ saveRDS(sigS_regression, "sigS_regression.rds")
 summary(sigS_regression)
     # Coefficients:
     #             Estimate Std. Error t value Pr(>|t|)
-    # (Intercept) 155902.92     727.82 214.205 6.99e-13 ***
-    # dates          420.57      92.88   4.528  0.00398 **
+    # (Intercept) 155919.1      722.5 215.818 6.68e-13 ***
+    # dates          423.1       92.2   4.589  0.00374 **
 
 summary(sig1_regression)
 summary(sig5_regression)
@@ -147,8 +147,10 @@ summary(sig40_regression)
         summary(picModel2)
             # Coefficients:
             #             Estimate Std. Error t value Pr(>|t|)
-            # (Intercept)    7.167      2.411   2.973   0.0311 *
-            # dates_Pic2   332.907    118.399   2.812   0.0375 *
+            # (Intercept)    7.139      2.391   2.986   0.0306 *
+            # dates_Pic2   338.472    117.412   2.883   0.0345 *
+
+            # 338.472+117.412*2 =  573.296
 
     pdf("BTN.tree.datingcorrection.pdf")
         plot.phylo(BTN.tree)
@@ -158,18 +160,72 @@ summary(sig40_regression)
         glsModel <- gls(sigS ~ dates, data = exposures_total_div1, method = "ML")
         summary(glsModel) # significant (same as lm regression done previously)
             # Coefficients:
-            #                 Value Std.Error   t-value p-value
-            # (Intercept) 155902.92  727.8208 214.20509   0.000
-            # dates          420.57   92.8832   4.52793   0.004
-            # 420.57+92.8832*2 = 606.3364
+            #             Value Std.Error   t-value p-value
+            # (Intercept) 155919.1  722.4572 215.81781  0.0000
+            # dates          423.1   92.1987   4.58895  0.0037
+
+            # 423.1+92.1987*2 = 607.5
         pglsModel <- gls(sigS ~ dates, correlation = corBrownian(phy = BTN.tree), data = exposures_total_div1, method = "ML")
         summary(pglsModel) # Not significant
             # Coefficients:
             #                 Value Std.Error  t-value p-value
-            # (Intercept) 154610.33  4823.482 32.05368  0.0000
-            # dates          256.72   174.964  1.46726  0.1927
-            # 256.72+174.964*2 = 606.648
+            # (Intercept) 154656.32  4797.512 32.23678  0.0000
+            # dates          262.47   174.022  1.50827  0.1822
+
+            # 262.47+174.022*2 = 610.5
+
         # pglsModel <- gls(sigS ~ dates, correlation = corPagel(1, phy = BTN.tree, fixed = FALSE), data = exposures_total_div1, method = "ML")
         # summary(pglsModel) # Doesn't work
         # pglsModel <- gls(sigS ~ dates, correlation = corMartins(1, BTN.tree), data = exposures_total_div1, method = "ML")
         # summary(pglsModel) # Same output as without a correction - I think samples are getting scrambled
+
+################################# Old notes
+
+# how much of genome are we excluding with LOH calls
+    LOH_genome_size <- read.table("/ssd3/Mar_genome_analysis/LOH/july_2021/output/new/BOTH_SUBLINEAGES_LOH_10_counts.bed") %>% mutate(V4 = V3-V2) %>% .$V4 %>%as.numeric() %>% sum()
+    full_genome_size <- read.table("/ssd3/Mar_genome_analysis/genomes/Mar.3.4.6.p1_Q30Q30A.fasta.fai") %>% .$V2 %>%as.numeric() %>% sum()
+    nonLOH_genome_size = full_genome_size - LOH_genome_size 
+    perGbcorrection = nonLOH_genome_size/1000000000
+    full_genome_correction <- full_genome_size/nonLOH_genome_size
+
+# More final sigS regression plot
+    exposures_total_div1$sub <- c("PEI","PEI","PEI","USA","USA","USA","USA","USA")
+    sigS_rsquared <- summary(sigS_regression)$r.squared
+    sigS_p_value <- summary(sigS_regression)$coefficients[2,4]
+    sigS_intercept <- summary(sigS_regression)$coefficients[1,1]
+    sigS_rate <- summary(sigS_regression)$coefficients[2,1]
+    sigS_rate_sd <- summary(sigS_regression)$coefficients[2,2]
+    div_estimate <- sigS_intercept/sigS_rate
+    div_estimate_lower95 <- sigS_intercept/(sigS_rate+2*sigS_rate_sd)
+    div_estimate_upper95 <- sigS_intercept/(sigS_rate-2*sigS_rate_sd)
+    origin_estimate_dnds <- (allCnoH_sigS_somatic_count_estimate+sigS_intercept)/sigS_rate
+    origin_estimate_dnds <- (allCnoH_sigS_somatic_count_estimate+sigS_intercept)/sigS_rate
+    print(paste("Estimate of PEI-USA split:",round(div_estimate),"years ago (95% CI:",round(div_estimate_lower95),"-",round(div_estimate_upper95),")"))
+    # print(paste("Estimate of origin:",round(origin_estimate),"years ago"))
+
+
+    pdf("sigS_time_regression3.pdf",width=3,height=3)
+    #dates changed to year
+    ggplot(exposures_total_div1, aes(x = jitter(dates+2021.73), y = sigS/perGbcorrection/1000, ymin=sigS_L/perGbcorrection/1000, ymax=sigS_U/perGbcorrection/1000)) + 
+        scale_color_manual(values=c("red", "blue"))+
+        stat_smooth(method = "lm",color="black",fullrange = T) + 
+        geom_pointrange(aes(color=sub))+ # , size=1, fatten = 5
+        #geom_text(aes(x=2017.5, y=157900/1000, label = paste(round(sigS_rate/perGbcorrection),"+/-",round(2*sigS_rate_sd/perGbcorrection),"mu/Gb/year"), angle = 32), size=3)+
+        #geom_text(aes(x=2018, y=154000/1000, label = paste("R-squared:",round(sigS_rsquared,3),"\n p-value:",round(sigS_p_value,3))), size=3)+
+        #geom_text(aes(x=2014, y=160000/1000, label = paste("Estimate of PEI-USA split: \n",round(div_estimate),"years ago \n (95% CI:",round(div_estimate_lower95),"-",round(div_estimate_upper95),"years)")), size=3)+
+        #geom_text(aes(x=2014, y=160000/1000,
+        #    label = paste(round(sigS_rate/perGbcorrection),"+/-",round(2*sigS_rate_sd/perGbcorrection),"mu/Gb/year","\n","R-squared:",round(sigS_rsquared,3),"\n", "p-value:",round(sigS_p_value,3))), size=3)+
+        #xlim(2010,2022)+
+        scale_x_continuous(breaks=seq(2010,2022,2))+
+        scale_y_continuous(breaks=seq(152,162,2))+
+        xlab("Year sampled")+
+        ylab("SigS mutations per Mb\n(since USA-PEI split)")+   
+        scale_fill_manual(values=c("red", "blue"))+
+        theme_classic() +
+            theme(axis.text=element_text(size=8,face="bold"),
+            axis.title=element_text(size=8,face="bold"),
+            text=element_text(size=8,face="bold"),
+            legend.position = "none") #+
+        #ggtitle(paste("Estimate of PEI-USA split:",round(div_estimate),"years ago (95% CI:",round(div_estimate_lower95),"-",round(div_estimate_upper95),"years)"))
+    dev.off()
+

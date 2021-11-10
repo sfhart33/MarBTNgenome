@@ -64,8 +64,134 @@ setwd("/ssd3/Mar_genome_analysis/somatypus/Mar.3.4.6.p1/final_run")
                         C_usa4_NV > C_usa4_avg/stringent_depth |
                         C_usa5_NV > C_usa5_avg/stringent_depth))
 
-################# Old notes in original file
 
+# binning for dnds and sigS analysis
+    # Is SNV found in any cancer
+        anyC <- filter(snvs, C_pei1_NV > C_pei1_avg/stringent_depth |
+                            C_pei2_NV > C_pei2_avg/stringent_depth |
+                            C_pei3_NV > C_pei3_avg/stringent_depth |
+                            C_usa1_NV > C_usa1_avg/stringent_depth |
+                            C_usa2_NV > C_usa2_avg/stringent_depth |
+                            C_usa3_NV > C_usa3_avg/stringent_depth |
+                            C_usa4_NV > C_usa4_avg/stringent_depth |
+                            C_usa5_NV > C_usa5_avg/stringent_depth)
+    # Is SNV found in any healthy clam    
+        anyHanyC <- filter(anyC, H_ref_NV > min_cutoff |
+                            H_usa_NV > min_cutoff |
+                            H_pei_NV > min_cutoff)
+        noHanyC <- filter(anyC, !(H_ref_NV > min_cutoff |
+                            H_usa_NV > min_cutoff |
+                            H_pei_NV > min_cutoff))
+    # which healthy clam is it found in
+        H_any <- filter(snvs, (H_ref_NV > stringent_depth) |
+                        (H_usa_NV > stringent_depth) |
+                        (H_pei_NV > stringent_depth))
+        H_USA <- filter(H_any, (H_usa_NV > stringent_depth))
+        H_PEI <- filter(H_any, (H_pei_NV > stringent_depth))
+        H_REF <- filter(H_any, (H_ref_NV > stringent_depth))  
+        H_USA_noR <- filter(H_any, !(H_ref_NV > min_cutoff) &
+                            (H_usa_NV > stringent_depth))
+        H_PEI_noR <- filter(H_any, !(H_ref_NV > min_cutoff) &
+                            (H_pei_NV > stringent_depth))  
+        H_USA_PEI_noR <- filter(H_any, !(H_ref_NV > min_cutoff) &
+                            ((H_usa_NV > stringent_depth) |
+                            (H_pei_NV > stringent_depth)))
+    # Likely founder germline
+        allCanyH <- filter(anyHanyC, C_pei1_NV > C_pei1_avg/weak_depth &
+                            C_pei2_NV > C_pei2_avg/weak_depth &
+                            C_pei3_NV > C_pei3_avg/weak_depth &
+                            C_usa1_NV > C_usa1_avg/weak_depth &
+                            C_usa2_NV > C_usa2_avg/weak_depth &
+                            C_usa3_NV > C_usa3_avg/weak_depth &
+                            C_usa4_NV > C_usa4_avg/weak_depth &
+                            C_usa5_NV > C_usa5_avg/weak_depth)
+    # Founder germline OR early somatic mutation
+        allCnoH <- filter(noHanyC, C_pei1_NV > C_pei1_avg/weak_depth &
+                            C_pei2_NV > C_pei2_avg/weak_depth &
+                            C_pei3_NV > C_pei3_avg/weak_depth &
+                            C_usa1_NV > C_usa1_avg/weak_depth &
+                            C_usa2_NV > C_usa2_avg/weak_depth &
+                            C_usa3_NV > C_usa3_avg/weak_depth &
+                            C_usa4_NV > C_usa4_avg/weak_depth &
+                            C_usa5_NV > C_usa5_avg/weak_depth)
+    # Somtic mutations OR mismaps, maybe some founder germline that dropped out of some samples
+        subsetCnoH <- filter(noHanyC, !(C_pei1_NV > C_pei1_avg/weak_depth &
+                            C_pei2_NV > C_pei2_avg/weak_depth &
+                            C_pei3_NV > C_pei3_avg/weak_depth &
+                            C_usa1_NV > C_usa1_avg/weak_depth &
+                            C_usa2_NV > C_usa2_avg/weak_depth &
+                            C_usa3_NV > C_usa3_avg/weak_depth &
+                            C_usa4_NV > C_usa4_avg/weak_depth &
+                            C_usa5_NV > C_usa5_avg/weak_depth))
+    # Sublineage specific
+        anyUSAnoPEInoH <- filter(subsetCnoH, !(C_pei1_NV > C_pei1_avg/weak_depth |
+                            C_pei2_NV > C_pei2_avg/weak_depth |
+                            C_pei3_NV > C_pei3_avg/weak_depth) |
+                            (C_usa1_NV > C_usa1_avg/weak_depth |
+                            C_usa2_NV > C_usa2_avg/weak_depth |
+                            C_usa3_NV > C_usa3_avg/weak_depth |
+                            C_usa4_NV > C_usa4_avg/weak_depth |
+                            C_usa5_NV > C_usa5_avg/weak_depth))
+        anyPEInoUSAnoH <- filter(subsetCnoH, (C_pei1_NV > C_pei1_avg/weak_depth |
+                            C_pei2_NV > C_pei2_avg/weak_depth |
+                            C_pei3_NV > C_pei3_avg/weak_depth) |
+                            !(C_usa1_NV > C_usa1_avg/weak_depth |
+                            C_usa2_NV > C_usa2_avg/weak_depth |
+                            C_usa3_NV > C_usa3_avg/weak_depth |
+                            C_usa4_NV > C_usa4_avg/weak_depth |
+                            C_usa5_NV > C_usa5_avg/weak_depth))
+        somatic <- rbind(anyPEInoUSAnoH, anyUSAnoPEInoH) %>%
+            arrange(CHROM,POS)        
+        allUSAnoPEInoH <- filter(subsetCnoH, !(C_pei1_NV > C_pei1_avg/weak_depth |
+                            C_pei2_NV > C_pei2_avg/weak_depth |
+                            C_pei3_NV > C_pei3_avg/weak_depth) &
+                            (C_usa1_NV > C_usa1_avg/weak_depth &
+                            C_usa2_NV > C_usa2_avg/weak_depth &
+                            C_usa3_NV > C_usa3_avg/weak_depth &
+                            C_usa4_NV > C_usa4_avg/weak_depth &
+                            C_usa5_NV > C_usa5_avg/weak_depth))
+        allPEInoUSAnoH <- filter(subsetCnoH, (C_pei1_NV > C_pei1_avg/weak_depth &
+                            C_pei2_NV > C_pei2_avg/weak_depth &
+                            C_pei3_NV > C_pei3_avg/weak_depth) &
+                            !(C_usa1_NV > C_usa1_avg/weak_depth |
+                            C_usa2_NV > C_usa2_avg/weak_depth |
+                            C_usa3_NV > C_usa3_avg/weak_depth |
+                            C_usa4_NV > C_usa4_avg/weak_depth |
+                            C_usa5_NV > C_usa5_avg/weak_depth))
+        sublineages <- rbind(allPEInoUSAnoH, allUSAnoPEInoH) %>%
+            arrange(CHROM,POS)
+
+# Bins to keep
+    bins_to_keep <- c("H_any", "H_USA", "H_PEI", "H_REF", "H_USA_noR", "H_PEI_noR", "H_USA_PEI_noR", "allCanyH", "allCnoH", "anyUSAnoPEInoH", "anyPEInoUSAnoH", "somatic", "allUSAnoPEInoH", "allPEInoUSAnoH", "sublineages")
+
+# Helmsman output
+    helmsmanfile <- function(sample){
+        get(sample) %>% select(CHROM, POS, REF, ALT) %>%
+            mutate(ID = sample) %>%
+            write.table(file = paste0("helmsman.output.txt"), append = TRUE, row.names=FALSE, col.names=FALSE, quote=FALSE, sep = '\t')
+    }
+    if(file.exists("helmsman.output.txt")) {
+        file.remove("helmsman.output.txt")
+    }
+    for(i in bins_to_keep){
+        print(i)
+        helmsmanfile(i)
+    }
+
+# dnds output
+    dnds_format <- function(input){
+        get(input) %>%
+            mutate(name=input) %>%
+            select(name, CHROM, POS, REF, ALT) %>%
+            write.table(file = paste0(input,".dnds"), row.names=FALSE, col.names=FALSE, quote=FALSE, sep = '\t')	
+    }
+    for(i in bins_to_keep){
+        print(i)
+        dnds_format(i)
+    }
+
+
+################# Old notes in original file
 
 # Counts since divergence to get time of divergence estimate
     noPEI <- filter(realSNVs,
@@ -132,6 +258,7 @@ setwd("/ssd3/Mar_genome_analysis/somatypus/Mar.3.4.6.p1/final_run")
         #div_counts <- append(div_counts,count2)
     }
     div_counts
+    saveRDS(div_counts, "post_div_counts.rds")
 
 # Histograms check
     plotalt2 <- function(snpfile, sampleID){
