@@ -20,6 +20,11 @@ module load bedtools/
     done
     rm $BEDS
 
+# Count size of LOH regions used in final
+    GENOMESZ=1216068291
+    awk -v genome=$GENOMESZ '$1 == "PEI_LOH_10_hetero_counts.bed" {print $0, $3/genome}' OFS='\t' $OUTPUT/LOH.count.test.txt # PEI_LOH_10_hetero_counts.bed    1098    155372688       0.127766
+    awk -v genome=$GENOMESZ '$1 == "USA_LOH_10_hetero_counts.bed" {print $0, $3/genome}' OFS='\t' $OUTPUT/LOH.count.test.txt # USA_LOH_10_hetero_counts.bed    817     98150937        0.0807117
+
 # Make helmsman input file
 # Note we want to look at PEI SNVs in USA LOH regions, as those will likely include founder germline SNV contamination
     cd $OUTPUT
