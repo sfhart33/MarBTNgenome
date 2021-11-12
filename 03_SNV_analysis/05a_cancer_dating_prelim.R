@@ -1,4 +1,4 @@
-# Original file here: C:\Users\shart\Metzger Lab Dropbox\Sam_data\Mya_genome\SNPs\somatypus_output_dating.r
+# Original file here: C:\Users\shart\Metzger Lab Dropbox\Sam_data\Mya_genome\SNPs\somatypus_output_dating2.r
 
 library(tidyverse)
 library(ape)
@@ -83,19 +83,24 @@ setwd("/ssd3/Mar_genome_analysis/somatypus/Mar.3.4.6.p1/final_run")
                             H_usa_NV > min_cutoff |
                             H_pei_NV > min_cutoff))
     # which healthy clam is it found in
-        H_any <- filter(snvs, (H_ref_NV > stringent_depth) |
-                        (H_usa_NV > stringent_depth) |
-                        (H_pei_NV > stringent_depth))
-        H_USA <- filter(H_any, (H_usa_NV > stringent_depth))
-        H_PEI <- filter(H_any, (H_pei_NV > stringent_depth))
-        H_REF <- filter(H_any, (H_ref_NV > stringent_depth))  
-        H_USA_noR <- filter(H_any, !(H_ref_NV > min_cutoff) &
-                            (H_usa_NV > stringent_depth))
-        H_PEI_noR <- filter(H_any, !(H_ref_NV > min_cutoff) &
-                            (H_pei_NV > stringent_depth))  
-        H_USA_PEI_noR <- filter(H_any, !(H_ref_NV > min_cutoff) &
-                            ((H_usa_NV > stringent_depth) |
-                            (H_pei_NV > stringent_depth)))
+        H_any <- filter(snvs, (H_ref_NV > min_cutoff) |
+                        (H_usa_NV > min_cutoff) |
+                        (H_pei_NV > min_cutoff))
+        H_any_hm <- filter(H_any, (H_ref_NV > min_cutoff & H_ref_NV/H_ref_NR > 0.8) |
+                        (H_usa_NV > min_cutoff & H_usa_NV/H_usa_NR > 0.8) |
+                        (H_pei_NV > min_cutoff & H_pei_NV/H_pei_NR > 0.8))
+        H_any_ht <- filter(H_any, (H_ref_NV > min_cutoff & H_ref_NV/H_ref_NR < 0.8) |
+                        (H_usa_NV > min_cutoff & H_usa_NV/H_usa_NR < 0.8) |
+                        (H_pei_NV > min_cutoff & H_pei_NV/H_pei_NR < 0.8))
+        H_USA <- filter(H_any, (H_usa_NV > Hmin_cutoff))
+        H_USA_hm <- filter(H_any, (H_usa_NV > min_cutoff & H_usa_NV/H_usa_NR > 0.8))
+        H_USA_ht <- filter(H_any, (H_usa_NV > min_cutoff & H_usa_NV/H_usa_NR < 0.8))
+        H_PEI <- filter(H_any, (H_pei_NV > min_cutoff))
+        H_PEI_hm <- filter(H_any, (H_pei_NV > min_cutoff & H_pei_NV/H_pei_NR > 0.8))
+        H_PEI_ht <- filter(H_any, (H_pei_NV > min_cutoff & H_pei_NV/H_pei_NR < 0.8))
+        H_REF <- filter(H_any, (H_ref_NV > min_cutoff))  
+        H_REF_hm <- filter(H_any, (H_ref_NV > min_cutoff & H_ref_NV/H_ref_NR > 0.8))  # should barely be any homozygous
+        H_REF_ht <- filter(H_any, (H_ref_NV > min_cutoff & H_ref_NV/H_ref_NR < 0.8))  
     # Likely founder germline
         allCanyH <- filter(anyHanyC, C_pei1_NV > C_pei1_avg/weak_depth &
                             C_pei2_NV > C_pei2_avg/weak_depth &
@@ -114,6 +119,22 @@ setwd("/ssd3/Mar_genome_analysis/somatypus/Mar.3.4.6.p1/final_run")
                             C_usa3_NV > C_usa3_avg/weak_depth &
                             C_usa4_NV > C_usa4_avg/weak_depth &
                             C_usa5_NV > C_usa5_avg/weak_depth)
+        allCnoH_ht <- filter(allCnoH, (C_pei1_NV/C_pei1_NR +
+                            C_pei2_NV/C_pei2_NR +
+                            C_pei3_NV/C_pei3_NR +
+                            C_usa1_NV/C_usa1_NR +
+                            C_usa2_NV/C_usa2_NR +
+                            C_usa3_NV/C_usa3_NR +
+                            C_usa4_NV/C_usa4_NR +
+                            C_usa5_NV/C_usa5_NR)/8 < 0.8)
+        allCnoH_hm <- filter(allCnoH, (C_pei1_NV/C_pei1_NR +
+                            C_pei2_NV/C_pei2_NR +
+                            C_pei3_NV/C_pei3_NR +
+                            C_usa1_NV/C_usa1_NR +
+                            C_usa2_NV/C_usa2_NR +
+                            C_usa3_NV/C_usa3_NR +
+                            C_usa4_NV/C_usa4_NR +
+                            C_usa5_NV/C_usa5_NR)/8 > 0.8)
     # Somtic mutations OR mismaps, maybe some founder germline that dropped out of some samples
         subsetCnoH <- filter(noHanyC, !(C_pei1_NV > C_pei1_avg/weak_depth &
                             C_pei2_NV > C_pei2_avg/weak_depth &
@@ -162,7 +183,8 @@ setwd("/ssd3/Mar_genome_analysis/somatypus/Mar.3.4.6.p1/final_run")
             arrange(CHROM,POS)
 
 # Bins to keep
-    bins_to_keep <- c("H_any", "H_USA", "H_PEI", "H_REF", "H_USA_noR", "H_PEI_noR", "H_USA_PEI_noR", "allCanyH", "allCnoH", "anyUSAnoPEInoH", "anyPEInoUSAnoH", "somatic", "allUSAnoPEInoH", "allPEInoUSAnoH", "sublineages")
+    bins_to_keep <- c("H_any", "H_USA", "H_PEI", "H_REF", "H_any_hm", "H_USA_hm", "H_PEI_hm", "H_REF_hm", "H_any_ht", "H_USA_ht", "H_PEI_ht", "H_REF_ht",
+                      "allCanyH", "allCnoH", "allCnoH_hm", "allCnoH_ht", "anyUSAnoPEInoH", "anyPEInoUSAnoH", "somatic", "allUSAnoPEInoH", "allPEInoUSAnoH", "sublineages")
 
 # Helmsman output
     helmsmanfile <- function(sample){
@@ -179,19 +201,17 @@ setwd("/ssd3/Mar_genome_analysis/somatypus/Mar.3.4.6.p1/final_run")
     }
 
 # dnds output
-    dnds_format <- function(input){
-        get(input) %>%
-            mutate(name=input) %>%
-            select(name, CHROM, POS, REF, ALT) %>%
-            write.table(file = paste0(input,".dnds"), row.names=FALSE, col.names=FALSE, quote=FALSE, sep = '\t')	
-    }
-    for(i in bins_to_keep){
-        print(i)
-        dnds_format(i)
-    }
+    # dnds_format <- function(input){
+    #     get(input) %>%
+    #         mutate(name=input) %>%
+    #         select(name, CHROM, POS, REF, ALT) %>%
+    #         write.table(file = paste0(input,".dnds"), row.names=FALSE, col.names=FALSE, quote=FALSE, sep = '\t')	
+    # }
+    # for(i in bins_to_keep){
+    #     print(i)
+    #     dnds_format(i)
+    # }
 
-
-################# Old notes in original file
 
 # Counts since divergence to get time of divergence estimate
     noPEI <- filter(realSNVs,

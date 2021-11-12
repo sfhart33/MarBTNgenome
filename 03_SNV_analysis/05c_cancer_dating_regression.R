@@ -1,15 +1,16 @@
-library(tidyverse)
-library(ape)
-library(sigfit)
-library(lsa)
-data(cosmic_signatures_v2)
-data(cosmic_signatures_v3)
+
+# Back in R: sigfit
+    library(tidyverse)
+    library(ape)
+    library(sigfit)
+    library(lsa)
+    data(cosmic_signatures_v2)
+    data(cosmic_signatures_v3)
+    library(ape)
     library(geiger)
     library(nlme)
     library(phytools)
-
-
-
+    
 # Load data
     setwd("/ssd3/Mar_genome_analysis/somatypus/Mar.3.4.6.p1/final_run/pairwise/noLOH")
     helmsman_output_file <- paste0("/ssd3/Mar_genome_analysis/somatypus/Mar.3.4.6.p1/final_run/pairwise/noLOH/helmsman_div_output/subtype_count_matrix.txt")
@@ -116,16 +117,13 @@ summary(sigS_regression)
     # (Intercept) 155919.1      722.5 215.818 6.68e-13 ***
     # dates          423.1       92.2   4.589  0.00374 **
 
+
 summary(sig1_regression)
 summary(sig5_regression)
 summary(sig40_regression)
 
 ##################################
 # NEW incorperate Phylogenetic Generalised Least Squares to make sure effect is not phylogeny-based
-    library(ape)
-    library(geiger)
-    library(nlme)
-    library(phytools)
     BTN.tree <- readRDS("/ssd3/Mar_genome_analysis/somatypus/Mar.3.4.6.p1/final_run/pairwise/BTN.tree.phy.rds") 
     BTN.tree$edge.length[16] <- 0 # set root length to 0
     BTN.tree <- root(BTN.tree, outgroup = "genome", resolve.root = TRUE)
@@ -179,8 +177,6 @@ summary(sig40_regression)
         # pglsModel <- gls(sigS ~ dates, correlation = corMartins(1, BTN.tree), data = exposures_total_div1, method = "ML")
         # summary(pglsModel) # Same output as without a correction - I think samples are getting scrambled
 
-################################# Old notes
-
 # how much of genome are we excluding with LOH calls
     LOH_genome_size <- read.table("/ssd3/Mar_genome_analysis/LOH/july_2021/output/new/BOTH_SUBLINEAGES_LOH_10_counts.bed") %>% mutate(V4 = V3-V2) %>% .$V4 %>%as.numeric() %>% sum()
     full_genome_size <- read.table("/ssd3/Mar_genome_analysis/genomes/Mar.3.4.6.p1_Q30Q30A.fasta.fai") %>% .$V2 %>%as.numeric() %>% sum()
@@ -188,7 +184,7 @@ summary(sig40_regression)
     perGbcorrection = nonLOH_genome_size/1000000000
     full_genome_correction <- full_genome_size/nonLOH_genome_size
 
-# More final sigS regression plot
+# Final sigS regression plot
     exposures_total_div1$sub <- c("PEI","PEI","PEI","USA","USA","USA","USA","USA")
     sigS_rsquared <- summary(sigS_regression)$r.squared
     sigS_p_value <- summary(sigS_regression)$coefficients[2,4]

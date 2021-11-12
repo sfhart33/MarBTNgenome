@@ -42,75 +42,87 @@ setwd("/ssd3/Mar_genome_analysis/somatypus/Mar.3.4.6.p1/final_run/pairwise/noLOH
     mutation_counts <- rowSums(helmsman_run) %>% as.data.frame() 
     colnames(mutation_counts) <- "count"
     exposures_run_total <- cbind(mutation_counts,exp_mean,exp_upper,exp_lower)
-
+    exposures_run_total
 
 ############################################################### dnds ############################################################
-    bins_to_keep <- c("H_any", "H_USA", "H_PEI", "H_REF", "H_USA_noR", "H_PEI_noR", "H_USA_PEI_noR", "allCanyH", "allCnoH", "anyUSAnoPEInoH", "anyPEInoUSAnoH", "somatic", "allUSAnoPEInoH", "allPEInoUSAnoH", "sublineages")
+# No longer used
+    # bins_to_keep <- c("H_any", "H_USA", "H_PEI", "H_REF", "H_any_hm", "H_USA_hm", "H_PEI_hm", "H_REF_hm", "H_any_ht", "H_USA_ht", "H_PEI_ht", "H_REF_ht",
+    #                   "allCanyH", "allCnoH", "allCnoH_hm", "allCnoH_ht", "anyUSAnoPEInoH", "anyPEInoUSAnoH", "somatic", "allUSAnoPEInoH", "allPEInoUSAnoH", "sublineages")
+    # # bins_to_keep <- c("allCnoH", "allCnoH_hm", "allCnoH_ht","H_any", "H_USA", "H_PEI", "H_REF", "H_any_ht", "H_USA_ht", "H_PEI_ht", "allUSAnoPEInoH", "allPEInoUSAnoH", "sublineages")
 
-    count=0
-    for(i in bins_to_keep){
-        print(i)
-        dndsout <- dndscv(read.table(paste0(i,".dnds")),
-                    refdb="/ssd3/Mar_genome_analysis/dnds/dndscv/Mar.3.4.6.p1_snap02_refCDS.rda",
-                    cv=NULL,
-                    max_coding_muts_per_sample = 1000000000,
-                    max_muts_per_gene_per_sample = 1000000000)
-        #saveRDS(dndsout, paste0(i,".dnds.rds"))   
-        dndsout$globaldnds[1,] %>% print()
-    # save to file
-        if(count == 0){
-            dnds_summary <- data.frame(dndsout$globaldnds[1,], stringsAsFactors = FALSE) %>%
-            mutate(name = i)
-        }
-        if(count > 0){
-            dnds_value <- data.frame(dndsout$globaldnds[1,], stringsAsFactors = FALSE) %>%
-                mutate(name = i)
-            dnds_summary <- rbind(dnds_summary,dnds_value)
-        }
-        count=count+1
-        print("     done", quote = FALSE)	
-    }
+    # count=0
+    # for(i in bins_to_keep){
+    #     print(i)
+    #     dndsout <- dndscv(read.table(paste0(i,".dnds")),
+    #                 refdb="/ssd3/Mar_genome_analysis/dnds/dndscv/Mar.3.4.6.p1_snap02_refCDS.rda",
+    #                 cv=NULL,
+    #                 max_coding_muts_per_sample = 1000000000,
+    #                 max_muts_per_gene_per_sample = 1000000000)
+    #     #saveRDS(dndsout, paste0(i,".dnds.rds"))   
+    #     dndsout$globaldnds[1,] %>% print()
+    # # save to file
+    #     if(count == 0){
+    #         dnds_summary <- data.frame(dndsout$globaldnds[1,], stringsAsFactors = FALSE) %>%
+    #         mutate(name = i)
+    #     }
+    #     if(count > 0){
+    #         dnds_value <- data.frame(dndsout$globaldnds[1,], stringsAsFactors = FALSE) %>%
+    #             mutate(name = i)
+    #         dnds_summary <- rbind(dnds_summary,dnds_value)
+    #     }
+    #     count=count+1
+    #     print("     done", quote = FALSE)	
+    # }
     
-    rownames(dnds_summary) <- dnds_summary$name
-    saveRDS(dnds_summary, "/ssd3/Mar_genome_analysis/somatypus/Mar.3.4.6.p1/final_run/bins/dnds/outputs/noLOH.dnds.summary.rds")
+    # rownames(dnds_summary) <- dnds_summary$name
+    # dnds_summary
+    # saveRDS(dnds_summary, "/ssd3/Mar_genome_analysis/somatypus/Mar.3.4.6.p1/final_run/bins/dnds/outputs/noLOH.dnds.summary.rds")
 
 
 # Plots
-    dnds_to_plot <- dnds_summary[c("H_any", "allCnoH", "allUSAnoPEInoH", "allPEInoUSAnoH"),] # "H_USA", "H_PEI"
-    dnds_to_plot$name <- factor(c("Healthy", "allCnoH", "USA", "PEI"), levels = c("Healthy", "allCnoH", "USA", "PEI"))
-    dnds_to_plot$color <- factor(c("Healthy","Cancer","USA","PEI"))
-    dnds_to_plot
-    sigS_to_plot <- exposures_run_total[c("H_any", "allCnoH", "allUSAnoPEInoH", "allPEInoUSAnoH"),]
-    sigS_to_plot$name <- factor(c("Healthy", "allCnoH", "USA", "PEI"), levels = c("Healthy", "allCnoH", "USA", "PEI"))
-    sigS_to_plot$color <- factor(c("Healthy","Cancer","USA","PEI"))
+    # dnds_to_plot <- dnds_summary[c("H_USA", "H_PEI","H_REF","allCanyH", "allCnoH_hm", "allCnoH_ht", "allUSAnoPEInoH", "allPEInoUSAnoH"),] # "H_any",
+    # dnds_to_plot$name <- factor(c("H_USA", "H_PEI","H_REF","allCanyH", "allCnoH_hm", "allCnoH_ht", "USA", "PEI"),
+    #                             levels = c("H_USA", "H_PEI","H_REF","allCanyH", "allCnoH_hm", "allCnoH_ht", "USA", "PEI"))
+    # dnds_to_plot$color <- factor(c("Healthy","Healthy","Healthy","Cancer","Cancer","Cancer","USA","PEI"))
+    # dnds_to_plot
+    sigS_to_plot <- exposures_run_total[c("H_USA", "H_PEI","H_REF","allCanyH", "allCnoH_hm", "allCnoH_ht", "allUSAnoPEInoH", "allPEInoUSAnoH"),] %>%
+        select(count, sigS, sigS_U, sigS_L)
+    sigS_to_plot$name <- factor(c("H_USA", "H_PEI","H_REF","allCanyH", "allCnoH_hm", "allCnoH_ht", "USA", "PEI"),
+                                levels = c("H_USA", "H_PEI","H_REF","allCanyH", "allCnoH_hm", "allCnoH_ht", "USA", "PEI"))
+    sigS_to_plot$color <- factor(c("Healthy","Healthy","Healthy","Cancer","Cancer","Cancer","USA","PEI"))
     sigS_to_plot
+    # sigS_to_plot <- exposures_run_total[c("H_any", "allCnoH", "allUSAnoPEInoH", "allPEInoUSAnoH"),]
+    # sigS_to_plot$name <- factor(c("Healthy", "allCnoH", "USA", "PEI"), levels = c("Healthy", "allCnoH", "USA", "PEI"))
+    # sigS_to_plot$color <- factor(c("Healthy","Cancer","USA","PEI"))
+    # sigS_to_plot
 
-pdf("dnds_sigS_main_plot.pdf", width=2, height=2)
-ggplot(dnds_to_plot, aes(x=as.factor(name),y=mle,ymin=cilow,ymax=cihigh,color=color))+
-    geom_abline(aes(intercept=dnds_summary["sublineages","mle"], slope=0), color="black", linetype="dashed")+
-    geom_abline(aes(intercept=dnds_summary["allCnoH","mle"], slope=0), color="black", linetype="dashed")+
-    geom_abline(aes(intercept=dnds_summary["H_any","mle"], slope=0), color="black", linetype="dashed")+
-    #geom_pointrange(fatten = 3, size = 3)+  
-    geom_point(size = 3)+  #size = 9
-    geom_errorbar(color="grey20",width=0.25)+
-    ylab("dN/dS")+
-    scale_color_manual(values=c("grey", "black", "red", "blue"))+
-    scale_y_continuous(limits = c(0,1.1),breaks=seq(0,1.0,0.2))+
-    theme_classic() +
-        theme(axis.text=element_text(size=8,face="bold"),
-        axis.title=element_text(size=8,face="bold"),
-        text=element_text(size=8,face="bold"),
-        axis.title.x = element_blank(),
-        axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1),
-        legend.position = "none") #+
-    #ggtitle("dN/dS")
+#pdf("dnds_sigS_main_plot.pdf", width=2, height=2)
+pdf("sigS_main_plot.pdf", width=2, height=2.5)
+# ggplot(dnds_to_plot, aes(x=as.factor(name),y=mle,ymin=cilow,ymax=cihigh,color=color))+
+#     geom_abline(aes(intercept=dnds_summary["sublineages","mle"], slope=0), color="black", linetype="dashed")+
+#     geom_abline(aes(intercept=dnds_summary["allCnoH","mle"], slope=0), color="black", linetype="dashed")+
+#     geom_abline(aes(intercept=dnds_summary["H_any","mle"], slope=0), color="black", linetype="dashed")+
+#     #geom_pointrange(fatten = 3, size = 3)+  
+#     geom_point(size = 3)+  #size = 9
+#     geom_errorbar(color="grey20",width=0.25)+
+#     ylab("dN/dS")+
+#     scale_color_manual(values=c("grey", "black", "red", "blue"))+
+#     scale_y_continuous(limits = c(0,1.1),breaks=seq(0,1.0,0.2))+
+#     theme_classic() +
+#         theme(axis.text=element_text(size=8,face="bold"),
+#         axis.title=element_text(size=8,face="bold"),
+#         text=element_text(size=8,face="bold"),
+#         axis.title.x = element_blank(),
+#         axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1),
+#         legend.position = "none") #+
+#     #ggtitle("dN/dS")
 ggplot(sigS_to_plot, aes(x=as.factor(name),y=sigS,ymin=sigS_L,ymax=sigS_U,color=color))+
     geom_abline(aes(intercept=exposures_run_total["sublineages","sigS"], slope=0), color="black", linetype="dashed")+
-    geom_abline(aes(intercept=exposures_run_total["allCnoH","sigS"], slope=0), color="black", linetype="dashed")+
+    #geom_abline(aes(intercept=exposures_run_total["allCnoH","sigS"], slope=0), color="black", linetype="dashed")+
     geom_abline(aes(intercept=exposures_run_total["H_any","sigS"], slope=0), color="black", linetype="dashed")+
-    #geom_pointrange(fatten = 3, size = 3)+  
-    geom_point(size = 3)+  #size = 9
-    geom_errorbar(color="grey20",width=0.25)+
+    geom_pointrange()+  # fatten = 3, size = 2
+    #geom_point(size = 3)+  #size = 9
+    #geom_errorbar(color="grey20",width=0.25)+
     ylab("SigS Fraction")+
     scale_color_manual(values=c("grey", "black", "red", "blue"))+
     scale_y_continuous(limits = c(0,0.55),breaks=seq(0,0.5,0.1))+
@@ -126,40 +138,47 @@ dev.off()
 
 
 # Extract important values
-        allCnoH_dnds <- dnds_summary["allCnoH","mle"]
-        allCnoH_dnds_L <- dnds_summary["allCnoH","cilow"]
-        allCnoH_dnds_U <- dnds_summary["allCnoH","cihigh"] 
-        allCnoH_dnds_Lsd <- allCnoH_dnds - allCnoH_dnds_L
-        allCnoH_dnds_Usd <- allCnoH_dnds_U - allCnoH_dnds
-        allCnoH_dnds_sd <- mean(allCnoH_dnds_Lsd,allCnoH_dnds_Usd)
+        # allCnoH_dnds <- dnds_summary["allCnoH","mle"]
+        # allCnoH_dnds_L <- dnds_summary["allCnoH","cilow"]
+        # allCnoH_dnds_U <- dnds_summary["allCnoH","cihigh"] 
+        # allCnoH_dnds_Lsd <- allCnoH_dnds - allCnoH_dnds_L
+        # allCnoH_dnds_Usd <- allCnoH_dnds_U - allCnoH_dnds
+        # allCnoH_dnds_sd <- mean(allCnoH_dnds_Lsd,allCnoH_dnds_Usd)
 
-        H_dnds <- dnds_summary["H_any","mle"]
-        H_dnds_L <- dnds_summary["H_any","cilow"]
-        H_dnds_U <- dnds_summary["H_any","cihigh"] 
-        H_dnds_Lsd <- H_dnds - H_dnds_L
-        H_dnds_Usd <- H_dnds_U - H_dnds
-        H_dnds_sd <- mean(H_dnds_Lsd,H_dnds_Usd)
+        # H_dnds <- dnds_summary["H_any","mle"]
+        # H_dnds_L <- dnds_summary["H_any","cilow"]
+        # H_dnds_U <- dnds_summary["H_any","cihigh"] 
+        # H_dnds_Lsd <- H_dnds - H_dnds_L
+        # H_dnds_Usd <- H_dnds_U - H_dnds
+        # H_dnds_sd <- mean(H_dnds_Lsd,H_dnds_Usd)
 
-        somatic_dnds <- dnds_summary["sublineages","mle"]
-        somatic_dnds_L <- dnds_summary["sublineages","cilow"]
-        somatic_dnds_U <- dnds_summary["sublineages","cihigh"] 
-        somatic_dnds_Lsd <- somatic_dnds - somatic_dnds_L
-        somatic_dnds_Usd <- somatic_dnds_U - somatic_dnds
-        somatic_dnds_sd <- mean(somatic_dnds_Lsd,somatic_dnds_Usd)
+        # somatic_dnds <- dnds_summary["sublineages","mle"]
+        # somatic_dnds_L <- dnds_summary["sublineages","cilow"]
+        # somatic_dnds_U <- dnds_summary["sublineages","cihigh"] 
+        # somatic_dnds_Lsd <- somatic_dnds - somatic_dnds_L
+        # somatic_dnds_Usd <- somatic_dnds_U - somatic_dnds
+        # somatic_dnds_sd <- mean(somatic_dnds_Lsd,somatic_dnds_Usd)
 
-        allCnoH_sigS <- exposures_run_total["allCnoH","sigS"]
-        allCnoH_sigS_L <- exposures_run_total["allCnoH","sigS_L"]
-        allCnoH_sigS_U <- exposures_run_total["allCnoH","sigS_U"] 
+        allCnoH_sigS <- exposures_run_total["allCnoH_ht","sigS"]
+        allCnoH_sigS_L <- exposures_run_total["allCnoH_ht","sigS_L"]
+        allCnoH_sigS_U <- exposures_run_total["allCnoH_ht","sigS_U"] 
         allCnoH_sigS_Lsd <- allCnoH_sigS - allCnoH_sigS_L
         allCnoH_sigS_Usd <- allCnoH_sigS_U - allCnoH_sigS
         allCnoH_sigS_sd <- mean(allCnoH_sigS_Lsd,allCnoH_sigS_Usd)
-
+        allCnoH_count <- exposures_run_total["allCnoH_ht","count"]
+        # allCnoH_sigS <- exposures_run_total["allCnoH","sigS"]
+        # allCnoH_sigS_L <- exposures_run_total["allCnoH","sigS_L"]
+        # allCnoH_sigS_U <- exposures_run_total["allCnoH","sigS_U"] 
+        # allCnoH_sigS_Lsd <- allCnoH_sigS - allCnoH_sigS_L
+        # allCnoH_sigS_Usd <- allCnoH_sigS_U - allCnoH_sigS
+        # allCnoH_sigS_sd <- mean(allCnoH_sigS_Lsd,allCnoH_sigS_Usd)
+        # allCnoH_count <- exposures_run_total["allCnoH","count"]
         H_sigS <- exposures_run_total["H_any","sigS"]
         H_sigS_L <- exposures_run_total["H_any","sigS_L"]
         H_sigS_U <- exposures_run_total["H_any","sigS_U"] 
         H_sigS_Lsd <- H_sigS - H_sigS_L
         H_sigS_Usd <- H_sigS_U - H_sigS
-        H_sig_sd <- mean(H_sig_Lsd,H_sig_Usd)
+        H_sig_sd <- mean(H_sigS_Lsd,H_sigS_Usd)
 
         somatic_sigS <- exposures_run_total["sublineages","sigS"]
         somatic_sigS_L <- exposures_run_total["sublineages","sigS_L"]
@@ -168,11 +187,11 @@ dev.off()
         somatic_sigS_Usd <- somatic_sigS_U - somatic_sigS
         somatic_sigS_sd <- mean(somatic_sigS_Lsd,somatic_sigS_Usd)
 
-        allCnoH_count <- exposures_run_total["allCnoH","count"]
+        
 
 ############################################################### calculations ############################################################
 #   View all data
-    dnds_summary
+    # dnds_summary
     exposures_run_total
 
 # from other calculation in somatypus_output-pairwise.r: sigS_rate = 430 +/- 190 mu/Gb/year
@@ -199,17 +218,17 @@ dev.off()
         2*sigS_rate_sd/nonLOH_genome_Gb # 188.4483
 
 # estimate age 
-    allCnoH_somatic_sigS_est <- allCnoH_sigS - H_sigS # 0.02529728
-    allCnoH_somatic_sigS_count_est <- allCnoH_somatic_sigS_est * allCnoH_count # 56325.46
-    allCnoH_somatic_sigS_age_est <- allCnoH_somatic_sigS_count_est / sigS_rate # 133.127 YEARS FROM ORIGIN TO DIVERGENCE ESTIMATE FROM SIGS
+    allCnoH_somatic_sigS_est <- allCnoH_sigS - H_sigS # 0.03112695
+    allCnoH_somatic_sigS_count_est <- allCnoH_somatic_sigS_est * allCnoH_count # 53350.19
+    allCnoH_somatic_sigS_age_est <- allCnoH_somatic_sigS_count_est / sigS_rate # 126.0949 YEARS FROM ORIGIN TO DIVERGENCE ESTIMATE FROM SIGS
     
-    allCnoH_somatic_sigS_age_est_L <- allCnoH_somatic_sigS_count_est / (sigS_rate+sigS_rate_sd*2) # 92.71788
-    allCnoH_somatic_sigS_age_est_U <- allCnoH_somatic_sigS_count_est / (sigS_rate-sigS_rate_sd*2) # 235.9694
+    allCnoH_somatic_sigS_age_est_L <- allCnoH_somatic_sigS_count_est / (sigS_rate+sigS_rate_sd*2) # 87.82026
+    allCnoH_somatic_sigS_age_est_U <- allCnoH_somatic_sigS_count_est / (sigS_rate-sigS_rate_sd*2) # 223.5049
 
 # Total ages
-    total_age_est <- postdiv_age_est + allCnoH_somatic_sigS_age_est # 501.6469
-    total_age_est_L <- postdiv_age_est_L + allCnoH_somatic_sigS_age_est_L # 345.9597
-    total_age_est_U <- postdiv_age_est_U + allCnoH_somatic_sigS_age_est_U # 898.4115
+    total_age_est <- postdiv_age_est + allCnoH_somatic_sigS_age_est # 494.6148
+    total_age_est_L <- postdiv_age_est_L + allCnoH_somatic_sigS_age_est_L # 344.4802
+    total_age_est_U <- postdiv_age_est_U + allCnoH_somatic_sigS_age_est_U # 876.7112
 
 
 # age estimate error propagation. NOTE - rate error is almost all the error
@@ -227,20 +246,20 @@ dev.off()
 
 
 # mutation count estimate
-    allCnoH_sigS_somatic_fraction_estimate = (allCnoH_sigS - H_sigS)/(somatic_sigS - H_sigS) # 0.05536177
-    allCnoH_sigS_somatic_fraction_estimate * allCnoH_count # 123265.3
-    allCnoH_sigS_somatic_fraction_estimate_U = (allCnoH_sigS_U - H_sigS_L)/(somatic_sigS_L - H_sigS_L) #  0.05777897
-    allCnoH_sigS_somatic_fraction_estimate_U * allCnoH_count # 128647.3
-    allCnoH_sigS_somatic_fraction_estimate_L = (allCnoH_sigS_L - H_sigS_U)/(somatic_sigS_U - H_sigS_U) # 0.0530576
-    allCnoH_sigS_somatic_fraction_estimate_L * allCnoH_count # 118135
+    allCnoH_sigS_somatic_fraction_estimate = (allCnoH_sigS - H_sigS)/(somatic_sigS - H_sigS) # 0.068126
+    allCnoH_sigS_somatic_fraction_estimate * allCnoH_count # 116764.9
+    allCnoH_sigS_somatic_fraction_estimate_U = (allCnoH_sigS_U - H_sigS_L)/(somatic_sigS_L - H_sigS_L) #  0.07083365
+    allCnoH_sigS_somatic_fraction_estimate_U * allCnoH_count # 121405.7
+    allCnoH_sigS_somatic_fraction_estimate_L = (allCnoH_sigS_L - H_sigS_U)/(somatic_sigS_U - H_sigS_U) # 0.06544987
+    allCnoH_sigS_somatic_fraction_estimate_L * allCnoH_count # 112178.1
 
-    allCnoH_dnds_somatic_fraction_estimate = (allCnoH_dnds - H_dnds)/(somatic_dnds - H_dnds) # 0.1301147
-    allCnoH_dnds_somatic_fraction_estimate * allCnoH_count # 289705.8
-    allCnoH_dnds_somatic_fraction_estimate_U = (allCnoH_dnds_U - H_dnds_L)/(somatic_dnds_L - H_dnds_L) # 0.169512
-    allCnoH_dnds_somatic_fraction_estimate_U * allCnoH_count # 377425.7
-    allCnoH_dnds_somatic_fraction_estimate_L = (allCnoH_dnds_L - H_dnds_U)/(somatic_dnds_U - H_dnds_U) # 0.09611125
-    allCnoH_dnds_somatic_fraction_estimate_L * allCnoH_count #  213995.7
+    # allCnoH_dnds_somatic_fraction_estimate = (allCnoH_dnds - H_dnds)/(somatic_dnds - H_dnds) # 0.1301147
+    # allCnoH_dnds_somatic_fraction_estimate * allCnoH_count # 289705.8
+    # allCnoH_dnds_somatic_fraction_estimate_U = (allCnoH_dnds_U - H_dnds_L)/(somatic_dnds_L - H_dnds_L) # 0.169512
+    # allCnoH_dnds_somatic_fraction_estimate_U * allCnoH_count # 377425.7
+    # allCnoH_dnds_somatic_fraction_estimate_L = (allCnoH_dnds_L - H_dnds_U)/(somatic_dnds_U - H_dnds_U) # 0.09611125
+    # allCnoH_dnds_somatic_fraction_estimate_L * allCnoH_count #  213995.7
 
 # Total counts and per Mb estimate
-    total_nonLOH_mu_est <- (allCnoH_sigS_somatic_fraction_estimate * allCnoH_count) + exposures_run_total["sublineages","count"]/2 # 443705.8
-    total_nonLOH_mu_est/nonLOH_genome_size*1000000 #  453.4532
+    total_nonLOH_mu_est <- (allCnoH_sigS_somatic_fraction_estimate * allCnoH_count) + exposures_run_total["sublineages","count"]/2 # 437205.4
+    total_nonLOH_mu_est/nonLOH_genome_size*1000000 #  446.81
