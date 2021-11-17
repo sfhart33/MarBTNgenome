@@ -230,6 +230,28 @@ dev.off()
     total_age_est_L <- postdiv_age_est_L + allCnoH_somatic_sigS_age_est_L # 344.4802
     total_age_est_U <- postdiv_age_est_U + allCnoH_somatic_sigS_age_est_U # 876.7112
 
+# Plot age
+    age_summary <- data.frame(matrix(ncol=4,nrow=0, dimnames=list(NULL, c("name", "age", "lower","upper"))))
+    age_summary[1,] <- c("Origin", total_age_est, total_age_est_L, total_age_est_U)
+    age_summary[2,] <- c("MRCA", postdiv_age_est, postdiv_age_est_L, postdiv_age_est_U)
+    # age_summary[,2:4] <- as.numeric(age_summary[1:2,2:4])age_summary[2,4]
+    age_summary
+    pdf("cancer_age_estimate.pdf", width=4, height=1.5) # 
+    ggplot(age_summary, aes(x=as.factor(name),y=as.numeric(age),ymin=as.numeric(lower),ymax=as.numeric(upper)))+
+        geom_abline(aes(intercept=50, slope=0), color="black", linetype="dashed")+
+        geom_pointrange()+  # fatten = 3, size = 2
+        #geom_point(size = 3)+  #size = 9
+        #geom_errorbar(color="grey20",width=0.25)+
+        ylab("Years before present")+
+        #scale_y_continuous(limits = c(900,0),breaks=c(800,700,600,500,400,300,200,100,0))+ #as.numeric(age_summary[1,"age"]),as.numeric(age_summary[2,"age"]))
+        # ylim(900,0) +
+        theme_classic() +
+            theme(axis.text=element_text(size=8,face="bold"),
+            axis.title=element_text(size=8,face="bold"),
+            text=element_text(size=8,face="bold")) +
+        scale_y_reverse(limits = c(900,0)) +
+        coord_flip()
+    dev.off()
 
 # age estimate error propagation. NOTE - rate error is almost all the error
     # # upper = high allCnoH_sigS, low H_sigS, low sigS_rate
