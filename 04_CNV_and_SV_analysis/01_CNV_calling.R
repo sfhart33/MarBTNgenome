@@ -9,6 +9,7 @@
     #library(fastseg)
     library(zoo)
     library(bedr)
+    library(gridExtra)
 
 # Use cn.mops to count reads
     setwd("/ssd3/Mar_genome_analysis/bwa_mapping/Mar.3.4.6.p1/all_samples")
@@ -20,12 +21,12 @@
     # CONTROL <- (BAM_FILES[c(7,9)])
     # REFERENCE <- (BAM_FILES[5])
     # ##########################################
-    # bam_CASES <- getReadCountsFromBAM(CASES,
-    #                                     WL = 1000,
-    #                                     parallel = 70)
-    bam_CASES_100 <- getReadCountsFromBAM(CASES,
-                                        WL = 100,
+    bam_CASES <- getReadCountsFromBAM(CASES,
+                                        WL = 1000,
                                         parallel = 70)
+    # bam_CASES_100 <- getReadCountsFromBAM(CASES,
+    #                                     WL = 100,
+    #                                     parallel = 70)
     setwd("/ssd3/Mar_genome_analysis/CNV_calling/FINAL")
     saveRDS(bam_CASES, "ReadCountsFromBAM_1kB.rds") # to save
     #saveRDS(bam_CASES_100, "ReadCountsFromBAM_100bp.rds") # to save
@@ -107,12 +108,10 @@
         bam_counts[,2:11] <- bam_counts[,2:11]/bam_counts[,1]
     # NORMALIZE TO AVERAGE COVERAGE AND COVERT TO LOG2
         coverage_all <- as.data.frame((t(t(as.matrix(bam_counts))/colMeans(bam_counts, na.rm=TRUE)))) %>%
-        mutate(usaAVG = (FFM19G1+FFM20B2+FFM22F10+MELCA11+NYTCC9)/5,
-                peiAVG = (DF488+DNHL03+DN08)/3)
+            mutate(usaAVG = (FFM19G1+FFM20B2+FFM22F10+MELCA11+NYTCC9)/5,
+                   peiAVG = (DF488+DNHL03+DN08)/3)
         coverage_all_logR <- log2(coverage_all)
-
-
-    bam_counts[,6:16]
+        head(coverage_all_logR)
 
     # PLOT LOG2 HISTOGRAM OR FREQPOLY
         pdf("logR_reads_mapped.pdf")
@@ -133,6 +132,7 @@
             ggplot(coverage_all_logR) +
                 geom_freqpoly(aes(FFM19G1), binwidth = binsize, color = "grey") +
                 geom_freqpoly(aes(FFM20B2), binwidth = binsize, color = "grey") +
+                geom_freqpoly(aes(FFM22F10), binwidth =binsize, color = "grey") +
                 geom_freqpoly(aes(MELCA11), binwidth =binsize, color = "grey") +
                 geom_freqpoly(aes(NYTCC9), binwidth = binsize, color = "grey") +
                 geom_freqpoly(aes(usaAVG), binwidth = binsize, color = "black") +
@@ -270,6 +270,7 @@
         ggplot(coverage_logR_1Mb_genomewide) +
             geom_freqpoly(aes(FFM19G1), binwidth = binsize, color = "grey") +
             geom_freqpoly(aes(FFM20B2), binwidth = binsize, color = "grey") +
+            geom_freqpoly(aes(FFM22F10), binwidth = binsize, color = "grey") +
             geom_freqpoly(aes(MELCA11), binwidth = binsize, color = "grey") +
             geom_freqpoly(aes(NYTCC9), binwidth = binsize, color = "grey") +
             geom_freqpoly(aes(usaAVG), binwidth = binsize, color = "black") +
@@ -305,6 +306,7 @@
         test_plot <- ggplot(coverage_logR_1Mb_genomewide) +
             geom_freqpoly(aes(usaP*2^FFM19G1), binwidth = binsize, color = "grey") +
             geom_freqpoly(aes(usaP*2^FFM20B2), binwidth = binsize, color = "grey") +
+            geom_freqpoly(aes(usaP*2^FFM22F10), binwidth = binsize, color = "grey") +
             geom_freqpoly(aes(usaP*2^MELCA11), binwidth = binsize, color = "grey") +
             geom_freqpoly(aes(usaP*2^NYTCC9), binwidth = binsize, color = "grey") +
             geom_freqpoly(aes(usaP*2^usaAVG), binwidth = binsize, color = "black") +
@@ -347,7 +349,7 @@
 
 # average at end for comparison (makes little difference)
     ploidy <- coverage_logR_1Mb_genomewide %>%
-    mutate(usaAVGend = (FFM19G1+FFM20B2+MELCA11+NYTCC9)/4,
+    mutate(usaAVGend = (FFM19G1+FFM20B2+FFM22F10+MELCA11+NYTCC9)/5,
             peiAVGend = (DF488+DNHL03+DN08)/3)
     head(ploidy)
     ploidy[,c(10:15,17)] <- usaP*2^(ploidy[,c(10:15,17)])
@@ -538,13 +540,13 @@
     }
 
     pdf("CN_genomewide.pdf", width=24, height=6)
-    genome_plot(ploidy$chr,ploidy$peiAVGend,ploidy_genome$peiAVGend,"PEI (end avg)",7)
+    #genome_plot(ploidy$chr,ploidy$peiAVGend,ploidy_genome$peiAVGend,"PEI (end avg)",7)
     genome_plot(ploidy$chr,ploidy$peiAVG,ploidy_genome$peiAVG,"PEI (start avg)",7)
-    genome_plot(ploidy$chr,ploidy$usaAVGend,ploidy_genome$usaAVGend,"USA (end avg)",7)
+    #genome_plot(ploidy$chr,ploidy$usaAVGend,ploidy_genome$usaAVGend,"USA (end avg)",7)
     genome_plot(ploidy$chr,ploidy$usaAVG,ploidy_genome$usaAVG,"USA (start avg)",7)
-    genome_plot(ploidy$chr,ploidy$MELCA9,ploidy_genome$MELCA9,"MELCA9",3)
-    genome_plot(ploidy$chr,ploidy$DF490,ploidy_genome$DF490,"DF490",3)
-    genome_plot(ploidy$chr,ploidy$REF,ploidy_genome$REF,"REF",3)
+    genome_plot(ploidy$chr,ploidy$MELCA9,ploidy_genome$MELCA9,"MELCA9",7)
+    genome_plot(ploidy$chr,ploidy$DF490,ploidy_genome$DF490,"DF490",7)
+    #genome_plot(ploidy$chr,ploidy$REF,ploidy_genome$REF,"REF",3)
     dev.off()
 
     pdf("CN_freqpolys.pdf", width=6, height=6)
@@ -563,10 +565,11 @@
                 axis.title=element_text(size=16,face="bold"),
                 text=element_text(size=14,face="bold")) +
             coord_flip() +
-            ggtitle(paste("PEI sublineage, 1Mb mode bins, set logR(0)=:",peiP))
+            ggtitle("PEI sublineage")
         ggplot(ploidy) +
             geom_freqpoly(aes(FFM19G1), binwidth = binsize, color = "grey") +
             geom_freqpoly(aes(FFM20B2), binwidth = binsize, color = "grey") +
+            geom_freqpoly(aes(FFM22F10), binwidth = binsize, color = "grey") +
             geom_freqpoly(aes(MELCA11), binwidth = binsize, color = "grey") +
             geom_freqpoly(aes(NYTCC9), binwidth = binsize, color = "grey") +
             geom_freqpoly(aes(usaAVG), binwidth = binsize, color = "black") +
@@ -579,31 +582,13 @@
                 axis.title=element_text(size=16,face="bold"),
                 text=element_text(size=14,face="bold")) +
             coord_flip() +
-            ggtitle(paste("USA sublineage, 1Mb mode bins, set logR(0)=:",usaP))
+            ggtitle("USA sublineage")
         ggplot(ploidy) +
             #geom_freqpoly(aes(REF), binwidth = binsize, color = "grey") +
             geom_freqpoly(aes(MELCA9), binwidth = binsize) +
             geom_freqpoly(aes(DF490), binwidth = binsize) +
             xlab("LogR")+
             #xlim(0,3)+
-            scale_x_continuous(expand = c(0, 0), limits =c(0,4)) +
-            scale_y_continuous(expand = c(0, 0)) +
-            theme_classic() +
-            theme(axis.text=element_text(size=12,face="bold"),
-                axis.title=element_text(size=16,face="bold"),
-                text=element_text(size=14,face="bold")) +
-            coord_flip() +
-            ggtitle(paste("Healthy clams, 1Mb mode bins, set logR(0)=:","X"))   
-    dev.off()
-    ploidy_noH0 <- filter(ploidy, MELCA9>1.5 & DF490>1.5)
-    pdf("CN_freqpolys_noH0-1.pdf", width=6, height=6)
-        binsize = 0.1
-        ggplot(ploidy_noH0) +
-            geom_freqpoly(aes(DF488), binwidth = binsize, color = "grey") +
-            geom_freqpoly(aes(DNHL03), binwidth = binsize, color = "grey") +
-            geom_freqpoly(aes(DN08), binwidth = binsize, color = "grey") +
-            geom_freqpoly(aes(peiAVG), binwidth = binsize, color = "black") +
-            xlab("LogR")+
             scale_x_continuous(expand = c(0, 0), limits =c(0,8)) +
             scale_y_continuous(expand = c(0, 0)) +
             theme_classic() +
@@ -611,36 +596,54 @@
                 axis.title=element_text(size=16,face="bold"),
                 text=element_text(size=14,face="bold")) +
             coord_flip() +
-            ggtitle(paste("PEI sublineage, 1Mb mode bins, set logR(0)=:",peiP))
-        ggplot(ploidy_noH0) +
-            geom_freqpoly(aes(FFM19G1), binwidth = binsize, color = "grey") +
-            geom_freqpoly(aes(FFM20B2), binwidth = binsize, color = "grey") +
-            geom_freqpoly(aes(MELCA11), binwidth = binsize, color = "grey") +
-            geom_freqpoly(aes(NYTCC9), binwidth = binsize, color = "grey") +
-            geom_freqpoly(aes(usaAVG), binwidth = binsize, color = "black") +
-            xlab("LogR")+
-            scale_x_continuous(expand = c(0, 0), limits =c(0,8)) +
-            scale_y_continuous(expand = c(0, 0)) +
-            theme_classic() +
-            theme(axis.text=element_text(size=12,face="bold"),
-                axis.title=element_text(size=16,face="bold"),
-                text=element_text(size=14,face="bold")) +
-            coord_flip() +
-            ggtitle(paste("USA sublineage, 1Mb mode bins, set logR(0)=:",usaP))
-        ggplot(ploidy_noH0) +
-            #geom_freqpoly(aes(REF), binwidth = binsize, color = "grey") +
-            geom_freqpoly(aes(MELCA9), binwidth = binsize) +
-            geom_freqpoly(aes(DF490), binwidth = binsize) +
-            xlab("LogR")+
-            scale_x_continuous(expand = c(0, 0), limits =c(0,4)) +
-            scale_y_continuous(expand = c(0, 0)) +
-            theme_classic() +
-            theme(axis.text=element_text(size=12,face="bold"),
-                axis.title=element_text(size=16,face="bold"),
-                text=element_text(size=14,face="bold")) +
-            coord_flip() +
-            ggtitle(paste("Healthy clams, 1Mb mode bins, set logR(0)=:","X"))   
+            ggtitle("Healthy clams")   
     dev.off()
+    # ploidy_noH0 <- filter(ploidy, MELCA9>1.5 & DF490>1.5)
+    # pdf("CN_freqpolys_noH0-1.pdf", width=6, height=6)
+    #     binsize = 0.1
+    #     ggplot(ploidy_noH0) +
+    #         geom_freqpoly(aes(DF488), binwidth = binsize, color = "grey") +
+    #         geom_freqpoly(aes(DNHL03), binwidth = binsize, color = "grey") +
+    #         geom_freqpoly(aes(DN08), binwidth = binsize, color = "grey") +
+    #         geom_freqpoly(aes(peiAVG), binwidth = binsize, color = "black") +
+    #         xlab("LogR")+
+    #         scale_x_continuous(expand = c(0, 0), limits =c(0,8)) +
+    #         scale_y_continuous(expand = c(0, 0)) +
+    #         theme_classic() +
+    #         theme(axis.text=element_text(size=12,face="bold"),
+    #             axis.title=element_text(size=16,face="bold"),
+    #             text=element_text(size=14,face="bold")) +
+    #         coord_flip() +
+    #         ggtitle(paste("PEI sublineage, 1Mb mode bins, set logR(0)=:",peiP))
+    #     ggplot(ploidy_noH0) +
+    #         geom_freqpoly(aes(FFM19G1), binwidth = binsize, color = "grey") +
+    #         geom_freqpoly(aes(FFM20B2), binwidth = binsize, color = "grey") +
+    #         geom_freqpoly(aes(MELCA11), binwidth = binsize, color = "grey") +
+    #         geom_freqpoly(aes(NYTCC9), binwidth = binsize, color = "grey") +
+    #         geom_freqpoly(aes(usaAVG), binwidth = binsize, color = "black") +
+    #         xlab("LogR")+
+    #         scale_x_continuous(expand = c(0, 0), limits =c(0,8)) +
+    #         scale_y_continuous(expand = c(0, 0)) +
+    #         theme_classic() +
+    #         theme(axis.text=element_text(size=12,face="bold"),
+    #             axis.title=element_text(size=16,face="bold"),
+    #             text=element_text(size=14,face="bold")) +
+    #         coord_flip() +
+    #         ggtitle(paste("USA sublineage, 1Mb mode bins, set logR(0)=:",usaP))
+    #     ggplot(ploidy_noH0) +
+    #         #geom_freqpoly(aes(REF), binwidth = binsize, color = "grey") +
+    #         geom_freqpoly(aes(MELCA9), binwidth = binsize) +
+    #         geom_freqpoly(aes(DF490), binwidth = binsize) +
+    #         xlab("LogR")+
+    #         scale_x_continuous(expand = c(0, 0), limits =c(0,4)) +
+    #         scale_y_continuous(expand = c(0, 0)) +
+    #         theme_classic() +
+    #         theme(axis.text=element_text(size=12,face="bold"),
+    #             axis.title=element_text(size=16,face="bold"),
+    #             text=element_text(size=14,face="bold")) +
+    #         coord_flip() +
+    #         ggtitle(paste("Healthy clams, 1Mb mode bins, set logR(0)=:","X"))   
+    # dev.off()
 
 # comparison plots
     for(A in c("MELCA9","DF490","DF488","DNHL03","DN08","FFM19G1","FFM20B2","FFM22F10","MELCA11","NYTCC9")){
@@ -656,77 +659,99 @@
     }
     #PEI vs PEI all ~0.98
     #PEI vs USA all ~0.52-0.56
+    #PEI vs USA avg 0.563
     #USA vs USA all ~0.94-0.98
 
-    pdf("densityplot_comparisons_fullgenome.pdf") #, width=4, height=4)
+    # (Too big a file)
+    # pdf("densityplot_comparisons_fullgenome.pdf") #, width=4, height=4)
     # for(A in c("MELCA9","DF490","DF488","DNHL03","DN08","FFM19G1","FFM20B2","FFM22F10","MELCA11","NYTCC9")){
     #     for(B in c("MELCA9","DF490","DF488","DNHL03","DN08","FFM19G1","FFM20B2","FFM22F10","MELCA11","NYTCC9")){
-    for(A in c("MELCA9","DF490","DF488","DNHL03","DN08","FFM19G1","FFM20B2","FFM22F10","MELCA11","NYTCC9")){
-        for(B in c("MELCA9","DF490","DF488","DNHL03","DN08","FFM19G1","FFM20B2","FFM22F10","MELCA11","NYTCC9")){
-            if(A != B){
-                ploidy_regression <- lm(get(A) ~ get(B), data=ploidy)
-                plot1 <- ggplot(ploidy, aes(get(A),get(B))) +
-                    #geom_density_2d_filled(aes(,), alpha = 0.5) +
-                    geom_point(, size = 0.1, alpha = 0.1) +
-                    theme_classic() +
-                    theme(axis.text=element_text(size=12,face="bold"),
-                            axis.title=element_text(size=16,face="bold"),
-                            text=element_text(size=18,face="bold")) +
-                    ggtitle(paste(A,"vs",B,"r.squared:",summary(ploidy_regression)$r.squared))+
-                    xlim(0,6)+
-                    ylim(0,6)+
-                    xlab(A)+
-                    ylab(B) 
-                print(plot1)
-            }
-        }  
+    #         if(A != B){
+    #             ploidy_regression <- lm(get(A) ~ get(B), data=ploidy)
+    #             plot1 <- ggplot(ploidy, aes(get(A),get(B))) +
+    #                 #geom_density_2d_filled(aes(,), alpha = 0.5) +
+    #                 geom_point(, size = 0.1, alpha = 0.1) +
+    #                 theme_classic() +
+    #                 theme(axis.text=element_text(size=12,face="bold"),
+    #                         axis.title=element_text(size=16,face="bold"),
+    #                         text=element_text(size=18,face="bold")) +
+    #                 ggtitle(paste(A,"vs",B,"r.squared:",round(summary(ploidy_regression)$r.squared,3)))+
+    #                 xlim(0,6)+
+    #                 ylim(0,6)+
+    #                 xlab(A)+
+    #                 ylab(B) 
+    #             print(plot1)
+    #         }
+    #     }  
+    # }
+    # dev.off()
+
+    plot_CN_comparison <- function(A,B){
+        ploidy_regression <- lm(get(A) ~ get(B), data=ploidy)
+        plot1 <- ggplot(ploidy, aes(get(A),get(B))) +
+            #geom_density_2d_filled(aes(,), alpha = 0.5) +
+            geom_point(, size = 0.5, alpha = 0.5) +
+            theme_classic() +
+            theme(axis.text=element_text(size=12,face="bold"),
+                    axis.title=element_text(size=16,face="bold"),
+                    text=element_text(size=18,face="bold")) +
+            ggtitle(paste(A,"vs",B,"r.squared:",round(summary(ploidy_regression)$r.squared,3)))+
+            xlim(0,6)+
+            ylim(0,6)+
+            xlab(A)+
+            ylab(B) 
+        print(plot1)
     }
+    pdf("densityplot_comparisons_fullgenome.pdf") #, width=4, height=4)
+    plot_CN_comparison("usaAVG", "peiAVG")
+    plot_CN_comparison("DF488", "DN08")
+    plot_CN_comparison("FFM19G1", "NYTCC9")
     dev.off()
 
 # Pie chart
-    piechart_ploidy <- data.frame(ploidy_genome$peiAVG,
-                                ploidy_genome$usaAVG,
-                                ploidy_genome$MELCA9,
-                                ploidy_genome$DF490,
-                                ploidy_genome$REF
-                                ) %>%
-                                filter(H_USA == 0 & H_PEI == 0)
-    colnames(piechart_ploidy) <- c("PEI", "USA", "H_USA", "H_PEI", "H_REF")
-    piechart_ploidy[piechart_ploidy >= 7]  = "7+"
+    # piechart_ploidy <- data.frame(ploidy_genome$peiAVG,
+    #                             ploidy_genome$usaAVG,
+    #                             ploidy_genome$MELCA9,
+    #                             ploidy_genome$DF490,
+    #                             ploidy_genome$REF
+    #                             ) %>%
+    #                             filter(H_USA == 0 & H_PEI == 0)
+    # colnames(piechart_ploidy) <- c("PEI", "USA", "H_USA", "H_PEI", "H_REF")
+    # piechart_ploidy[piechart_ploidy >= 7]  = "7+"
 
-    pdf("CNV_piecharts.pdf", width=4, height=4)
-        ggplot(piechart_ploidy, aes(x="", y="", fill=PEI)) +
-            geom_bar(stat="identity", width=1) +
-            coord_polar("y", start=0) +
-            theme_void()+
-            scale_fill_brewer(palette="Set1")
-        ggplot(piechart_ploidy, aes(x="", y="", fill=USA)) +
-            geom_bar(stat="identity", width=1) +
-            coord_polar("y", start=0)+
-            theme_void()+
-            scale_fill_brewer(palette="Set1")
-        ggplot(piechart_ploidy, aes(x="", y="", fill=H_PEI)) +
-            geom_bar(stat="identity", width=1) +
-            coord_polar("y", start=0)+
-            theme_void()+
-            scale_fill_brewer(palette="Set1")
-        ggplot(piechart_ploidy, aes(x="", y="", fill=H_USA)) +
-            geom_bar(stat="identity", width=1) +
-            coord_polar("y", start=0)+
-            theme_void()+
-            scale_fill_brewer(palette="Set1")
-        ggplot(piechart_ploidy, aes(x="", y="", fill=H_REF)) +
-            geom_bar(stat="identity", width=1) +
-            coord_polar("y", start=0)+
-            theme_void()+
-            scale_fill_brewer(palette="Set1")
-    dev.off()
+    # pdf("CNV_piecharts.pdf", width=4, height=4)
+    #     ggplot(piechart_ploidy, aes(x="", y="", fill=PEI)) +
+    #         geom_bar(stat="identity", width=1) +
+    #         coord_polar("y", start=0) +
+    #         theme_void()+
+    #         scale_fill_brewer(palette="Set1")
+    #     ggplot(piechart_ploidy, aes(x="", y="", fill=USA)) +
+    #         geom_bar(stat="identity", width=1) +
+    #         coord_polar("y", start=0)+
+    #         theme_void()+
+    #         scale_fill_brewer(palette="Set1")
+    #     ggplot(piechart_ploidy, aes(x="", y="", fill=H_PEI)) +
+    #         geom_bar(stat="identity", width=1) +
+    #         coord_polar("y", start=0)+
+    #         theme_void()+
+    #         scale_fill_brewer(palette="Set1")
+    #     ggplot(piechart_ploidy, aes(x="", y="", fill=H_USA)) +
+    #         geom_bar(stat="identity", width=1) +
+    #         coord_polar("y", start=0)+
+    #         theme_void()+
+    #         scale_fill_brewer(palette="Set1")
+    #     ggplot(piechart_ploidy, aes(x="", y="", fill=H_REF)) +
+    #         geom_bar(stat="identity", width=1) +
+    #         coord_polar("y", start=0)+
+    #         theme_void()+
+    #         scale_fill_brewer(palette="Set1")
+    # dev.off()
             
 # bed output for healthy freq check
     head(ploidy_genome)
     ploidy_round <- ploidy_genome
     ploidy_round[,1] <- paste("Mar.3.4.6.p1_scaffold", (ploidy_round[,1]-1), sep = "")
-    ploidy_round_noH0 <- filter(ploidy_round, MELCA9>1.5 | DF490>1.5 )
+    # ploidy_round_noH0 <- filter(ploidy_round, MELCA9>1.5 | DF490>1.5 )
     head(ploidy_round)
     CN_to_bed <- function(input, column, max, name){
         for(i in 0:max){
@@ -743,7 +768,7 @@
                         sep = "\t", quote = FALSE, row.names = FALSE, col.names = FALSE)
     }
     setwd("/ssd3/Mar_genome_analysis/CNV_calling/FINAL/output_bed")
-    CN_to_bed(ploidy_round,"usaAVGend",6,"USA")
-    CN_to_bed(ploidy_round_noH0,"usaAVGend",6,"USA_noH0-1")
-    CN_to_bed(ploidy_round,"peiAVGend",6,"PEI")
-    CN_to_bed(ploidy_round_noH0,"peiAVGend",6,"PEI_noH0-1")
+    CN_to_bed(ploidy_round,"usaAVGend",7,"USA")
+    #CN_to_bed(ploidy_round_noH0,"usaAVGend",6,"USA_noH0-1")
+    CN_to_bed(ploidy_round,"peiAVGend",7,"PEI")
+    #CN_to_bed(ploidy_round_noH0,"peiAVGend",6,"PEI_noH0-1")
