@@ -2,11 +2,11 @@
 ## Code to accompany publication on genome evolution of soft-shell clam transmissible cancer
 Samuel Hart, University of Washington Molecular and Cellular Biology PhD program
 
-	*(Contact for questions regarding data analysis: sfhart33@gmail.com)*
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*Contact for questions regarding data analysis: sfhart33@gmail.com*
 
 Michael Metzger, Pacific Northwest Research Institute
 
-	*(Contact for questions regarding Mya arenaria genome assembly: metzgerm@pnri.org)*
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*Contact for questions regarding Mya arenaria genome assembly: metzgerm@pnri.org*
 
 <br/><br/>
 
