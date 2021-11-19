@@ -16,31 +16,37 @@ library(ape) # for pairwise phylogeny
     sample9 <- "DF-488" # Cancerous
     sample10 <- "DN-HL03" # Cancerous
     sample11 <- "PEI-DN08_S3" # Cancerous
-    for(i in 1:11){
-    # Steamer insertion sites
-        sample <- paste0("/ssd3/Mar_genome_analysis/steamer/final_pipeline/", get(paste0("sample",i)), "_multiple.bed")
-        sample_file <- read.delim(sample) %>%
-            filter( total > 5 | (up > 0 & down>0)) %>%
-            select(contig,start,end, strand, name, total)
-        names(sample_file) <- c("contig", "min", "max", "strand", "name", str_replace(get(paste0("sample",i)), "-", "_"))
-    # Depth of reads info
-        depth <- paste0("/ssd3/Mar_genome_analysis/steamer/final_pipeline/coverage/",get(paste0("sample",i)),"_multiple_depth.bed")
-        depth_file <- read.delim(depth, header = FALSE, col.names = c("name", paste0(str_replace(get(paste0("sample",i)), "-", "_"),"_cov")))
-        col_name <- paste0(str_replace(i, "-", "_"),"cov")
-    # Merge the two
-        merged <- right_join(sample_file, depth_file, by = "name") #%>%
-            #mutate(!!col_name := get(str_replace(get(paste0("sample",i)), "-", "_")) / get(str_replace(get(paste0("sample",i)), "-", "_cov_")))
-        assign(paste0("sample",i,"_premerge"),merged)
+    for(mult in c("updown","multiple")){
+        for(i in 1:11){
+            # Steamer insertion sites
+                sample <- paste0("/ssd3/Mar_genome_analysis/steamer/final_pipeline/", get(paste0("sample",i)), "_",mult,".bed")
+                sample_file <- read.delim(sample) %>%
+                    filter( total > 5 | (up > 0 & down>0)) %>%
+                    select(contig,start,end, strand, name, total)
+                names(sample_file) <- c("contig", "min", "max", "strand", "name", str_replace(get(paste0("sample",i)), "-", "_"))
+            # Depth of reads info
+                depth <- paste0("/ssd3/Mar_genome_analysis/steamer/final_pipeline/coverage/",get(paste0("sample",i)),"_",mult,"_depth.bed")
+                depth_file <- read.delim(depth, header = FALSE, col.names = c("name", paste0(str_replace(get(paste0("sample",i)), "-", "_"),"_cov")))
+                col_name <- paste0(str_replace(i, "-", "_"),"cov")
+            # Merge the two
+                merged <- right_join(sample_file, depth_file, by = "name") #%>%
+                    #mutate(!!col_name := get(str_replace(get(paste0("sample",i)), "-", "_")) / get(str_replace(get(paste0("sample",i)), "-", "_cov_")))
+                assign(paste0("sample",i,"_premerge"),merged)
+            }
+        # MERGE INTO ONE FILE
+            merge_all <- full_join(sample1_premerge, sample2_premerge, by = c("contig", "min", "max", "strand", "name")) 
+            for(i in 3:11){
+                merge_all <- full_join(merge_all, get(paste0("sample",i,"_premerge")), by = c("contig", "min", "max", "strand", "name"))
+            }
+            merge_all[is.na(merge_all)] <- 0
+            nrow(merge_all)
+            if(mult == "updown"){ merge_all_updown <- merge_all}
     }
-# MERGE INTO ONE FILE
-    merge_all <- full_join(sample1_premerge, sample2_premerge, by = c("contig", "min", "max", "strand", "name")) 
-    for(i in 3:11){
-        merge_all <- full_join(merge_all, get(paste0("sample",i,"_premerge")), by = c("contig", "min", "max", "strand", "name"))
-    }
-    merge_all[is.na(merge_all)] <- 0
-    head(merge_all)
-    # as.tibble() %>%
 
+    head(merge_all)
+    head(merge_all_updown)
+    nrow(merge_all)
+    nrow(merge_all_updown)
 
 # PAIRWISE ANALYSIS
     samplesALL=c("MELC_2E11","MELC_A9","PEI_DF490","FFM_19G1","FFM_20B2","FFM_22F10","MELC_A11_S1","NYTC_C9_S2","DF_488","DN_HL03","PEI_DN08_S3")
@@ -82,66 +88,128 @@ library(ape) # for pairwise phylogeny
         dev.off()
         write.tree(njtree, file = "steamer.tree")
 
-no_healthy <- filter(merge_all, MELC_2E11 == 0 & MELC_A9 == 0 & PEI_DF490 == 0 )
-all_cancer <- filter(no_healthy,
-                        FFM_19G1 > 0 & FFM_20B2 > 0 & MELC_A11_S1 > 0 & FFM_22F10 > 0 & NYTC_C9_S2 > 0 &
-                        DF_488 > 0 & DN_HL03 > 0 & PEI_DN08_S3 > 0)%>%
-                mutate(score = (FFM_19G1+FFM_20B2+MELC_A11_S1+FFM_22F10+NYTC_C9_S2+DF_488+DN_HL03+PEI_DN08_S3)/
-                               (FFM_19G1_cov+FFM_20B2_cov+MELC_A11_S1_cov+FFM_22F10_cov+
-                               NYTC_C9_S2_cov+DF_488_cov+DN_HL03_cov+PEI_DN08_S3))
-all_cancer2 <- filter(no_healthy,
-                        (FFM_19G1 > 0 | FFM_20B2 > 0 | MELC_A11_S1 > 0 | FFM_22F10 > 0 | NYTC_C9_S2 > 0) &
-                        (DF_488 > 0 | DN_HL03 > 0 | PEI_DN08_S3 > 0))
-any_cancer <- filter(no_healthy,
-                        (FFM_19G1 > 0 | FFM_20B2 > 0 | MELC_A11_S1 > 0 | FFM_22F10 > 0 | NYTC_C9_S2 > 0 |
-                        DF_488 > 0 | DN_HL03 > 0 | PEI_DN08_S3 > 0))
-no_pei <- filter(no_healthy,
-                        DF_488 == 0 & DN_HL03 == 0 & PEI_DN08_S3 == 0)
-no_usa <- filter(no_healthy,
-                        FFM_19G1 == 0 & FFM_20B2 == 0 & MELC_A11_S1 == 0 & FFM_22F10 == 0 & NYTC_C9_S2 == 0)
-any_pei <- filter(no_usa, DF_488 > 0 | DN_HL03 > 0 | PEI_DN08_S3 > 0)
-all_pei <- filter(no_usa,
-                        DF_488 > 0 & DN_HL03 > 0 & PEI_DN08_S3 > 0)%>%
-                mutate(score = (DF_488+DN_HL03+PEI_DN08_S3)/(DF_488_cov+DN_HL03_cov+PEI_DN08_S3))
-notall_pei <- filter(no_usa,
-                        (DF_488 == 0 | DN_HL03 == 0 | PEI_DN08_S3 == 0) & (DF_488 > 0 | DN_HL03 > 0 | PEI_DN08_S3 > 0))                      
-all_usa <- filter(no_pei,
-                        FFM_19G1 > 0 & FFM_20B2 > 0 & MELC_A11_S1 > 0 & FFM_22F10 > 0 & NYTC_C9_S2 > 0)%>%
-                mutate(score = (FFM_19G1+FFM_20B2+MELC_A11_S1+FFM_22F10+NYTC_C9_S2)/
-                               (FFM_19G1_cov+FFM_20B2_cov+MELC_A11_S1_cov+FFM_22F10_cov+NYTC_C9_S2_cov))
-notall_usa <- filter(no_pei,
-                        (FFM_19G1 == 0 | FFM_20B2 == 0 | MELC_A11_S1 == 0 | FFM_22F10 == 0 | NYTC_C9_S2 == 0) &
-                        (FFM_19G1 > 0 | FFM_20B2 > 0 | MELC_A11_S1 > 0 | FFM_22F10 > 0 | NYTC_C9_S2 > 0))
-somatic <- rbind(all_cancer,all_usa,all_pei)
+# Count healthys
+    filter(merge_all, MELC_2E11 > 0) %>% nrow()
+    filter(merge_all, MELC_A9 > 0) %>% nrow()
+    filter(merge_all, PEI_DF490 > 0 ) %>% nrow()
+    filter(merge_all, FFM_19G1 > 0) %>% nrow()
+    filter(merge_all, FFM_20B2 > 0) %>% nrow()
+    filter(merge_all, FFM_22F10 > 0 ) %>% nrow()
+    filter(merge_all, MELC_A11_S1 > 0) %>% nrow()
+    filter(merge_all, NYTC_C9_S2 > 0) %>% nrow()
+    filter(merge_all, DF_488 > 0 ) %>% nrow()
+    filter(merge_all, DN_HL03 > 0) %>% nrow()
+    filter(merge_all, PEI_DN08_S3 > 0) %>% nrow()
+    filter(merge_all_updown, MELC_2E11 > 0) %>% nrow()
+    filter(merge_all_updown, MELC_A9 > 0) %>% nrow()
+    filter(merge_all_updown, PEI_DF490 > 0 ) %>% nrow()
+    filter(merge_all_updown, FFM_19G1 > 0) %>% nrow()
+    filter(merge_all_updown, FFM_20B2 > 0) %>% nrow()
+    filter(merge_all_updown, FFM_22F10 > 0 ) %>% nrow()
+    filter(merge_all_updown, MELC_A11_S1 > 0) %>% nrow()
+    filter(merge_all_updown, NYTC_C9_S2 > 0) %>% nrow()
+    filter(merge_all_updown, DF_488 > 0 ) %>% nrow()
+    filter(merge_all_updown, DN_HL03 > 0) %>% nrow()
+    filter(merge_all_updown, PEI_DN08_S3 > 0) %>% nrow()
 
-nrow(no_healthy) # 1061
-nrow(any_cancer) # 550
-nrow(all_cancer) # 193
-nrow(all_cancer2) # 238
-nrow(all_usa) # 187
-nrow(all_pei) # 51
-nrow(notall_usa) # 61
-nrow(notall_pei) # 13
-nrow(somatic) # 431
+# other bins
+    no_healthy <- filter(merge_all, MELC_2E11 == 0 & MELC_A9 == 0 & PEI_DF490 == 0 )
+    all_cancer <- filter(no_healthy,
+                            FFM_19G1 > 0 & FFM_20B2 > 0 & MELC_A11_S1 > 0 & FFM_22F10 > 0 & NYTC_C9_S2 > 0 &
+                            DF_488 > 0 & DN_HL03 > 0 & PEI_DN08_S3 > 0)%>%
+                    mutate(score = (FFM_19G1+FFM_20B2+MELC_A11_S1+FFM_22F10+NYTC_C9_S2+DF_488+DN_HL03+PEI_DN08_S3)/
+                                (FFM_19G1_cov+FFM_20B2_cov+MELC_A11_S1_cov+FFM_22F10_cov+
+                                NYTC_C9_S2_cov+DF_488_cov+DN_HL03_cov+PEI_DN08_S3))
+    all_cancer2 <- filter(no_healthy,
+                            (FFM_19G1 > 0 | FFM_20B2 > 0 | MELC_A11_S1 > 0 | FFM_22F10 > 0 | NYTC_C9_S2 > 0) &
+                            (DF_488 > 0 | DN_HL03 > 0 | PEI_DN08_S3 > 0))
+    any_cancer <- filter(no_healthy,
+                            (FFM_19G1 > 0 | FFM_20B2 > 0 | MELC_A11_S1 > 0 | FFM_22F10 > 0 | NYTC_C9_S2 > 0 |
+                            DF_488 > 0 | DN_HL03 > 0 | PEI_DN08_S3 > 0))
+    no_pei <- filter(no_healthy,
+                            DF_488 == 0 & DN_HL03 == 0 & PEI_DN08_S3 == 0)
+    no_usa <- filter(no_healthy,
+                            FFM_19G1 == 0 & FFM_20B2 == 0 & MELC_A11_S1 == 0 & FFM_22F10 == 0 & NYTC_C9_S2 == 0)
+    any_pei <- filter(no_usa, DF_488 > 0 | DN_HL03 > 0 | PEI_DN08_S3 > 0)
+    all_pei <- filter(no_usa,
+                            DF_488 > 0 & DN_HL03 > 0 & PEI_DN08_S3 > 0)%>%
+                    mutate(score = (DF_488+DN_HL03+PEI_DN08_S3)/(DF_488_cov+DN_HL03_cov+PEI_DN08_S3))
+    notall_pei <- filter(no_usa,
+                            (DF_488 == 0 | DN_HL03 == 0 | PEI_DN08_S3 == 0) & (DF_488 > 0 | DN_HL03 > 0 | PEI_DN08_S3 > 0))                      
+    all_usa <- filter(no_pei,
+                            FFM_19G1 > 0 & FFM_20B2 > 0 & MELC_A11_S1 > 0 & FFM_22F10 > 0 & NYTC_C9_S2 > 0)%>%
+                    mutate(score = (FFM_19G1+FFM_20B2+MELC_A11_S1+FFM_22F10+NYTC_C9_S2)/
+                                (FFM_19G1_cov+FFM_20B2_cov+MELC_A11_S1_cov+FFM_22F10_cov+NYTC_C9_S2_cov))
+    notall_usa <- filter(no_pei,
+                            (FFM_19G1 == 0 | FFM_20B2 == 0 | MELC_A11_S1 == 0 | FFM_22F10 == 0 | NYTC_C9_S2 == 0) &
+                            (FFM_19G1 > 0 | FFM_20B2 > 0 | MELC_A11_S1 > 0 | FFM_22F10 > 0 | NYTC_C9_S2 > 0))
+    somatic <- rbind(all_cancer,all_usa,all_pei)
 
+    nrow(no_healthy) # 1061
+    nrow(any_cancer) # 550
+    nrow(all_cancer) # 193
+    nrow(all_cancer2) # 238
+    nrow(all_usa) # 187
+    nrow(all_pei) # 51
+    nrow(notall_usa) # 61
+    nrow(notall_pei) # 13
+    nrow(somatic) # 431
 
-print_steamer_bed <- function(file1, name){
-    if(!"score" %in% colnames(file1)){
-            file1 <- mutate(file1, score = 0)
+# Compare multiple read support to JUST updown support
+    no_healthy_updown <- filter(merge_all_updown, MELC_2E11 == 0 & MELC_A9 == 0 & PEI_DF490 == 0 )
+    all_cancer_updown <- filter(merge_all_updown, MELC_2E11 == 0 & MELC_A9 == 0 & PEI_DF490 == 0 &
+                            FFM_19G1 > 0 & FFM_20B2 > 0 & MELC_A11_S1 > 0 & FFM_22F10 > 0 & NYTC_C9_S2 > 0 &
+                            DF_488 > 0 & DN_HL03 > 0 & PEI_DN08_S3 > 0)
+    any_cancer_updown <- filter(no_healthy_updown,
+                            (FFM_19G1 > 0 | FFM_20B2 > 0 | MELC_A11_S1 > 0 | FFM_22F10 > 0 | NYTC_C9_S2 > 0 |
+                            DF_488 > 0 | DN_HL03 > 0 | PEI_DN08_S3 > 0))
+    nrow(no_healthy_updown) # 401
+    nrow(all_cancer_updown) # 131
+    nrow(any_cancer_updown) # 401
+
+# Merge to find discrepancies between multiple and updown (possibly mediating rearrangement?)
+    head(merge_all_updown)
+    merge_all_updown2 <- merge_all_updown
+    colnames(merge_all_updown2)[6:27] <- paste0(colnames(merge_all_updown2)[6:27], "_updown")
+    head(merge_all_updown2)
+    merge_mult_updown <- full_join(merge_all, merge_all_updown2, by = c("contig", "min", "max", "strand", "name")) 
+    merge_mult_updown[is.na(merge_mult_updown)] <- 0
+
+    all_cancer_mult_updown <- filter(merge_mult_updown, MELC_2E11 == 0 & MELC_A9 == 0 & PEI_DF490 == 0 &
+                            FFM_19G1 > 0 & FFM_20B2 > 0 & MELC_A11_S1 > 0 & FFM_22F10 > 0 & NYTC_C9_S2 > 0 &
+                            DF_488 > 0 & DN_HL03 > 0 & PEI_DN08_S3 > 0)
+    all_cancer_mult_updown_disc <- filter(all_cancer_mult_updown,
+                            FFM_19G1_updown == 0 | FFM_20B2_updown == 0 | MELC_A11_S1_updown == 0 | FFM_22F10_updown == 0 | NYTC_C9_S2_updown == 0 |
+                            DF_488_updown == 0 | DN_HL03_updown == 0 | PEI_DN08_S3 == 0)
+    all_cancer_mult_updown_disc_USA <- filter(all_cancer_mult_updown_disc,
+                            FFM_19G1_updown > 0 & FFM_20B2_updown > 0 & MELC_A11_S1_updown > 0 & FFM_22F10_updown > 0 & NYTC_C9_S2_updown > 0 &
+                            DF_488_updown == 0 & DN_HL03_updown == 0 & PEI_DN08_S3 == 0)
+    all_cancer_mult_updown_disc_PEI <- filter(all_cancer_mult_updown_disc,
+                            FFM_19G1_updown == 0 & FFM_20B2_updown == 0 & MELC_A11_S1_updown == 0 & FFM_22F10_updown == 0 & NYTC_C9_S2_updown == 0 &
+                            DF_488_updown > 0 & DN_HL03_updown > 0 & PEI_DN08_S3 > 0)
+    nrow(all_cancer_mult_updown_disc) # 61
+    nrow(all_cancer_mult_updown_disc_USA) # 0
+    nrow(all_cancer_mult_updown_disc_PEI) # 2
+    # Overall, doesn't look like much evidence for Steamer-mediated rearrangement
+
+# Print bed files of insertion sites
+    print_steamer_bed <- function(file1, name){
+        if(!"score" %in% colnames(file1)){
+                file1 <- mutate(file1, score = 0)
+        }
+        file1 %>%
+            filter(substr(contig, 1, 12) == "Mar.3.4.6.p1") %>%
+            arrange(as.character(contig),min) %>%
+            select(contig,min,max,name,score,strand) %>%
+            write.table(file = name, row.names=FALSE, col.names=FALSE, quote=FALSE, sep = '\t')
     }
-    file1 %>%
-        filter(substr(contig, 1, 12) == "Mar.3.4.6.p1") %>%
-        arrange(as.character(contig),min) %>%
-        select(contig,min,max,name,score,strand) %>%
-        write.table(file = name, row.names=FALSE, col.names=FALSE, quote=FALSE, sep = '\t')
-}
 
-print_steamer_bed(somatic,"allCnoH_allPEI_allUSA.bed")
-print_steamer_bed(all_cancer,"allCnoH.bed")
-print_steamer_bed(no_healthy,"anyCnoH.bed")
-print_steamer_bed(all_usa,"allUSA.bed")
-print_steamer_bed(all_pei,"allPEI.bed")
-print_steamer_bed(merge_all,"all_sites.bed")
+    print_steamer_bed(somatic,"allCnoH_allPEI_allUSA.bed")
+    print_steamer_bed(all_cancer,"allCnoH.bed")
+    print_steamer_bed(no_healthy,"anyCnoH.bed")
+    print_steamer_bed(all_usa,"allUSA.bed")
+    print_steamer_bed(all_pei,"allPEI.bed")
+    print_steamer_bed(merge_all,"all_sites.bed")
 
 # allele frequency plots
 
