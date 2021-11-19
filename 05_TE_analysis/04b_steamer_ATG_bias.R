@@ -1,15 +1,43 @@
 #Original file here: C:\Users\shart\Metzger Lab Dropbox\Sam_data\Mya_genome\steamer\atg_bias.r
 
-library(tidyverse)
-library(ggseqlogo)
-setwd("/ssd3/Mar_genome_analysis/steamer/final_pipeline/logos")
+# Load packages
+    library(tidyverse)
+    library(ggseqlogo)
+    library(Biostrings)
+    data(ggseqlogo_sample)
+    setwd("/ssd3/Mar_genome_analysis/steamer/final_pipeline/logos")
 
-data(ggseqlogo_sample)
 
-# GC content of the genome WARNING - OLD VERSION OF GENOME - NEW VERSION SHOULD BE SIMILAR BUT NEED TO CHECK
-    GC = 0.176471649081384
-    AT = 0.323528350918616
+# GC  and ATG content of the genome
+    genome <- readDNAStringSet("/ssd3/Mar_genome_analysis/mut_sig/trinuc_freq/Mar.3.4.6.p1.genome.fasta")
+    genome3 <- trinucleotideFrequency(genome, as.prob=TRUE)
+    genome1 <- oligonucleotideFrequency(genome, 1, as.prob=TRUE)
+    genome1
+        # A         C         G         T
+        # [1,] 0.3234503 0.1765954 0.1765707 0.3233836
+    GC = (genome1[,"G"] + genome1[,"C"])/2 # 0.176583
+    AT = (genome1[,"A"] + genome1[,"T"])/2 # 0.323417
+    genome3
 
+
+# calculate how much more ATG insertions than expected, using numbers from atg_bias.sh
+    # Observed
+        # total: 550
+        # CAT upstream: 103
+        # ATG downstream: 90
+        # CAT up and ATG down: 12
+        103/550 # 0.1872727
+        90/550 # 0.1636364
+        12/550 # 0.02181818
+    # Expected
+        CAT = genome3[,"CAT"] # 0.02212902
+        ATG = genome3[,"ATG"]  # 0.02210742
+        CAT_ATG = genome3[,"ATG"] * genome3[,"CAT"] # 0.0004892154
+    # Fold overrepresented
+        103/550/CAT # 8.462768
+        90/550/ATG # 7.401876
+        12/550/CAT_ATG # 44.59831
+        
 # Read info from .sh script and restructure
     downstream_all <- read.table("steamer_bias_down.txt",sep="\t", header=T, check.names=F) %>%
         mutate(freq = count/total)

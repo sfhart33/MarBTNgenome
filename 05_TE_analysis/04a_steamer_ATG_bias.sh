@@ -81,3 +81,11 @@ do
         done
     done
 done
+
+# count number with ATG in positions 7/8/9
+    wc -l allCnoH.seq.bed
+    awk '$7 ~ "..................................." {count +=1} END{print count}' anyCnoH.seq.bed # total: 550
+    awk '$7 ~ "...........CAT....................." {count +=1} END{print count}' anyCnoH.seq.bed # CAT upstream: 103
+    awk '$7 ~ ".....................ATG..........." {count +=1} END{print count}' anyCnoH.seq.bed # ATG downstream: 90
+    awk '$7 ~ "...........CAT.......ATG..........." {count +=1} END{print count}' anyCnoH.seq.bed # CAT up and ATG down: 12
+# Expected calculated in R

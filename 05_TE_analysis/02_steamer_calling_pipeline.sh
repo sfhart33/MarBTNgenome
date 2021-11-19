@@ -227,30 +227,35 @@ SAMPLES="MELC-2E11 MELC-A9 PEI-DF490 FFM-19G1 FFM-20B2 FFM-22F10 MELC-A11_S1 NYT
 BAMFILES=/ssd3/Mar_genome_analysis/bwa_mapping/Mar.3.4.6.p1/all_samples
 INPUT=/ssd3/Mar_genome_analysis/steamer/final_pipeline
 OUTPUT=/ssd3/Mar_genome_analysis/steamer/final_pipeline/coverage
+TYPES="multiple updown"
 cd $INPUT
-
-for sample in $SAMPLES
+for type in $TYPES
 do
-    if [ $sample = "MELC-2E11" ]; then number="01.MELC-2E11.bam"; fi
-    if [ $sample = "MELC-A9" ]; then number="02.MELC-A9.bam"; fi
-    if [ $sample = "PEI-DF490" ]; then number="03.PEI-DF490.bam"; fi
-    if [ $sample = "FFM-19G1" ]; then number="08.FFM-19G1.bam"; fi
-    if [ $sample = "FFM-20B2" ]; then number="09.FFM-20B2.bam"; fi
-    if [ $sample = "FFM-22F10" ]; then number="11.FFM-22F10.bam"; fi
-    if [ $sample = "MELC-A11_S1" ]; then number="13.MELC-A11_S1.bam"; fi
-    if [ $sample = "NYTC-C9_S2" ]; then number="14.NYTC-C9_S2.bam"; fi
-    if [ $sample = "DF-488" ]; then number="04.PEI-DF488.bam"; fi
-    if [ $sample = "DN-HL03" ]; then number="05.PEI-DN03.bam"; fi
-    if [ $sample = "PEI-DN08_S3" ]; then number="07.PEI-DN08_S3.bam"; fi
-    echo $number started
-	awk '$1 ~ /^M.*/ {chr=$1; start=$2; end=$3; name=$5; print chr, start-10, start, name}' OFS='\t' $INPUT/$sample"_multiple.bed" > $OUTPUT/sites_up.bed   # window 10bp up and downstream insertion
-	awk '$1 ~ /^M.*/ {chr=$1; start=$2; end=$3; name=$5; print chr, end, end+10, name}' OFS='\t' $INPUT/$sample"_multiple.bed" > $OUTPUT/sites_dn.bed   # window 10bp up and downstream insertion
-    samtools bedcov -Q 30 $OUTPUT/sites_up.bed $BAMFILES/$number | awk '{count = $5/10; print $4, count}' OFS='\t' > $OUTPUT/$sample"_multiple_depthUP.bed"
-    samtools bedcov -Q 30 $OUTPUT/sites_dn.bed $BAMFILES/$number | awk '{count = $5/10; print $4, count}' OFS='\t' > $OUTPUT/$sample"_multiple_depthDN.bed"
-    join $OUTPUT/$sample"_multiple_depthUP.bed" $OUTPUT/$sample"_multiple_depthDN.bed" | awk '{print $1, ($2 + $3)/2}' OFS='\t' > $OUTPUT/$sample"_multiple_depth.bed"
-    rm $OUTPUT/$sample"_multiple_depthUP.bed"
-    rm $OUTPUT/$sample"_multiple_depthDN.bed"
+    echo $type
+    for sample in $SAMPLES
+    do
+        if [ $sample = "MELC-2E11" ]; then number="01.MELC-2E11.bam"; fi
+        if [ $sample = "MELC-A9" ]; then number="02.MELC-A9.bam"; fi
+        if [ $sample = "PEI-DF490" ]; then number="03.PEI-DF490.bam"; fi
+        if [ $sample = "FFM-19G1" ]; then number="08.FFM-19G1.bam"; fi
+        if [ $sample = "FFM-20B2" ]; then number="09.FFM-20B2.bam"; fi
+        if [ $sample = "FFM-22F10" ]; then number="11.FFM-22F10.bam"; fi
+        if [ $sample = "MELC-A11_S1" ]; then number="13.MELC-A11_S1.bam"; fi
+        if [ $sample = "NYTC-C9_S2" ]; then number="14.NYTC-C9_S2.bam"; fi
+        if [ $sample = "DF-488" ]; then number="04.PEI-DF488.bam"; fi
+        if [ $sample = "DN-HL03" ]; then number="05.PEI-DN03.bam"; fi
+        if [ $sample = "PEI-DN08_S3" ]; then number="07.PEI-DN08_S3.bam"; fi
+        echo $number started
+        awk '$1 ~ /^M.*/ {chr=$1; start=$2; end=$3; name=$5; print chr, start-10, start, name}' OFS='\t' $INPUT/$sample"_"$type".bed" > $OUTPUT/sites_up.bed   # window 10bp up and downstream insertion
+        awk '$1 ~ /^M.*/ {chr=$1; start=$2; end=$3; name=$5; print chr, end, end+10, name}' OFS='\t' $INPUT/$sample"_"$type".bed" > $OUTPUT/sites_dn.bed   # window 10bp up and downstream insertion
+        samtools bedcov -Q 30 $OUTPUT/sites_up.bed $BAMFILES/$number | awk '{count = $5/10; print $4, count}' OFS='\t' > $OUTPUT/$sample"_"$type"_depthUP.bed"
+        samtools bedcov -Q 30 $OUTPUT/sites_dn.bed $BAMFILES/$number | awk '{count = $5/10; print $4, count}' OFS='\t' > $OUTPUT/$sample"_"$type"_depthDN.bed"
+        join $OUTPUT/$sample"_"$type"_depthUP.bed" $OUTPUT/$sample"_"$type"_depthDN.bed" | awk '{print $1, ($2 + $3)/2}' OFS='\t' > $OUTPUT/$sample"_"$type"_depth.bed"
+        rm $OUTPUT/$sample"_"$type"_depthUP.bed"
+        rm $OUTPUT/$sample"_"$type"_depthDN.bed"
+    done
 done
 
 rm $OUTPUT/sites_up.bed
 rm $OUTPUT/sites_dn.bed
+
