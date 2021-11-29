@@ -165,3 +165,18 @@ module load bedtools/
         bcftools filter -O v -T ^$LOH/$region"_LOH_10_counts.bed" $WORK_DIR/"Somatypus_"$snvs"_final_compact.vcf.gz" > $WORK_DIR/"Somatypus_"$snvs"_compact_"$region"_nonLOH_10.vcf" &
     done
     done
+
+# SNVs outside_LOH regions
+# From here: /ssd3/Mar_genome_analysis/somatypus/Mar.3.4.6.p1/final_run/README
+	WORKD=/ssd3/Mar_genome_analysis/somatypus/Mar.3.4.6.p1/final_run
+	LOH=/ssd3/Mar_genome_analysis/LOH/july_2021/output/new
+	COMMAND=/ssd3/Mar_genome_analysis/somatypus
+	cd $WORKD
+	bcftools filter -O b -T ^$LOH/PEI_hetero_LOH_10_counts.bed Somatypus_SNVs_final.vcf.gz | \
+		bcftools filter -O v -T ^$LOH/USA_hetero_LOH_10_counts.bed > Somatypus_SNVs_final_noLOH.vcf
+	awk '$0 !~ /^##contig=.*/ && $0 !~ /^##FILTER=<ID=PASS.*/ && $0 !~ /^##bcftools_filter.*/  {print}' Somatypus_SNVs_final_noLOH.vcf > Somatypus_SNVs_final_noLOH2.vcf
+	$COMMAND/ExtractVcfData.py Somatypus_SNVs_final_noLOH2.vcf
+	rm Somatypus_SNVs_final_noLOH.vcf
+	rm Somatypus_SNVs_final_noLOH2.vcf
+
+	cat $LOH/PEI_hetero_LOH_10_counts.bed $LOH/USA_hetero_LOH_10_counts.bed | sort -k1,1 -k2,2n -k3,3n | bedtools merge -d 0 -i - > $LOH/BOTH_SUBLINEAGES_LOH_10_counts.bed
