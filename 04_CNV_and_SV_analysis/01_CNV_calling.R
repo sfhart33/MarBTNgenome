@@ -257,6 +257,8 @@
             print(paste("Done with:", i))                
     }
 
+	head(coverage_logR_1Mb_genomewide)
+
     # genome-wide plots
         binsize = 0.05
         ggplot(coverage_logR_1Mb_genomewide) +
@@ -408,7 +410,7 @@
             rightmid=middle-(middle-1)/2
             leftmid=middle+(middle-1)/2
             sd_max=1
-
+            
         #function to pick whether to smooth right, left or centered
         # ploidy_remove_na <- function(input){
         #   if(is.na(input[2])){
@@ -460,8 +462,9 @@
         }
         head(ploidy)
         ploidy2 <- ploidy
-        #ploidy2[, 4:18] <- round(ploidy2[, 4:18]) # round before smoothing?
-        ploidy2[is.na(ploidy2)] <- 0
+        # ploidy2[, 4:18] <- round(ploidy2[, 4:18]) # round before smoothing?
+        filter(ploidy2, is.na(REF)) %>% nrow()
+        ploidy2[is.na(ploidy2)] <- 0 # only three places with NA - just set to zero to simplify
         head(ploidy2)
         filter(ploidy2, is.na(REF)) %>% nrow()
         # LOOP THRU CHR
