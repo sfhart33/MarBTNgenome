@@ -37,7 +37,7 @@
         103/550/CAT # 8.462768
         90/550/ATG # 7.401876
         12/550/CAT_ATG # 44.59831
-        
+
 # Read info from .sh script and restructure
     downstream_all <- read.table("steamer_bias_down.txt",sep="\t", header=T, check.names=F) %>%
         mutate(freq = count/total)
@@ -94,8 +94,9 @@
 
 
 # Final plot for paper
-    steamer_to_plot <- filter(genome_all, sample == "anyCnoH", bp > 9, bp < 26) %>%
-        mutate(bp2 = bp-10)
+    steamer_to_plot <- filter(genome_all, sample == "anyCnoH", bp > 10, bp < 26) %>%
+        mutate(bp2 = bp-10) %>%
+        mutate(freq_vs_exp = freq/exp_freq/4)
     pdf("logo_plot_final.pdf", width=4, height=2)
         sample_plot <- steamer_to_plot
         test_data <- data.frame(A=filter(sample_plot, nuc == "A")$dif,
@@ -105,11 +106,29 @@
                                     t()
         plot1 <- ggseqlogo(test_data, method = 'custom' ) +
                     ggtitle("anyCnoH") +
-                    xlab("Position (Steamer 5bp dup: 7-11)") +
+                    xlab("Position (Steamer 5bp dup: 6-10)") +
                     ylab("Probability vs expected") +
                     ylim(-0.4,0.4)+
                     theme_classic()
         print(plot1)
+        test_data <- data.frame(A=filter(sample_plot, nuc == "A")$freq_vs_exp,
+                                    T=filter(sample_plot, nuc == "T")$freq_vs_exp,
+                                    G=filter(sample_plot, nuc == "G")$freq_vs_exp,
+                                    C=filter(sample_plot, nuc == "C")$freq_vs_exp) %>%
+                                    t()
+        plot1 <- ggseqlogo(test_data, method = 'bits' ) +
+                    ggtitle("anyCnoH") +
+                    xlab("Position (Steamer 5bp dup: 6-10)") +
+                    #ylab("Probability vs expected") +
+                    #ylim(-0.4,0.4)+
+                    theme_classic()
+        print(plot1)
+        plot2 <- ggseqlogo(test_data, method = 'prob' ) +
+                    ggtitle("anyCnoH") +
+                    xlab("Position (Steamer 5bp dup: 6-10)") +
+                    #ylab("Probability vs expected") +
+                    #ylim(-0.4,0.4)+
+                    theme_classic()
+        print(plot2)
     dev.off()
-
 
