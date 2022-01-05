@@ -206,12 +206,12 @@ dev.off()
                         maker-Mar.3.4.6.p1_scaffold3-snap-gene-789.7 
     somatic_pos <- filter(sel_cv, qmis_cv <0.05, wmis_cv >1) %>% arrange(qmis_cv) %>% select(gene_name,n_syn,n_mis,wmis_cv,qmis_cv)
     left_join(somatic_pos,somatic_pos_H,by="gene_name", suffix = c("_C","_H"))
-    # gene_name	n_syn_C	n_mis_C	wmis_cv_C	qmis_cv_C	n_syn_H	n_mis_H	wmis_cv_H	qmis_cv_H	AA		blastp	IGV (All appear to be a single haplotype)
-    # maker-Mar.3.4.6.p1_scaffold15-snap-gene-127.5	2	30	35.963162	2.42E-08	0	1	0.05840293	9.22E-07	312	all PEI	no hits	minimal healthy mapping, ~3x coverage PEI vs USA
-    # maker-Mar.3.4.6.p1_scaffold9-snap-gene-700.19	2	12	34.868098	1.64E-04	13	14	0.42658891	4.53E-02	802	11/2 USA	no hits	minimal healthy mapping
-    # maker-Mar.3.4.6.p1_scaffold11-snap-gene-477.12	1	9	105.558072	1.64E-04	3	3	0.57100099	5.11E-01	211	9/0 USA	uncharacterized protein (Crassostrea virginica)	single exon mutation cluster
-    # maker-Mar.3.4.6.p1_scaffold4-snap-gene-785.0	4	15	11.320769	9.25E-03	4	0	0	1.06E-05	112	All USA	receptor-type tyrosine-protein phosphatase mu-like (Mizuhopecten yessoensis)	
-    # maker-Mar.3.4.6.p1_scaffold6-snap-gene-524.0	17	41	3.491338	2.42E-02	10	35	1.33074384	4.77E-01	447	All USA	ATP-dependent DNA helicase PIF1 (Mytilus galloprovincialis)	All homozygous, PEI almost exactly matches reference genome, PEI appears to be CN 1 or 2
+    #     gene_name	n_syn_C	n_mis_C	wmis_cv_C	qmis_cv_C	n_syn_H	n_mis_H	wmis_cv_H	qmis_cv_H	AA		blastp	IGV Notes (All appear to be a single haplotype)
+    # 1	maker-Mar.3.4.6.p1_scaffold15-snap-gene-127.5	2	30	35.963162	2.42E-08	0	1	0.05840293	9.22E-07	312	all PEI	no hits	Low USA mapping, almost no SNVs in healthy, LOTS in PEI
+    # 2	maker-Mar.3.4.6.p1_scaffold9-snap-gene-700.19	2	12	34.868098	1.64E-04	13	14	0.42658891	4.53E-02	112	11/2 USA	receptor-type tyrosine-protein phosphatase mu-like (Mizuhopecten yessoensis)	Higher CN in USA vs PEI
+    # 3	maker-Mar.3.4.6.p1_scaffold11-snap-gene-477.12	1	9	105.558072	1.64E-04	3	3	0.57100099	5.11E-01	80	9/0 USA	no hits	single exon mutation cluster
+    # 4	maker-Mar.3.4.6.p1_scaffold4-snap-gene-785.0	4	15	11.320769	9.25E-03	4	0	0	1.06E-05	211	All USA	uncharacterized protein (Crassostrea virginica)	
+    # 5	maker-Mar.3.4.6.p1_scaffold6-snap-gene-524.0	17	41	3.491338	2.42E-02	10	35	1.33074384	4.77E-01	447	All USA	ATP-dependent DNA helicase PIF1 (Mytilus galloprovincialis)	All homozygous, both PEI and USA appear to be low CN, especially PEI
 
 healthy_dnds$globaldnds
 dnds_best_somatic$globaldnds
