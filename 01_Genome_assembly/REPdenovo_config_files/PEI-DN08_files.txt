@@ -1,0 +1,2 @@
+/ssd2/Illumina_data/PEI-DN08_S3_R1_001.fastq.gz 1 323 75
+/ssd2/Illumina_data/PEI-DN08_S3_R2_001.fastq.gz 1 323 75
