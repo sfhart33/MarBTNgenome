@@ -38,6 +38,8 @@ data(cosmic_signatures_v3)
                                     warmup = 1000, 
                                     chains = 1, 
                                     seed = 1756)
+    saveRDS(helmsman_fit, "LOH_cutoffs_sigfit.rds")
+    #helmsman_fit <- readRDS("LOH_cutoffs_sigfit.rds")
     #plot_exposures(mcmc_samples = helmsman_fit , pdf_path = "helmsman_fit_exposures.pdf")
     #plot_reconstruction(mcmc_samples = helmsman_fit , pdf_path = "helmsman_fit_reconstruction.pdf")
 
@@ -98,7 +100,7 @@ data(cosmic_signatures_v3)
 
 
 # Load data about size of LOH regions
-    LOH_size <- read.table("LOH.count.test.txt", header=T) %>%
+    LOH_size <- read.table("LOH.count.test.txt", header=T,fill=TRUE) %>%
         separate(Sample, c("region",NA,"count",NA), sep = "_") %>%
         arrange(as.integer(count))
     LOH_size_USA <- filter(LOH_size, region=="USA")
@@ -124,93 +126,102 @@ data(cosmic_signatures_v3)
 
 pdf("optimal_cutoff_plot_hetero.pdf")
 ggplot(full_data)+
-    geom_line(aes(count,PEIsom_sigS), size=1, color="red", linetype="solid")+
-    geom_line(aes(count,USAsom_sigS), size=1, color="blue", linetype="solid")+
-    geom_line(aes(count,PEIloh_sigS), size=1, color="red", linetype="dashed")+
-    geom_line(aes(count,USAloh_sigS), size=1, color="blue", linetype="dashed")+
-    geom_abline(aes(intercept=null_pei_sigS, slope=0), color="red", linetype="dotted")+
-    geom_abline(aes(intercept=null_usa_sigS, slope=0), color="blue", linetype="dotted")+
-    xlab("# discordant homozygous alleles in other sublineage")+
-    ylab("Fraction of SigS exposure")+
+    # geom_line(aes(count,PEIsom_sigS), size=1, color="red", linetype="solid")+
+    # geom_line(aes(count,USAsom_sigS), size=1, color="blue", linetype="solid")+
+    # geom_line(aes(count,PEIloh_sigS), size=1, color="red", linetype="dashed")+
+    # geom_line(aes(count,USAloh_sigS), size=1, color="blue", linetype="dashed")+
+    geom_point(aes(count,PEIsom_sigS), size=2, fill="red", shape = 21)+
+    geom_point(aes(count,USAsom_sigS), size=2, fill="blue", shape = 21)+
+    geom_point(aes(count,PEIloh_sigS), size=2, fill="red", shape = 22)+
+    geom_point(aes(count,USAloh_sigS), size=2, fill="blue", shape = 22)+
+    geom_abline(aes(intercept=null_pei_sigS, slope=0), color="red", linetype="dashed")+
+    geom_abline(aes(intercept=null_usa_sigS, slope=0), color="blue", linetype="dashed")+
+    geom_vline(xintercept=10, color="black", linetype="dashed")+
+    xlab("# discordant homozygous alleles to call LOH")+
+    ylab("Fraction of SNVs attributed to SigS")+
     theme_classic() +
         theme(axis.text=element_text(size=12,face="bold"),
         axis.title=element_text(size=16,face="bold"),
-        text=element_text(size=16,face="bold")) +
-    ggtitle("PEI_SNVs in USA_LOH (red)
-USA_SNVs in PEI_LOH (blue)")
+        text=element_text(size=16,face="bold")) #+
+    #ggtitle("PEI_SNVs in USA_LOH (red)\nUSA_SNVs in PEI_LOH (blue)")
 ggplot(full_data)+
-    geom_line(aes(count,PEIdif_sigS), size=1, color="red", linetype="solid")+
-    geom_line(aes(count,USAdif_sigS), size=1, color="blue", linetype="solid")+
-    geom_line(aes(count,(USAdif_sigS+PEIdif_sigS)/2), size=1, color="black", linetype="dotted")+
-    xlab("# discordant homozygous alleles in other sublineage")+
-    ylab("Difference in SigS exposure: LOH vs nonLOH")+
+    # geom_line(aes(count,PEIdif_sigS), size=1, color="red", linetype="solid")+
+    # geom_line(aes(count,USAdif_sigS), size=1, color="blue", linetype="solid")+
+    geom_point(aes(count,PEIdif_sigS), size=2, fill="red", shape = 21)+
+    geom_point(aes(count,USAdif_sigS), size=2, fill="blue", shape = 21)+
+    geom_line(aes(count,(USAdif_sigS+PEIdif_sigS)/2), size=1, color="black", linetype="solid")+
+    geom_vline(xintercept=10, color="black", linetype="dashed")+
+    xlab("# discordant homozygous alleles to call LOH")+
+    ylab("Difference in SigS fraction: LOH vs nonLOH")+
     theme_classic() +
         theme(axis.text=element_text(size=12,face="bold"),
         axis.title=element_text(size=16,face="bold"),
-        text=element_text(size=16,face="bold")) +
-    ggtitle("PEI_SNVs in USA_LOH (red)
-USA_SNVs in PEI_LOH (blue)
-Average(black)")
-ggplot(full_data)+
-    geom_point(aes(PEIsom_sigS,PEIsom_sig40), size=2, color="red")+
-    geom_point(aes(USAsom_sigS,USAsom_sig40), size=2, color="blue")+
-    xlab("sigS (each point is one cutoff value)")+
-    ylab("sig40")+
-    theme_classic() +
-        theme(axis.text=element_text(size=12,face="bold"),
-        axis.title=element_text(size=16,face="bold"),
-        text=element_text(size=16,face="bold")) +
-    ggtitle("SigS negatively coorelates with sig40")
-ggplot(full_data)+
-    geom_line(aes(count,PEIsom_sig40), size=1, color="red", linetype="solid")+
-    geom_line(aes(count,USAsom_sig40), size=1, color="blue", linetype="solid")+
-    geom_line(aes(count,PEIloh_sig40), size=1, color="red", linetype="dashed")+
-    geom_line(aes(count,USAloh_sig40), size=1, color="blue", linetype="dashed")+
-    geom_abline(aes(intercept=null_pei_sig40, slope=0), color="red", linetype="dotted")+
-    geom_abline(aes(intercept=null_usa_sig40, slope=0), color="blue", linetype="dotted")+
-    xlab("# discordant homozygous alleles in other sublineage")+
-    ylab("Fraction of sig40 exposure")+
-    theme_classic() +
-        theme(axis.text=element_text(size=12,face="bold"),
-        axis.title=element_text(size=16,face="bold"),
-        text=element_text(size=16,face="bold")) +
-    ggtitle("PEI_SNVs in USA_LOH (red)
-USA_SNVs in PEI_LOH (blue)")
-ggplot(full_data)+
-    geom_line(aes(count,PEIdif_sig40), size=1, color="red", linetype="solid")+
-    geom_line(aes(count,USAdif_sig40), size=1, color="blue", linetype="solid")+
-    geom_line(aes(count,(USAdif_sig40+PEIdif_sig40)/2), size=1, color="black", linetype="dotted")+
-    xlab("# discordant homozygous alleles in other sublineage")+
-    ylab("Difference in sig40 exposure: LOH vs nonLOH")+
-    theme_classic() +
-        theme(axis.text=element_text(size=12,face="bold"),
-        axis.title=element_text(size=16,face="bold"),
-        text=element_text(size=16,face="bold")) +
-    ggtitle("PEI_SNVs in USA_LOH (red)
-USA_SNVs in PEI_LOH (blue)
-Average(black)")
+        text=element_text(size=16,face="bold")) #+
+    #ggtitle("PEI_SNVs in USA_LOH (red)\nUSA_SNVs in PEI_LOH (blue)\nAverage(black)")
+# ggplot(full_data)+
+#     geom_point(aes(PEIsom_sigS,PEIsom_sig40), size=2, color="red")+
+#     geom_point(aes(USAsom_sigS,USAsom_sig40), size=2, color="blue")+
+#     xlab("sigS (each point is one cutoff value)")+
+#     ylab("sig40")+
+#     theme_classic() +
+#         theme(axis.text=element_text(size=12,face="bold"),
+#         axis.title=element_text(size=16,face="bold"),
+#         text=element_text(size=16,face="bold")) +
+#     ggtitle("SigS negatively coorelates with sig40")
+# ggplot(full_data)+
+#     geom_line(aes(count,PEIsom_sig40), size=1, color="red", linetype="solid")+
+#     geom_line(aes(count,USAsom_sig40), size=1, color="blue", linetype="solid")+
+#     geom_line(aes(count,PEIloh_sig40), size=1, color="red", linetype="dashed")+
+#     geom_line(aes(count,USAloh_sig40), size=1, color="blue", linetype="dashed")+
+#     geom_abline(aes(intercept=null_pei_sig40, slope=0), color="red", linetype="dotted")+
+#     geom_abline(aes(intercept=null_usa_sig40, slope=0), color="blue", linetype="dotted")+
+#     xlab("# discordant homozygous alleles in other sublineage")+
+#     ylab("Fraction of sig40 exposure")+
+#     theme_classic() +
+#         theme(axis.text=element_text(size=12,face="bold"),
+#         axis.title=element_text(size=16,face="bold"),
+#         text=element_text(size=16,face="bold")) +
+#     ggtitle("PEI_SNVs in USA_LOH (red)
+# USA_SNVs in PEI_LOH (blue)")
+# ggplot(full_data)+
+#     geom_line(aes(count,PEIdif_sig40), size=1, color="red", linetype="solid")+
+#     geom_line(aes(count,USAdif_sig40), size=1, color="blue", linetype="solid")+
+#     geom_line(aes(count,(USAdif_sig40+PEIdif_sig40)/2), size=1, color="black", linetype="dotted")+
+#     xlab("# discordant homozygous alleles in other sublineage")+
+#     ylab("Difference in sig40 exposure: LOH vs nonLOH")+
+#     theme_classic() +
+#         theme(axis.text=element_text(size=12,face="bold"),
+#         axis.title=element_text(size=16,face="bold"),
+#         text=element_text(size=16,face="bold")) +
+#     ggtitle("PEI_SNVs in USA_LOH (red)
+# USA_SNVs in PEI_LOH (blue)
+# Average(black)")
 ggplot()+
-    geom_line(data=LOH_size_PEI, aes(as.integer(count),bp/1215282629), size=1, color="red", linetype="solid")+
-    geom_line(data=LOH_size_USA, aes(as.integer(count),bp/1215282629), size=1, color="blue", linetype="solid")+
-    xlab("# discordant homozygous alleles in other sublineage")+
+    geom_point(data=LOH_size_PEI, aes(as.integer(count),bp/1215282629), size=2, fill="red", shape=21)+
+    geom_point(data=LOH_size_USA, aes(as.integer(count),bp/1215282629), size=2, fill="blue", shape=21)+
+    geom_vline(xintercept=10, color="black", linetype="dashed")+
+    geom_hline(yintercept=0, color="black", linetype="solid")+
+    geom_hline(yintercept=LOH_size_USA[10,4]/1215282629, color="blue", linetype="dashed")+
+    geom_hline(yintercept=LOH_size_PEI[10,4]/1215282629, color="red", linetype="dashed")+
+    xlab("# discordant homozygous alleles to call LOH")+
     ylab("Fraction of genome in LOH regions")+
     theme_classic() +
         theme(axis.text=element_text(size=12,face="bold"),
         axis.title=element_text(size=16,face="bold"),
-        text=element_text(size=16,face="bold")) +
-    ggtitle("PEI_LOH (red), USA_LOH (blue)")
-ggplot()+
-    geom_line(data=LOH_size_PEI, aes(as.integer(count),bp/1215282629), size=1, color="red", linetype="solid")+
-    geom_line(data=LOH_size_USA, aes(as.integer(count),bp/1215282629), size=1, color="blue", linetype="solid")+
-    xlab("# discordant homozygous alleles in other sublineage")+
-    ylab("Fraction of genome in LOH regions")+
-    xlim(0,20)+
-    ylim(0,0.2)+
-    theme_classic() +
-        theme(axis.text=element_text(size=12,face="bold"),
-        axis.title=element_text(size=16,face="bold"),
-        text=element_text(size=16,face="bold")) +
-    ggtitle("PEI_LOH (red), USA_LOH (blue)")
+        text=element_text(size=16,face="bold")) #+
+    #ggtitle("PEI_LOH (red), USA_LOH (blue)")
+# ggplot()+
+#     geom_line(data=LOH_size_PEI, aes(as.integer(count),bp/1215282629), size=1, color="red", linetype="solid")+
+#     geom_line(data=LOH_size_USA, aes(as.integer(count),bp/1215282629), size=1, color="blue", linetype="solid")+
+#     xlab("# discordant homozygous alleles in other sublineage")+
+#     ylab("Fraction of genome in LOH regions")+
+#     xlim(0,20)+
+#     ylim(0,0.2)+
+#     theme_classic() +
+#         theme(axis.text=element_text(size=12,face="bold"),
+#         axis.title=element_text(size=16,face="bold"),
+#         text=element_text(size=16,face="bold")) +
+#     ggtitle("PEI_LOH (red), USA_LOH (blue)")
 dev.off()
 
 

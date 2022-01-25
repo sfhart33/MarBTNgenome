@@ -127,7 +127,7 @@ setwd("/ssd3/Mar_genome_analysis/somatypus/Mar.3.4.6.p1/final_run/sigfit")
     rownames(signatures_4$lower_95) <- signames 
     plot_spectrum(signatures_4, pdf_path = "extract_4sigs_generegions.pdf")
     saveRDS(signatures_4, file = "signatures_4_extracted_full.rds")
-
+    #signatures_4 <- readRDS(file = "/ssd3/Mar_genome_analysis/somatypus/Mar.3.4.6.p1/final_run/sigfit/signatures_4_extracted_full.rds")
 
 # fit data for the generegions
     helmsman_4sigs_fit <- fit_signatures(counts = helmsman2,  
@@ -240,6 +240,13 @@ setwd("/ssd3/Mar_genome_analysis/somatypus/Mar.3.4.6.p1/final_run/sigfit")
 
     exposures_genome_and_LOH <- rbind(exposures_genome,exposures_total_LOH)
     saveRDS(exposures_genome_and_LOH, "/ssd3/Mar_genome_analysis/somatypus/Mar.3.4.6.p1/final_run/sigfit/exposures_genome_and_LOH.rds")
+    #exposures_genome_and_LOH <- readRDS("/ssd3/Mar_genome_analysis/somatypus/Mar.3.4.6.p1/final_run/sigfit/exposures_genome_and_LOH.rds")
+
+# Plot noLOH spectra
+    plot_spectrum(helmsman_LOH, pdf_path = "noLOH_raw_spectra.pdf")
+    LOH_freq <- helmsman_LOH/mutational_oppertunities_many[rep(5, nrow(helmsman_LOH)),]
+    LOH_freq <- LOH_freq/rowSums(LOH_freq)
+    plot_spectrum(LOH_freq, pdf_path = "noLOH_raw_spectra_mutoppscorrected.pdf")
 
 exposures_genome_plot <- exposures_genome_and_LOH[c("H_P.genome","H_U.genome","H_RUP.genome",
                                             "allCanyH.genome","allCnoH.genome","allPEInoUSAnoH.genome","allUSAnoPEInoH.genome","USA_LOH_10_hetero_counts.bed.merge.PEIsom","PEI_LOH_10_hetero_counts.bed.merge.USAsom",
@@ -248,12 +255,14 @@ exposures_genome_plot <- exposures_genome_and_LOH[c("H_P.genome","H_U.genome","H
                                             "uniqU1noPEInoH.genome","uniqU2noPEInoH.genome","uniqU3noPEInoH.genome","uniqU4noPEInoH.genome","uniqU5noPEInoH.genome"),]
 exposures_genome_plot$sample <- factor(c("PEI healthy","USA healthy","All healthy clams",
                                             "All cancer, any healthy","All cancer, no healthy","PEI sublineage","USA sublineage","PEI sublineage, nonLOH","USA sublineage, nonLOH",
-                                            "Maine sublineage","Maine sub-sublineage","Maine sub-sub-sublineage","PEI sub-sublineage",
+                                            #"Maine sublineage","Maine sub-sublineage","Maine sub-sub-sublineage","PEI sub-sublineage",
+                                            "USA 1&2&3&4 only","USA 1&2&3 only","USA 1&2 only","PEI 1&2 only",
                                             "Only PEI1","Only PEI2","Only PEI3",
                                             "Only USA1","Only USA2","Only USA3","Only USA4","Only USA5"))
 exposures_genome_plot$sample <- factor(exposures_genome_plot$sample, levels = c("PEI healthy","USA healthy","All healthy clams",
                                             "All cancer, any healthy","All cancer, no healthy","PEI sublineage","USA sublineage","PEI sublineage, nonLOH","USA sublineage, nonLOH",
-                                            "Maine sublineage","Maine sub-sublineage","Maine sub-sub-sublineage","PEI sub-sublineage",
+                                            #"Maine sublineage","Maine sub-sublineage","Maine sub-sub-sublineage","PEI sub-sublineage",
+                                            "USA 1&2&3&4 only","USA 1&2&3 only","USA 1&2 only","PEI 1&2 only",
                                             "Only PEI1","Only PEI2","Only PEI3",
                                             "Only USA1","Only USA2","Only USA3","Only USA4","Only USA5"))
 exposures_genome_plot$color <- c("Healthy","Healthy","Healthy",
@@ -287,6 +296,29 @@ plot1 <- ggplot(exposures_genome_plot) +
     print(plot1)
 }
 dev.off()
+# NEW PLOTS
+    setwd("/ssd3/Mar_genome_analysis/somatypus/Mar.3.4.6.p1/final_run/sigfit")
+    pdf("Signature_exposures_Sand1.pdf",width=8, height=4)
+    for(i in c("sigS","sig1")){ #,"sig5","sig40"
+    plot1 <- ggplot(exposures_genome_plot) + 
+        #geom_col(aes(x=sample,y=get(i),fill=color))+
+        #geom_linerange(aes(x=sample,y=get(i),ymin=get(paste0(i,"_L")),ymax=get(paste0(i,"_U"))))+
+        geom_pointrange(aes(x=sample,y=get(i),ymin=get(paste0(i,"_L")),ymax=get(paste0(i,"_U")),color=color))+
+        #geom_text(aes(x=sample,y=-0.02,label = count))+
+        ylab(paste(i, "SNV Fraction"))+
+        xlab(NULL)+
+        #scale_fill_manual(values=c("grey", "black", "red", "blue"))+
+        scale_color_manual(values=c("grey", "black", "red", "blue"))+
+        theme_classic() +
+            theme(axis.text=element_text(size=8,face="bold"),
+            axis.title=element_text(size=8,face="bold"),
+            text=element_text(size=8,face="bold")) +
+            theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))#+
+        #ggtitle(paste(i, "SNV Fraction"))
+        print(plot1)
+    }
+    dev.off()
+###
 pdf("Signature_exposures_condensed.pdf",width=7.5, height=10)
 for(i in c("sigS","sig1")){ #,"sig5","sig40"
 plot1 <- ggplot(exposures_genome_plot2) + 
@@ -428,17 +460,20 @@ dev.off()
                                                 "uniqU1noPEInoH.CDS","uniqU2noPEInoH.CDS","uniqU3noPEInoH.CDS","uniqU4noPEInoH.CDS","uniqU5noPEInoH.CDS"),]
     bins_all$names <- factor(c("PEI healthy","USA healthy","All healthy clams",
                                                 "All cancer, any healthy","All cancer, no healthy","PEI sublineage","USA sublineage",
-                                                "Maine sublineage","Maine sub-sublineage","Maine sub-sub-sublineage","PEI sub-sublineage",
+                                                #"Maine sublineage","Maine sub-sublineage","Maine sub-sub-sublineage","PEI sub-sublineage",
+                                                "USA 1&2&3&4 only","USA 1&2&3 only","USA 1&2 only","PEI 1&2 only",
                                                 "Only PEI1","Only PEI2","Only PEI3",
                                                 "Only USA1","Only USA2","Only USA3","Only USA4","Only USA5",
                                 "PEI healthy","USA healthy","All healthy clams",
                                                 "All cancer, any healthy","All cancer, no healthy","PEI sublineage","USA sublineage",
-                                                "Maine sublineage","Maine sub-sublineage","Maine sub-sub-sublineage","PEI sub-sublineage",
+                                                #"Maine sublineage","Maine sub-sublineage","Maine sub-sub-sublineage","PEI sub-sublineage",
+                                                "USA 1&2&3&4 only","USA 1&2&3 only","USA 1&2 only","PEI 1&2 only",
                                                 "Only PEI1","Only PEI2","Only PEI3",
                                                 "Only USA1","Only USA2","Only USA3","Only USA4","Only USA5"))
     bins_all$names <- factor(bins_all$names, levels = c("PEI healthy","USA healthy","All healthy clams",
                                                 "All cancer, any healthy","All cancer, no healthy","PEI sublineage","USA sublineage",
-                                                "Maine sublineage","Maine sub-sublineage","Maine sub-sub-sublineage","PEI sub-sublineage",
+                                                #"Maine sublineage","Maine sub-sublineage","Maine sub-sub-sublineage","PEI sub-sublineage",
+                                                "USA 1&2&3&4 only","USA 1&2&3 only","USA 1&2 only","PEI 1&2 only",
                                                 "Only PEI1","Only PEI2","Only PEI3",
                                                 "Only USA1","Only USA2","Only USA3","Only USA4","Only USA5"))
     #bins_all$region <- factor(bins_all$region, levels = c(CDS, genome))
@@ -455,17 +490,17 @@ dev.off()
     bins_all
 
     setwd("/ssd3/Mar_genome_analysis/somatypus/Mar.3.4.6.p1/final_run/sigfit")
-    pdf("Signature1_CDSvsGENOME.pdf",width=30, height=10)
+    pdf("Signature1_CDSvsGENOME.pdf",width=8, height=4)
     ggplot(bins_all) + 
         #geom_col(aes(x=sample,y=get(i),fill=color))+
-        geom_pointrange(aes(x=names,y=sig1,ymin=sig1l,ymax=sig1u,color=color,shape= region))+
+        geom_pointrange(aes(x=names,y=sig1,ymin=sig1l,ymax=sig1u,color=color,shape= region), position=position_dodge(width=0.25))+
         #geom_text(aes(x=sample,y=-0.02,label = count))+
         ylab("Fraction of mutations attributed to sig1")+
         scale_color_manual(values=c("grey", "black", "red", "blue"))+
         theme_classic() +
-            theme(axis.text=element_text(size=16,face="bold"),
-            axis.title=element_text(size=16,face="bold"),
-            text=element_text(size=18,face="bold")) +
+            theme(axis.text=element_text(size=8,face="bold"),
+            axis.title=element_text(size=8,face="bold"),
+            text=element_text(size=8,face="bold")) +
             theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+
         ggtitle("Sig1: CDS vs full genome")
     dev.off()

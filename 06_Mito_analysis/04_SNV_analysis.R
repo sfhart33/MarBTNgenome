@@ -33,38 +33,39 @@ snvs2 <- filter(snvs, pos < 12060 | pos > 12971)
     # }
     # dev.off()
 
-    # pdf("mito_snp_freq.pdf")
-    # for(i in c(	"Href_f", "Husa_f", "Hpei_f", 
-    # 	"Cpei0_f", "Cpei1_f", "Cpei2_f", "Cpei3_f",
-    # 	"Cusa0a_f", "Cusa0b_f", "Cusa1_f", "Cusa2_f", "Cusa3_f", "Cusa4_f", "Cusa5_f")){ #	"Tpei1_f", "Tpei2_f", "Tpei3_f", "Tusa1_f", "Tusa2_f", "Tusa3_f", "Tusa4_f", "Tusa5_f"
-    #     plot1 <- ggplot(snvs2, aes(get(i)))+
-    #         geom_histogram(binwidth=0.01)+
-    #         ggtitle(i)+
-    #         theme_classic() +
-    #         theme(axis.text=element_text(size=12,face="bold"),
-    #                 axis.title=element_text(size=16,face="bold"),
-    #                 text=element_text(size=18,face="bold"))
-    #     print(plot1)
-    #     plot1 <- ggplot(snvs2, aes(get(i)))+
-    #         geom_histogram(binwidth=0.001)+
-    #         xlim(0,0.1)+
-    #         ggtitle(i)+
-    #         theme_classic() +
-    #         theme(axis.text=element_text(size=12,face="bold"),
-    #                 axis.title=element_text(size=16,face="bold"),
-    #                 text=element_text(size=18,face="bold"))
-    #     print(plot1)
-    #     plot1 <- ggplot(snvs2, aes(get(i)))+
-    #         geom_histogram(binwidth=0.001)+
-    #         xlim(0.9,1)+
-    #         ggtitle(i)+
-    #         theme_classic() +
-    #         theme(axis.text=element_text(size=12,face="bold"),
-    #                 axis.title=element_text(size=16,face="bold"),
-    #                 text=element_text(size=18,face="bold"))
-    #     print(plot1)
-    # }
-    # dev.off()
+    pdf("mito_snp_freq.pdf")
+    for(i in c(	"Href_f", "Husa_f", "Hpei_f", 
+    	"Cpei0_f", "Cpei1_f", "Cpei2_f", "Cpei3_f",
+    	"Cusa0a_f", "Cusa0b_f", "Cusa1_f", "Cusa2_f", "Cusa3_f", "Cusa4_f", "Cusa5_f",
+        "Tpei1_f", "Tpei2_f", "Tpei3_f", "Tusa1_f", "Tusa2_f", "Tusa3_f", "Tusa4_f", "Tusa5_f")){ #	
+        plot1 <- ggplot(snvs2, aes(get(i)))+
+            geom_histogram(binwidth=0.01)+
+            ggtitle(i)+
+            theme_classic() +
+            theme(axis.text=element_text(size=12,face="bold"),
+                    axis.title=element_text(size=16,face="bold"),
+                    text=element_text(size=18,face="bold"))
+        print(plot1)
+        plot1 <- ggplot(snvs2, aes(get(i)))+
+            geom_histogram(binwidth=0.001)+
+            xlim(0,0.1)+
+            ggtitle(i)+
+            theme_classic() +
+            theme(axis.text=element_text(size=12,face="bold"),
+                    axis.title=element_text(size=16,face="bold"),
+                    text=element_text(size=18,face="bold"))
+        print(plot1)
+        plot1 <- ggplot(snvs2, aes(get(i)))+
+            geom_histogram(binwidth=0.001)+
+            xlim(0.9,1)+
+            ggtitle(i)+
+            theme_classic() +
+            theme(axis.text=element_text(size=12,face="bold"),
+                    axis.title=element_text(size=16,face="bold"),
+                    text=element_text(size=18,face="bold"))
+        print(plot1)
+    }
+    dev.off()
 
 # Filter for snvs not found in healthies
     snvs_noH <- filter(snvs2, Href_f < 0.5, Husa_f < 0.5, Hpei_f < 0.5)
@@ -103,19 +104,24 @@ snvs2 <- filter(snvs, pos < 12060 | pos > 12971)
     #######
     samples <- NULL
     withH <- NULL
+    withHsd <- NULL
     noH <- NULL
     for(i in c(	"Href", "Husa", "Hpei", 
         "Cpei0", "Cpei1", "Cpei2", "Cpei3",
         "Cusa0a", "Cusa0b", "Cusa1", "Cusa2", "Cusa3", "Cusa4", "Cusa5")){
         print(i)
         #filter(snvs, get(i) > 0.5) %>% pull(get(i)) %>% mean() %>% print()
-        noH1 <- filter(snvs_noH, get(paste0(i,"_f")) > 0.5) %>% pull(get(paste0(i,"_f"))) %>% median()
-        withH1 <- filter(snvs, get(paste0(i,"_f")) > 0.5) %>% pull(get(paste0(i,"_f"))) %>% median()
+        noH1 <- filter(snvs_noH, get(paste0(i,"_f")) > 0.5) %>% pull(get(paste0(i,"_f"))) %>% mean()
+        withH1 <- filter(snvs2, get(paste0(i,"_f")) > 0.5) %>% pull(get(paste0(i,"_f"))) %>% mean()
+        withH1sd <- filter(snvs2, get(paste0(i,"_f")) > 0.5) %>% pull(get(paste0(i,"_f"))) %>% sd()
+        # noH1 <- filter(snvs_noH, get(paste0(i,"_f")) > 0.5) %>% pull(get(paste0(i,"_f"))) %>% median()
+        # withH1 <- filter(snvs, get(paste0(i,"_f")) > 0.5) %>% pull(get(paste0(i,"_f"))) %>% median()
         noH <- c(noH, noH1)
         withH <- c(withH, withH1)
+        withHsd <- c(withHsd, withH1sd)
         samples <- c(samples , i)
     }
-        purity <- data.frame(samples,noH,withH) 
+        purity <- data.frame(samples,noH,withH,withHsd) 
         healthy_corr <- mean(purity[1:3,3])
         purity <- purity %>%
             mutate(withH_purity = 1-withH) %>%
@@ -137,6 +143,138 @@ snvs2 <- filter(snvs, pos < 12060 | pos > 12971)
                 axis.title=element_text(size=16,face="bold"),
                 text=element_text(size=18,face="bold")) +
             ggtitle("Mitochondiral SNP contamination estimate - healthy corrected")
+    dev.off()
+purity
+############## NEw 1/24/21 purity plots
+# supp figure plot of purity
+    healthyavg <- purity[c(1,2,3),] %>% pull(withH) %>% mean()
+    purity_used <- purity[c(1,2,3,4,5,7,8,9,11,13,14),]
+    purity_used$samples <- c("H_REF","H_USA","H_PEI","pei1","pei2","pei3","usa1","usa2","usa3","usa4","usa5")
+    purity_used$type <- as.factor(c("Healthy","Healthy","Healthy","PEI_BTN","PEI_BTN","PEI_BTN","USA_BTN","USA_BTN","USA_BTN","USA_BTN","USA_BTN"))
+    pdf("sample_purity_FIGURE.pdf")
+    ggplot(purity_used, aes(x=samples, y=withH, ymin=withH-withHsd, ymax=withH+withHsd,color=type)) +
+            #geom_col()+
+            geom_hline(yintercept = 1, linetype="solid", color = "black", size=1) +
+            geom_hline(yintercept = healthyavg, linetype="dotted", color = "black", size=1) +
+            geom_pointrange()+
+            scale_color_manual(values=c("black","red", "blue"))+
+            ylim(0.9,1) +
+            theme_classic() +
+                theme(axis.text=element_text(size=12,face="bold"),
+                axis.title=element_text(size=16,face="bold"),
+                axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1),
+                text=element_text(size=18,face="bold")) +
+            ggtitle("Mitochondiral SNP contamination estimate")+
+            xlab(NULL)+
+            ylab("Target DNA")
+    dev.off()
+
+    # pdf("mito_tissue_snp_freq.pdf")
+    # for(i in c("pei1", "pei2", "pei3", "usa1", "usa2", "usa3", "usa4", "usa5")){ #	
+    #     plot1 <- filter(snvs2, get(paste0("C",i,"_f"))>0.5) %>%
+    #         ggplot(aes(get(paste0("T",i,"_f"))))+
+    #             geom_histogram(binwidth=0.01)+
+    #             ggtitle(i)+
+    #             theme_classic() +
+    #             theme(axis.text=element_text(size=12,face="bold"),
+    #                     axis.title=element_text(size=16,face="bold"),
+    #                     text=element_text(size=18,face="bold"))
+    #     print(plot1)
+    # }
+    # dev.off()
+    # pdf("mito_tissue_snp_freq2.pdf")
+    # for(i in c("pei1", "pei2", "pei3", "usa1", "usa2", "usa3", "usa4", "usa5")){ #	
+    #     plot1 <- filter(snvs_noH, get(paste0("C",i,"_f"))>0.5) %>%
+    #         ggplot(aes(get(paste0("T",i,"_f"))))+
+    #             geom_histogram(binwidth=0.01)+
+    #             ggtitle(i)+
+    #             theme_classic() +
+    #             theme(axis.text=element_text(size=12,face="bold"),
+    #                     axis.title=element_text(size=16,face="bold"),
+    #                     text=element_text(size=18,face="bold"))
+    #     print(plot1)
+    # }
+    # dev.off()
+    # filter(snvs_noH, Cusa3_f>0.5) %>% select(pos, Cusa3_f,Tusa3_f)
+
+    samples <- NULL
+    cancer <- NULL
+    cancersd <- NULL
+    for(i in c("pei1", "pei2", "pei3", "usa1", "usa2", "usa3", "usa4", "usa5")){
+        print(i)
+        #filter(snvs, get(i) > 0.5) %>% pull(get(i)) %>% mean() %>% print()
+        noH1 <- filter(snvs_noH, get(paste0("C",i,"_f")) > 0.5) %>% pull(get(paste0("T",i,"_f"))) %>% mean()
+        noH1sd <- filter(snvs_noH, get(paste0("C",i,"_f")) > 0.5) %>% pull(get(paste0("T",i,"_f"))) %>% sd()
+        cancer <- c(cancer, noH1)
+        cancersd <- c(cancersd, noH1sd)
+        samples <- c(samples , i)
+    }
+        tissue_purity <- data.frame(samples,cancer,cancersd) 
+        tissue_purity <- tissue_purity %>%
+            mutate(host = 1-cancer) %>%
+            print()
+    tissue_purity_used <- tissue_purity[c(1,3,5,7,8),]
+    tissue_purity_used$samples <- c("pei2","pei3","usa3","usa4","usa5")
+    tissue_purity_used$type <- as.factor(c("PEI_BTN","PEI_BTN","USA_BTN","USA_BTN","USA_BTN"))
+   
+    pdf("sample_purity_FIGURE.pdf")
+    ggplot(purity_used, aes(x=samples, y=withH, ymin=withH-withHsd, ymax=withH+withHsd,color=type)) +
+            #geom_col()+
+            geom_hline(yintercept = 1, linetype="solid", color = "black", size=1) +
+            geom_hline(yintercept = healthyavg, linetype="dotted", color = "black", size=1) +
+            geom_pointrange()+
+            scale_color_manual(values=c("black","red", "blue"))+
+            #ylim(0.9,1) +
+            theme_classic() +
+                theme(axis.text=element_text(size=12,face="bold"),
+                axis.title=element_text(size=16,face="bold"),
+                axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1),
+                text=element_text(size=18,face="bold")) +
+            ggtitle("Host contamination of cancer isolate")+
+            xlab(NULL)+
+            ylab("Fraction DNA from target")
+    ggplot(purity_used, aes(x=samples, y=withH, ymin=withH-withHsd, ymax=withH+withHsd,color=type)) +
+            #geom_col()+
+            geom_hline(yintercept = 1, linetype="solid", color = "black", size=1) +
+            geom_hline(yintercept = healthyavg, linetype="dotted", color = "black", size=1) +
+            geom_pointrange()+
+            scale_color_manual(values=c("black","red", "blue"))+
+            ylim(0.9,1) +
+            theme_classic() +
+                theme(axis.text=element_text(size=12,face="bold"),
+                axis.title=element_text(size=16,face="bold"),
+                axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1),
+                text=element_text(size=18,face="bold")) +
+            ggtitle("Host contamination of cancer isolate")+
+            xlab(NULL)+
+            ylab("Fraction DNA from target")
+    ggplot(purity_used, aes(x=samples, y=withH, ymin=withH-withHsd, ymax=withH+withHsd,color=type)) +
+            #geom_col()+
+            geom_hline(yintercept = 1, linetype="solid", color = "black", size=1) +
+            geom_hline(yintercept = healthyavg, linetype="dotted", color = "black", size=1) +
+            geom_pointrange()+
+            scale_color_manual(values=c("black","red", "blue"))+
+            ylim(0,1) +
+            theme_classic() +
+                theme(axis.text=element_text(size=12,face="bold"),
+                axis.title=element_text(size=16,face="bold"),
+                axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1),
+                text=element_text(size=18,face="bold")) +
+            ggtitle("Host contamination of cancer isolate")+
+            xlab(NULL)+
+            ylab("Fraction DNA from target")
+        ggplot(tissue_purity_used, aes(x=samples, y=cancer, ymin=cancer-cancersd, ymax=cancer+cancersd,color=type)) +
+            geom_pointrange()+
+            scale_color_manual(values=c("red", "blue"))+
+            ylim(0,1) +
+            theme_classic() +
+                theme(axis.text=element_text(size=12,face="bold"),
+                axis.title=element_text(size=16,face="bold"),
+                axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1),
+                text=element_text(size=18,face="bold")) +
+            ggtitle("Cancer contamination of tissue")+
+            xlab(NULL)+
+            ylab("Fraction DNA from disseminated cancer")
     dev.off()
 
 # comparison for pairwise differences
