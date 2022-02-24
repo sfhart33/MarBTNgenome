@@ -12,7 +12,7 @@ Michael Metzger, Pacific Northwest Research Institute
 
 If you use any of these methods or data for your own research, please use the following citation:
 
-*Genome evolution of soft-shell clam transmissible cancer*
+*MANUSCRIPT COMING SOON: Genome evolution of soft-shell clam transmissible cancer*
 
 <br/><br/>
 
