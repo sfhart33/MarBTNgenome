@@ -1,7 +1,8 @@
 # Original file here: C:\Users\shart\Metzger Lab Dropbox\Sam_data\Mya_genome\SVs\delly_downstream.R
 
 library(tidyverse)
-setwd("/ssd3/Mar_genome_analysis/delly/final_run")
+# setwd("/ssd3/Mar_genome_analysis/delly/final_run")
+setwd("/ssd3/Mar_genome_analysis/delly/downsampled")
 
 # load data
     #files <- list.files(pattern="*.table")
@@ -303,6 +304,50 @@ pdf("SV_allele_counts.pdf")
         # W = 11383807, p-value = 1.572e-11
         # alternative hypothesis: true location shift is not equal to 0
 
+# Duplication sizes supp fig
+    pdf("Tandem_DUP_sizes_overlay.pdf")
+    type <- "DUP"
+        test <- filter(SVs_nonref, TYPE == type) #%>% #nrow() %>% print()
+        ggplot(test) +
+            geom_freqpoly(data = filter(test,MELC.A9_NV>0), aes(log10(END - POS)), binwidth=0.2, color = "black")+
+            geom_freqpoly(data = filter(test,PEI.DF490_NV>0), aes(log10(END - POS)), binwidth=0.2, color = "black")+
+            geom_freqpoly(data = filter(test,PEI.DF488_NV>0), aes(log10(END - POS)), binwidth=0.2, color = "red")+
+            geom_freqpoly(data = filter(test,PEI.DN03_NV>0), aes(log10(END - POS)), binwidth=0.2, color = "red")+
+            geom_freqpoly(data = filter(test,PEI.DN08_S3_NV>0), aes(log10(END - POS)), binwidth=0.2, color = "red")+
+            geom_freqpoly(data = filter(test,FFM.19G1_NV>0), aes(log10(END - POS)), binwidth=0.2, color = "blue")+
+            geom_freqpoly(data = filter(test,FFM.20B2_NV>0), aes(log10(END - POS)), binwidth=0.2, color = "blue")+
+            geom_freqpoly(data = filter(test,FFM.22F10_NV>0), aes(log10(END - POS)), binwidth=0.2, color = "blue")+
+            geom_freqpoly(data = filter(test,MELC.A11_S1_NV>0), aes(log10(END - POS)), binwidth=0.2, color = "blue")+
+            geom_freqpoly(data = filter(test,NYTC.C9_S2_NV>0), aes(log10(END - POS)), binwidth=0.2, color = "blue")+
+            geom_vline(xintercept=log10(11000),linetype="dashed")+
+            xlim(1,8)+
+            xlab("Tandem duplication size (log10)")+
+            theme_classic() +
+                theme(axis.text=element_text(size=12,face="bold"),
+                axis.title=element_text(size=16,face="bold"),
+                text=element_text(size=18,face="bold")) +
+            ggtitle("Tandem duplications\n(not found in reference clam)")
+        usa_test <- filter(noPEI_SV, TYPE == type)
+        pei_test <- filter(noUSA_SV, TYPE == type)
+        ggplot(test) +
+            geom_freqpoly(data = filter(pei_test,PEI.DF488_NV>0), aes(log10(END - POS)), binwidth=0.2, color = "red")+
+            geom_freqpoly(data = filter(pei_test,PEI.DN03_NV>0), aes(log10(END - POS)), binwidth=0.2, color = "red")+
+            geom_freqpoly(data = filter(pei_test,PEI.DN08_S3_NV>0), aes(log10(END - POS)), binwidth=0.2, color = "red")+
+            geom_freqpoly(data = filter(usa_test,FFM.19G1_NV>0), aes(log10(END - POS)), binwidth=0.2, color = "blue")+
+            geom_freqpoly(data = filter(usa_test,FFM.20B2_NV>0), aes(log10(END - POS)), binwidth=0.2, color = "blue")+
+            geom_freqpoly(data = filter(usa_test,FFM.22F10_NV>0), aes(log10(END - POS)), binwidth=0.2, color = "blue")+
+            geom_freqpoly(data = filter(usa_test,MELC.A11_S1_NV>0), aes(log10(END - POS)), binwidth=0.2, color = "blue")+
+            geom_freqpoly(data = filter(usa_test,NYTC.C9_S2_NV>0), aes(log10(END - POS)), binwidth=0.2, color = "blue")+
+            geom_vline(xintercept=log10(11000),linetype="dashed")+
+            xlim(1,8)+
+            xlab("Tandem duplication size (log10)")+
+            theme_classic() +
+                theme(axis.text=element_text(size=12,face="bold"),
+                axis.title=element_text(size=16,face="bold"),
+                text=element_text(size=18,face="bold")) +
+            ggtitle("Likely somatic tandem duplications\n(not in healthy or other sublineage)")
+    dev.off()
+
 # size summary stats
     #nonref_SV_size <- data.frame(matrix(ncol=3,nrow=0, dimnames=list(NULL, c("sample", "sv", "size"))))
     threshold = 8
@@ -556,6 +601,8 @@ pdf("SV_allele_counts.pdf")
         ttest_output <- t.test(filter(somatic_SV_counts_unchanged,sv==type,region=="PEI")[,"count"],filter(somatic_SV_counts_unchanged,sv==type,region=="USA")[,"count"])
         print(paste0("   Somatic: PEI vs USA comparison p.value: ",ttest_output$p.value))
     }
+
+    # Without subsampling
         # [1] "DEL"
         # [1] "   Nonref: H vs C comparison p.value: 0.0106873986162626"
         # [1] "   Nonref: H vs USA comparison p.value: 0.072858563101637"
@@ -586,3 +633,97 @@ pdf("SV_allele_counts.pdf")
         # [1] "   Nonref: H vs PEI comparison p.value: 0.059357295456871"
         # [1] "   Nonref: PEI vs USA comparison p.value: 0.374813110050265"
         # [1] "   Somatic: PEI vs USA comparison p.value: 0.0530534894023736"
+
+    # After subsampling
+        # [1] "DEL"
+        # [1] "   Nonref: H vs C comparison p.value: 0.0285750774474327"
+        # [1] "   Nonref: H vs USA comparison p.value: 0.0732731676298972"
+        # [1] "   Nonref: H vs PEI comparison p.value: 0.115043840078506"
+        # [1] "   Nonref: PEI vs USA comparison p.value: 0.592877090030785"
+        # [1] "   Somatic: PEI vs USA comparison p.value: 0.657836787716022"
+        # [1] "INS"
+        # [1] "   Nonref: H vs C comparison p.value: 0.350480912380426"
+        # [1] "   Nonref: H vs USA comparison p.value: 0.625181530401229"
+        # [1] "   Nonref: H vs PEI comparison p.value: 0.489405514811121"
+        # [1] "   Nonref: PEI vs USA comparison p.value: 0.738996284127604"
+        # [1] "   Somatic: PEI vs USA comparison p.value: 0.0193652563494084"
+        # [1] "DUP"
+        # [1] "   Nonref: H vs C comparison p.value: 3.63245410944426e-05"
+        # [1] "   Nonref: H vs USA comparison p.value: 1.34034077867571e-05"
+        # [1] "   Nonref: H vs PEI comparison p.value: 0.00250926423075205"
+        # [1] "   Nonref: PEI vs USA comparison p.value: 0.000718672683938661"
+        # [1] "   Somatic: PEI vs USA comparison p.value: 1.04348266716193e-05"
+        # [1] "INV"
+        # [1] "   Nonref: H vs C comparison p.value: 8.034103548862e-11"
+        # [1] "   Nonref: H vs USA comparison p.value: 1.83666236417492e-07"
+        # [1] "   Nonref: H vs PEI comparison p.value: 0.00039241999572757"
+        # [1] "   Nonref: PEI vs USA comparison p.value: 0.176388519686108"
+        # [1] "   Somatic: PEI vs USA comparison p.value: 0.364418351742974"
+        # [1] "BND"
+        # [1] "   Nonref: H vs C comparison p.value: 1.87278195343974e-05"
+        # [1] "   Nonref: H vs USA comparison p.value: 3.10251835453687e-05"
+        # [1] "   Nonref: H vs PEI comparison p.value: 0.0227237997166055"
+        # [1] "   Nonref: PEI vs USA comparison p.value: 0.0334291016437359"
+        # [1] "   Somatic: PEI vs USA comparison p.value: 0.00175523838975438"
+
+
+# New plots for main figure
+#    pdf("SV_summary_plot_fig3.pdf",width=4, height=2)
+#     ggplot(filter(SV_summary_norm, sv != "INS"), aes(x=sv,y=mean,fill=region)) +
+#     geom_bar(position="dodge", stat="identity")+
+#     scale_fill_manual(values=c("black","red", "blue"))+ # 
+#     geom_point(data=filter(SV_counts_norm, sv != "INS"),
+#                 aes(x=sv,y=count,fill=region,position=region),
+#                 position=position_dodge(.9), fill="grey10", color="grey10", size=1)+
+#     geom_errorbar(aes(ymin=(mean-sd), ymax=(mean+sd)), width=.2,position=position_dodge(.9), color="grey46")+
+#     #geom_text(data=filter(SV_summary,region=="H"),aes(x=sv,y=-0.05,label=paste0("x",round(mean))))+
+#     xlab("SV type")+
+#     ylab("Number of SVs \n (norm to healthy)")+
+#     theme_classic() +
+#     theme(axis.text=element_text(size=8,face="bold"),
+#             axis.title=element_text(size=8,face="bold"),
+#             text=element_text(size=8,face="bold"),
+#             legend.title = element_blank())
+#     dev.off()   
+    pdf("SV_summary_plot_fig3.pdf",width=3, height=2)
+        ggplot(filter(SV_summary_norm, sv != "INS"), aes(x=sv,y=mean,fill=region)) +
+        geom_bar(position="dodge", stat="identity", alpha=0.5)+
+        scale_fill_manual(values=c("black","red", "blue"))+ # 
+        geom_errorbar(aes(ymin=(mean-sd), ymax=(mean+sd)), width=.2,position=position_dodge(.9), alpha=0.5)+ # , color="grey46"
+        geom_point(data=filter(SV_counts_norm, sv != "INS"),
+                    aes(x=sv,y=count,fill=region,color=region,position=region),
+                    position=position_dodge(.9), size=1)+ # , fill="grey10", color="grey10"
+        scale_fill_manual(values=c("black","red", "blue"))+ # 
+        scale_color_manual(values=c("black","red", "blue"))+ # 
+        #geom_text(data=filter(SV_summary,region=="H"),aes(x=sv,y=-0.05,label=paste0("x",round(mean))))+
+        xlab("SV type")+
+        ylab("Number of SVs \n (norm to healthy)")+
+        theme_classic() +
+        theme(axis.text=element_text(size=8,face="bold"),
+                axis.title=element_text(size=8,face="bold"),
+                text=element_text(size=8,face="bold"),
+                legend.title = element_blank(),
+                legend.position = "none")
+    dev.off()
+pdf("DUP_plot_fig3.pdf",width=2, height=2)    
+    bins1=0.2
+    test <- filter(SVs_nonref, TYPE == "DUP")
+        ggplot() +
+            geom_freqpoly(data = filter(test,MELC.A9_NV>0), aes(log10(END - POS)), binwidth=bins1, color = "black")+
+            geom_freqpoly(data = filter(test,PEI.DF490_NV>0), aes(log10(END - POS)), binwidth=bins1, color = "black")+
+            geom_freqpoly(data = filter(test,PEI.DF488_NV>0), aes(log10(END - POS)), binwidth=bins1, color = "red")+
+            geom_freqpoly(data = filter(test,PEI.DN03_NV>0), aes(log10(END - POS)), binwidth=bins1, color = "red")+
+            geom_freqpoly(data = filter(test,PEI.DN08_S3_NV>0), aes(log10(END - POS)), binwidth=bins1, color = "red")+
+            geom_freqpoly(data = filter(test,FFM.19G1_NV>0), aes(log10(END - POS)), binwidth=bins1, color = "blue")+
+            geom_freqpoly(data = filter(test,FFM.20B2_NV>0), aes(log10(END - POS)), binwidth=bins1, color = "blue")+
+            geom_freqpoly(data = filter(test,FFM.22F10_NV>0), aes(log10(END - POS)), binwidth=bins1, color = "blue")+
+            geom_freqpoly(data = filter(test,MELC.A11_S1_NV>0), aes(log10(END - POS)), binwidth=bins1, color = "blue")+
+            geom_freqpoly(data = filter(test,NYTC.C9_S2_NV>0), aes(log10(END - POS)), binwidth=bins1, color = "blue")+
+            geom_vline(xintercept=log10(11000),linetype="dashed")+
+            xlim(1,8)+
+            xlab("Tandem dup size (log10 bp)")+
+            theme_classic() +
+                theme(axis.text=element_text(size=8,face="bold"),
+                axis.title=element_text(size=8,face="bold"),
+                text=element_text(size=8,face="bold"))
+    dev.off()
