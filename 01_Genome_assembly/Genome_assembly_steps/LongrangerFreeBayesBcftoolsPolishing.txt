@@ -1,0 +1,32 @@
+
+##Align 10X linked reads to concatenated diplod assembly with longranger
+module load longranger/2.2.2
+longranger mkref ~/arrow/Mar.3.3.3_jelly.out_name.fasta
+longranger align --id=Mar333jellylongranger --fastq=~/LongrangerFreebayesbcftoolsPolish/10X_MELC-2E11_Data --sample=some_clam --reference=~/LongrangerFreebayesbcftoolsPolish/refdata-Mar.3.3.3_jelly.out_name
+module load samtools/1.9
+samtools index ~/LongrangerFreebayesbcftoolsPolish/Mar333jellylongranger/outs/possorted_bam.bam
+module load freebayes/1.3.1
+module load bcftools/1.10.2
+
+##filter for Q30 mapping score, Q30 SNP calling, apply to assembly
+cd ~/LongrangerFreebayesbcftoolsPolish/Mar333jellylongranger/outs/
+samtools view -F 0x104 -q30 -b possorted_bam.bam > possorted_bamQ30.bam
+freebayes --bam ~/LongrangerFreebayesbcftoolsPolish/Mar333jellylongranger/outs/possorted_bamQ30.bam -p 1 --skip-coverage 840 -f ~/LongrangerFreebayesbcftoolsPolish/refdata-Mar.3.3.3_jelly.out_name/fasta/genome.fa | bcftools view --no-version -Ob -o Mar333jellylongrangerQ30.bcf 
+bcftools index ~/LongrangerFreebayesbcftoolsPolish/Mar333jellylongrangerQ30.bcf
+bcftools stats ~/LongrangerFreebayesbcftoolsPolish/Mar333jellylongrangerQ30.bcf > Mar333jellylongrangerQ30.bcf.stats
+bcftools stats -i'QUAL>30 && (GT="A")' ~/LongrangerFreebayesbcftoolsPolish/Mar333jellylongrangerQ30.bcf > Mar333jellylongrangerQ30.bcf.20A.stats
+bcftools consensus -i'QUAL>30 && (GT="A")' -HR -f ~/LongrangerFreebayesbcftoolsPolish/refdata-Mar.3.3.3_jelly.out_name/fasta/genome.fa ~/LongrangerFreebayesbcftoolsPolish/Mar333jellylongrangerQ30.bcf > ~/LongrangerFreebayesbcftoolsPolish/Mar.3.4.6.p0p1_Q30Q30A.fasta
+##Applied 1862877 variants
+
+##Concatenated diplod assembly must be separated into p0 and p1 phases
+
+perl FASTA_pull_from_textlist.pl Mar.3.3.3.p0 Mar.3.4.6.p0p1_Q30Q30A.fasta
+perl FASTA_pull_from_textlist.pl Mar.3.3.3.p1 Mar.3.4.6.p0p1_Q30Q30A.fasta
+
+##all files still have Mar.3.3.3 in the filename and name of scaffolds
+
+mv Mar.3.3.3.p0.fasta Mar.3.4.6.p0_Q30Q30A.fasta
+sed -i 's/3.3.3/3.4.6/' Mar.3.4.6.p0_Q30Q30A.fasta
+mv Mar.3.3.3.p1.fasta Mar.3.4.6.p1_Q30Q30A.fasta
+sed -i 's/3.3.3/3.4.6/' Mar.3.4.6.p1_Q30Q30A.fasta
+sed -i 's/3.3.3/3.4.6/' Mar.3.4.6.p0p1_Q30Q30A.fasta

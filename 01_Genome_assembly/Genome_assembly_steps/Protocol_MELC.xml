@@ -1,0 +1,12 @@
+<jellyProtocol>
+    <reference>/home/metzgerm/PBJelly/Mar.3.3.1_PBA_assembly.fasta</reference>  
+    <outputDir>/home/metzgerm/PBJelly/MELC-2E11_out/</outputDir>
+    <cluster>
+        <command notes="For single node, multi-core machines" >${CMD} ${JOBNAME} 2> ${STDERR} 1> ${STDOUT} &amp;</command>
+        <nJobs>1</nJobs>
+    </cluster>
+    <blasr>--minMatch 8 --sdpTupleSize 8 --minPctSimilarity 75 --bestn 1 --nCandidates 10 --maxScore -500 --nproc 40 --noSplitSubreads</blasr>
+    <input baseDir="/home/metzgerm/MELC-2E11/">
+        <job>Marenaria.3.2.fasta</job>
+    </input>
+</jellyProtocol>

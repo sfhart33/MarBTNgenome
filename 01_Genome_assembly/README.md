@@ -1,10 +1,12 @@
 # Scripts for the assembly and annotation of the soft-shell clam genome (Mya arenaria)
 
-Also include:
+### Notes for genome assembly described in methods section of paper, with cooresponding steps included in "Genome_assembly_steps"
+
+Also included:
 
 * Scripts to calculate genome summary statistics
 
-* Repeatmoduler and repdenovo runs
+* Repeatmoduler run
 
 * Transcriptome assembly
 

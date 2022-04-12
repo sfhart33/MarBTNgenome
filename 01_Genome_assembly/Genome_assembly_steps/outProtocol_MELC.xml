@@ -1,0 +1,63 @@
+<jellyProtocol>
+    <reference>/home/metzgerm/PBJelly/Mar.3.3.2_p0p1_PGA_assembly_17.fasta</reference>  
+    <outputDir>/home/metzgerm/PBJelly/MELC-2E11_out/</outputDir>
+    <cluster>
+        <command notes="For single node, multi-core machines" >${CMD} ${JOBNAME} 2> ${STDERR} 1> ${STDOUT} &amp;</command>
+        <nJobs>1</nJobs>
+    </cluster>
+    <blasr>--minMatch 8 --sdpTupleSize 8 --minPctSimilarity 75 --bestn 1 --nCandidates 10 --maxScore -500 --nproc 50 --noSplitSubreads</blasr>
+    <input baseDir="/home/metzgerm/MELC-2E11/">
+        <job>m54179_190613_183836.subreads.A.fastq</job>
+        <job>m54179_190615_131451.subreads.A.fastq</job>
+        <job>m54179_190615_232823.subreads.A.fastq</job>
+        <job>m54179_190616_094153.subreads.A.fastq</job>
+        <job>m54179_190616_195525.subreads.A.fastq</job>
+        <job>m54179_190617_060901.subreads.A.fastq</job>
+        <job>m54179_190617_162556.subreads.A.fastq</job>
+        <job>m54179_190618_023924.subreads.A.fastq</job>
+        <job>m54179_190618_125256.subreads.A.fastq</job>
+        <job>m54179_190619_154828.subreads.A.fastq</job>
+        <job>m54179_190620_020150.subreads.A.fastq</job>
+        <job>m54179_190620_121518.subreads.A.fastq</job>
+        <job>m54179_190620_222853.subreads.A.fastq</job>
+        <job>m54179_190613_183836.subreads.B.fastq</job>
+        <job>m54179_190615_131451.subreads.B.fastq</job>
+        <job>m54179_190615_232823.subreads.B.fastq</job>
+        <job>m54179_190616_094153.subreads.B.fastq</job>
+        <job>m54179_190616_195525.subreads.B.fastq</job>
+        <job>m54179_190617_060901.subreads.B.fastq</job>
+        <job>m54179_190617_162556.subreads.B.fastq</job>
+        <job>m54179_190618_023924.subreads.B.fastq</job>
+        <job>m54179_190618_125256.subreads.B.fastq</job>
+        <job>m54179_190619_154828.subreads.B.fastq</job>
+        <job>m54179_190620_020150.subreads.B.fastq</job>
+        <job>m54179_190620_121518.subreads.B.fastq</job>
+        <job>m54179_190620_222853.subreads.B.fastq</job>
+        <job>m54179_190613_183836.subreads.C.fastq</job>
+        <job>m54179_190615_131451.subreads.C.fastq</job>
+        <job>m54179_190615_232823.subreads.C.fastq</job>
+        <job>m54179_190616_094153.subreads.C.fastq</job>
+        <job>m54179_190616_195525.subreads.C.fastq</job>
+        <job>m54179_190617_060901.subreads.C.fastq</job>
+        <job>m54179_190617_162556.subreads.C.fastq</job>
+        <job>m54179_190618_023924.subreads.C.fastq</job>
+        <job>m54179_190618_125256.subreads.C.fastq</job>
+        <job>m54179_190619_154828.subreads.C.fastq</job>
+        <job>m54179_190620_020150.subreads.C.fastq</job>
+        <job>m54179_190620_121518.subreads.C.fastq</job>
+        <job>m54179_190620_222853.subreads.C.fastq</job>
+        <job>m54179_190613_183836.subreads.D.fastq</job>
+        <job>m54179_190615_131451.subreads.D.fastq</job>
+        <job>m54179_190615_232823.subreads.D.fastq</job>
+        <job>m54179_190616_094153.subreads.D.fastq</job>
+        <job>m54179_190616_195525.subreads.D.fastq</job>
+        <job>m54179_190617_060901.subreads.D.fastq</job>
+        <job>m54179_190617_162556.subreads.D.fastq</job>
+        <job>m54179_190618_023924.subreads.D.fastq</job>
+        <job>m54179_190618_125256.subreads.D.fastq</job>
+        <job>m54179_190619_154828.subreads.D.fastq</job>
+        <job>m54179_190620_020150.subreads.D.fastq</job>
+        <job>m54179_190620_121518.subreads.D.fastq</job>
+        <job>m54179_190620_222853.subreads.D.fastq</job>
+    </input>
+</jellyProtocol>
