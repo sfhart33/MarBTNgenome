@@ -20,9 +20,9 @@ If you use any of these methods or data for your own research, please use the fo
 
 ### Output files are available here: ________________
 
-### Required installations:
-* ADD GENOME ASSEMBLY TOOLS
-* REPdenovo (2019.07.20 download)
+### Software installations used:
+
+* R (3.6.0)
 * bedtools (2.29.1)
 * BBTools (38.86)
 * trimmomatic (0.36)
@@ -37,10 +37,20 @@ If you use any of these methods or data for your own research, please use the fo
 * CD-HIT (4.8.1)
 * RepeatModeler (2.0)
 * Repeatmasker (4.1.0)
-* R (3.6.0)
+* REPdenovo (2019.07.20 download)
+* supernova (2.1.1)
+* FALCON-Unzip (with pbbioconda-0.0.5 and python 3.7)
+* PBSuite (15.8.24, slightly modified: https://github.com/esrice/PBJelly)
+* blasr (5.1)
+* networkx (2.2 with Python 2.7)
+* Longranger62 (2.2.2)
+* FreeBayes (1.3.1)
+* Trinity (2.8.5)
+* MAKER (2.31.10)
+* exonerate (2.2.0)
 
+### R packages used
 
-### Required R packages
 * Biostrings (2.54.0) 
 * sigfit (2.0.0)
 * mapdata (2.3.0)
