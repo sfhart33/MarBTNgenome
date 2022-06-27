@@ -1,4 +1,4 @@
-# myaBTNgenome
+# MarBTNgenome
 ## Code to accompany publication on genome evolution of soft-shell clam transmissible cancer
 Samuel Hart, University of Washington Molecular and Cellular Biology PhD program
 
