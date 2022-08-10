@@ -16,9 +16,9 @@ Hart S. F. M., Yonemitsu, M. A., Giersch, R. M., Beal B. F., Arriagada G., Davis
 
 <br/><br/>
 
-### Raw data files are available here: ________________
+### Raw data files are available here: *(will update upon publication of paper)*
 
-### Output files are available here: ________________
+### Key output files are available here: *(will update upon publication of paper)*
 
 ### Software installations used:
 
