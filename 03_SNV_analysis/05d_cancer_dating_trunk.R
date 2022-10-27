@@ -1,4 +1,4 @@
-# original file here: C:\Users\shart\Metzger Lab Dropbox\Sam_data\Mya_genome\SNPs\trunk_estimates2.R
+# original file here: C:\Users\shart\Metzger Lab Dropbox\Sam_data\Mya_genome\SNPs\trunk_estimates3.R
 
 library(tidyverse)
 library(sigfit)
@@ -194,57 +194,67 @@ dev.off()
     # dnds_summary
     exposures_run_total
 
-# from other calculation in somatypus_output-pairwise.r: sigS_rate = 430 +/- 190 mu/Gb/year
-    sigS_regression <- readRDS("sigS_regression.rds") 
+# rate stats
+setwd("/ssd3/Mar_genome_analysis/somatypus/Mar.3.4.6.p1/final_run/pairwise/withLOH")
+    sigS_regression <- readRDS("sigS_regression_noLOH_USAonly.rds") 
+    sig55_regression <- readRDS("sig55_regression_noLOH_USAonly.rds") 
     summary(sigS_regression)
-    sigS_rate <- summary(sigS_regression)$coefficients[2,1] # 423.0956
-    sigS_rate_sd <- summary(sigS_regression)$coefficients[2,2] # 92.19871
-    sigS_mutation_count <- summary(sigS_regression)$coefficients[1,1] # 155919.1377
+    sigS_rate <- summary(sigS_regression)$coefficients[2,1] # 495.6361
+    sigS_rate_sd <- (confint(sigS_regression)[2,2]-sigS_rate)/2  #  311.7626
+    sigS_mutation_count <- summary(sigS_regression)$coefficients[1,1] # 156057
+    sig55_rate <- summary(sig55_regression)$coefficients[2,1] # 226.4911
+    sig55_rate_sd <- (confint(sig55_regression)[2,2]-sig55_rate)/2  # 68.15301
+    sig55_mutation_count <- summary(sig55_regression)$coefficients[1,1] # 72280.41
 
 
 
-    postdiv_age_est <- sigS_mutation_count/sigS_rate # 368.5199 YEARS FROM DIVERGENCE TO PRESENT ESTIMATE FROM SIGS
-    postdiv_age_est_L <- sigS_mutation_count/(sigS_rate+sigS_rate_sd*2) # 256.66
-    postdiv_age_est_U <- sigS_mutation_count/(sigS_rate-sigS_rate_sd*2) # 653.2063
+    postdiv_age_Sest <- sigS_mutation_count/sigS_rate # 314.8621 YEARS FROM DIVERGENCE TO PRESENT ESTIMATE FROM SIGS
+    postdiv_age_Sest_L <- sigS_mutation_count/(sigS_rate+sigS_rate_sd*2) # 139.441
+    postdiv_age_Sest_U <- sigS_mutation_count/(sigS_rate-sigS_rate_sd*2) # -1220.252
+        postdiv_age_Sest_U <- Inf
+    postdiv_age_55est <- sig55_mutation_count/sig55_rate # 319.1314 YEARS FROM DIVERGENCE TO PRESENT ESTIMATE FROM SIGS
+    postdiv_age_55est_L <- sig55_mutation_count/(sig55_rate+sig55_rate_sd*2) # 199.2309
+    postdiv_age_55est_U <- sig55_mutation_count/(sig55_rate-sig55_rate_sd*2) # 801.4676
 
 # Genome size corrections: how much of genome are we excluding with LOH calls
     LOH_genome_size <- read.table("/ssd3/Mar_genome_analysis/LOH/july_2021/output/new/BOTH_SUBLINEAGES_LOH_10_counts.bed") %>% mutate(V4 = V3-V2) %>% .$V4 %>%as.numeric() %>% sum()
-    full_genome_size <- read.table("/ssd3/Mar_genome_analysis/genomes/Mar.3.4.6.p1_Q30Q30A.fasta.fai") %>% .$V2 %>%as.numeric() %>% sum()
+    full_genome_size <- read.table("/ssd3/Mar_genome_analysis/genomes/Mar.3.4.6.p1_Q30Q30A.fasta.fai") %>% .$V2 %>%as.numeric() %>% sum() # 1216068291
     full_genome_Gb <- full_genome_size/1000000000 # 1.216068
     nonLOH_genome_size = full_genome_size - LOH_genome_size 
     nonLOH_genome_Gb <- nonLOH_genome_size/1000000000 # 0.978504
     # Rate in mu/Gb/yr
-        sigS_rate/nonLOH_genome_Gb # 432.3902
-        2*sigS_rate_sd/nonLOH_genome_Gb # 188.4483
+        sigS_rate/nonLOH_genome_Gb # 506.5244
+        2*sigS_rate_sd/nonLOH_genome_Gb # 637.223
 
 # estimate age 
     allCnoH_somatic_sigS_est <- allCnoH_sigS - H_sigS # 0.03112695
     allCnoH_somatic_sigS_count_est <- allCnoH_somatic_sigS_est * allCnoH_count # 53350.19
-    allCnoH_somatic_sigS_age_est <- allCnoH_somatic_sigS_count_est / sigS_rate # 126.0949 YEARS FROM ORIGIN TO DIVERGENCE ESTIMATE FROM SIGS
+    allCnoH_somatic_sigS_age_est <- allCnoH_somatic_sigS_count_est / sigS_rate # 107.6398 YEARS FROM ORIGIN TO DIVERGENCE ESTIMATE FROM SIGS
     
-    allCnoH_somatic_sigS_age_est_L <- allCnoH_somatic_sigS_count_est / (sigS_rate+sigS_rate_sd*2) # 87.82026
-    allCnoH_somatic_sigS_age_est_U <- allCnoH_somatic_sigS_count_est / (sigS_rate-sigS_rate_sd*2) # 223.5049
-
+    allCnoH_somatic_sigS_age_est_L <- allCnoH_somatic_sigS_count_est / (sigS_rate+sigS_rate_sd*2) # 47.6698
+    allCnoH_somatic_sigS_age_est_U <- allCnoH_somatic_sigS_count_est / (sigS_rate-sigS_rate_sd*2) # -417.1597
+        allCnoH_somatic_sigS_age_est_U <- Inf
 # Total ages
-    total_age_est <- postdiv_age_est + allCnoH_somatic_sigS_age_est # 494.6148
-    total_age_est_L <- postdiv_age_est_L + allCnoH_somatic_sigS_age_est_L # 344.4802
-    total_age_est_U <- postdiv_age_est_U + allCnoH_somatic_sigS_age_est_U # 876.7112
+    total_age_est <- postdiv_age_Sest + allCnoH_somatic_sigS_age_est # 422.5019
+    total_age_est_L <- postdiv_age_Sest_L + allCnoH_somatic_sigS_age_est_L # 187.1108
+    total_age_est_U <- postdiv_age_Sest_U + allCnoH_somatic_sigS_age_est_U # -1637.412
 
 # Plot age
     age_summary <- data.frame(matrix(ncol=4,nrow=0, dimnames=list(NULL, c("name", "age", "lower","upper"))))
     age_summary[1,] <- c("Origin", total_age_est, total_age_est_L, total_age_est_U)
-    age_summary[2,] <- c("MRCA", postdiv_age_est, postdiv_age_est_L, postdiv_age_est_U)
+    age_summary[2,] <- c("MRCA_S", postdiv_age_Sest, postdiv_age_Sest_L, postdiv_age_Sest_U)
+    age_summary[3,] <- c("MRCA_55", postdiv_age_55est, postdiv_age_55est_L, postdiv_age_55est_U)
     # age_summary[,2:4] <- as.numeric(age_summary[1:2,2:4])age_summary[2,4]
     age_summary
-    pdf("cancer_age_estimate.pdf", width=4, height=1.5) # 
+    pdf("cancer_age_estimate.pdf", width=2, height=2) # 
     ggplot(age_summary, aes(x=as.factor(name),y=as.numeric(age),ymin=as.numeric(lower),ymax=as.numeric(upper)))+
-        geom_abline(aes(intercept=50, slope=0), color="black", linetype="dashed")+
+        geom_abline(aes(intercept=-50, slope=0), color="black", linetype="dashed")+
         geom_pointrange()+  # fatten = 3, size = 2
         #geom_point(size = 3)+  #size = 9
         #geom_errorbar(color="grey20",width=0.25)+
         ylab("Years before present")+
         #scale_y_continuous(limits = c(900,0),breaks=c(800,700,600,500,400,300,200,100,0))+ #as.numeric(age_summary[1,"age"]),as.numeric(age_summary[2,"age"]))
-        # ylim(900,0) +
+        #ylim(1000,0) +
         theme_classic() +
             theme(axis.text=element_text(size=8,face="bold"),
             axis.title=element_text(size=8,face="bold"),
@@ -253,18 +263,15 @@ dev.off()
         coord_flip()
     dev.off()
 
-# age estimate error propagation. NOTE - rate error is almost all the error
-    # # upper = high allCnoH_sigS, low H_sigS, low sigS_rate
-    # allCnoH_somatic_sigS_exp_est_U <- allCnoH_sigS_U - H_sigS_L #  0.02436468
-    # allCnoH_somatic_sigS_count_est_U <- allCnoH_somatic_sigS_exp_est_U * allCnoH_count # 58530
-    # allCnoH_somatic_sigS_age_est_U <- allCnoH_somatic_sigS_count_est_U / (sigS_rate-sigS_rate_sd*2) # 245.2051 MAX WITH ERROR PROPAGATION
-    # # lower = low allCnoH_sigS, high H_sigS, high sigS_rate
-    # allCnoH_somatic_sigS_exp_est_L <- allCnoH_sigS_L - H_sigS_U # 0.02960731
-    # allCnoH_somatic_sigS_count_est_L <- allCnoH_somatic_sigS_exp_est_L * allCnoH_count # 54248.98
-    # allCnoH_somatic_sigS_age_est_L <- allCnoH_somatic_sigS_count_est_L / (sigS_rate+sigS_rate_sd*2) # 89.29976 MIN WITH ERROR PROPAGATION
-    # # ORIGIN UNTIL SPLIT: 133 years (95% Ci: 89-245 years)
-    # # SPLIT UNTIL PRESENT: 371 years (95% Ci: 257-664 years) # from other calculation in somatypus_output-pairwise.r
-    # # ORIGIN UNTIL PRESENT: 523 years (95% Ci: 359-945 years)
+# # age estimate error propagation. NOTE - rate error is almost all the error
+#     # upper = high allCnoH_sigS, low H_sigS, low sigS_rate
+#     allCnoH_somatic_sigS_exp_est_U <- allCnoH_sigS_U - H_sigS_L #  0.03221753
+#     allCnoH_somatic_sigS_count_est_U <- allCnoH_somatic_sigS_exp_est_U * allCnoH_count # 55219.39
+#     allCnoH_somatic_sigS_age_est_U <- allCnoH_somatic_sigS_count_est_U / (sigS_rate-sigS_rate_sd*2) # 231.3356 MAX WITH ERROR PROPAGATION
+#     # lower = low allCnoH_sigS, high H_sigS, high sigS_rate
+#     allCnoH_somatic_sigS_exp_est_L <- allCnoH_sigS_L - H_sigS_U # 0.03005806
+#     allCnoH_somatic_sigS_count_est_L <- allCnoH_somatic_sigS_exp_est_L * allCnoH_count # 51518.16
+#     allCnoH_somatic_sigS_age_est_L <- allCnoH_somatic_sigS_count_est_L / (sigS_rate+sigS_rate_sd*2) # 84.80453 MIN WITH ERROR PROPAGATION
 
 
 # mutation count estimate
@@ -285,3 +292,7 @@ dev.off()
 # Total counts and per Mb estimate
     total_nonLOH_mu_est <- (allCnoH_sigS_somatic_fraction_estimate * allCnoH_count) + exposures_run_total["sublineages","count"]/2 # 437205.4
     total_nonLOH_mu_est/nonLOH_genome_size*1000000 #  446.81
+    total_nonLOH_mu_est <- (allCnoH_sigS_somatic_fraction_estimate * allCnoH_count) + exposures_run_total["allPEInoUSAnoH","count"] # 431986.9
+    total_nonLOH_mu_est/nonLOH_genome_size*1000000 #  441.4769
+    total_nonLOH_mu_est <- (allCnoH_sigS_somatic_fraction_estimate * allCnoH_count) + exposures_run_total["allUSAnoPEInoH","count"] # 442423.9
+    total_nonLOH_mu_est/nonLOH_genome_size*1000000 #  452.1432
