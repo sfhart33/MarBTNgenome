@@ -1,12 +1,9 @@
-# From original file: C:\Users\shart\Metzger Lab Dropbox\Sam_data\Mya_genome\SNPs\somatypus_output_pairwise_noLOH.r
+# From original file:C:\Users\shart\Metzger Lab Dropbox\Sam_data\Mya_genome\revision\BTN_phylogeny.R
+# Adapted from original pairwise analysis beginning to output: C:\Users\shart\Metzger Lab Dropbox\Sam_data\Mya_genome\SNPs\somatypus_output_pairwise_noLOH.r
 
 library(tidyverse)
 library(ape)
-library(sigfit)
-library(lsa)
-library(gridExtra)
-data(cosmic_signatures_v2)
-data(cosmic_signatures_v3)
+library(seqinr)
 
 setwd("/ssd3/Mar_genome_analysis/somatypus/Mar.3.4.6.p1/final_run")
 
@@ -46,51 +43,6 @@ setwd("/ssd3/Mar_genome_analysis/somatypus/Mar.3.4.6.p1/final_run")
         print(sample)
         print(get(paste0(sample,"_avg")))
     }
-    # average depths
-        # [1] "H_ref"
-        # [1] 59.91782
-        # [1] "H_usa"
-        # [1] 60.0784
-        # [1] "H_pei"
-        # [1] 60.3944
-        # [1] "C_pei1"
-        # [1] 94.64185
-        # [1] "C_pei2"
-        # [1] 89.04225
-        # [1] "C_pei4"
-        # [1] 56.09117
-        # [1] "C_pei3"
-        # [1] 65.3303
-        # [1] "C_usa1"
-        # [1] 92.81066
-        # [1] "C_usa2"
-        # [1] 92.78821
-        # [1] "C_usa6"
-        # [1] 68.59992
-        # [1] "C_usa3"
-        # [1] 63.84493
-        # [1] "C_usa7"
-        # [1] 58.19498
-        # [1] "C_usa4"
-        # [1] 63.49766
-        # [1] "C_usa5"
-        # [1] 59.25352
-        # [1] "C_pei2T"
-        # [1] 5.811725
-        # [1] "C_pei4T"
-        # [1] 18.54592
-        # [1] "C_pei3T"
-        # [1] 9.330324
-        # [1] "C_usa6T"
-        # [1] 31.91118
-        # [1] "C_usa3T"
-        # [1] 35.81058
-        # [1] "C_usa7T"
-        # [1] 33.20985
-        # [1] "C_usa4T"
-        # [1] 29.47542
-        # [1] "C_usa5T"
-        # [1] 31.76414
 
 
 #Set thresholds
@@ -111,130 +63,139 @@ setwd("/ssd3/Mar_genome_analysis/somatypus/Mar.3.4.6.p1/final_run")
                         C_usa4_NV > C_usa4_avg/stringent_depth |
                         C_usa5_NV > C_usa5_avg/stringent_depth))
 
-# Function to write helmsman output
-    # helmsmanfile <- function(input, sample1, sample2){
-    #     name <- paste0(sample1,".",sample2)
-    #     input %>% select(CHROM, POS, REF, ALT) %>%
-    #         mutate(ID = name) %>%
-    #         write.table(file = paste0("helmsman.txt"), append = TRUE, row.names=FALSE, col.names=FALSE, quote=FALSE, sep = '\t')
-    #         #write.table(file = paste0("helmsman.txt"), append = TRUE, row.names=FALSE, col.names=FALSE, quote=FALSE, sep = '\t')
-    # }
- 
 
-# Run pairwise analysis
-    # samplesALL=c("H_ref","H_usa","H_pei","C_pei1","C_pei2","C_pei3","C_usa1","C_usa2","C_usa3","C_usa4","C_usa5","genome")
-    samplesBTN=c("C_pei1","C_pei2","C_pei3","C_usa1","C_usa2","C_usa3","C_usa4","C_usa5","genome")
-    pairwise=data.frame(A=character(), B=character(), count=numeric(), stringsAsFactors = FALSE)
-    # if(file.exists("helmsman.txt")) {
-    #     file.remove("helmsman.txt")
-    # }
-    for(A in samplesBTN){
-        print(paste(A,"started"))
-        if(A != "genome"){
-            # altA1= get(paste0(A,"_avg"))/stringent_depth # high threshold
-            altA1= get(paste0(A,"_avg"))/weak_depth # high threshold
-            altA2= get(paste0(A,"_avg"))/weak_depth # low threshold
+#####################################################################################
+
+setwd("/ssd3/Mar_genome_analysis/revision/phylogeny")
+nrow(snvs)
+nrow(realSNVs)
+head(realSNVs)
+
+# fasta file of sequences to align
+
+    # Reference genome sequence
+        write(">genome", file="variants_concat.fasta",append=TRUE)
+        sequence <- realSNVs %>%
+            mutate(seq = as.character(REF)) %>%
+            .$seq %>%
+            paste(collapse = '') %>%
+            write(file="variants_concat.fasta",append=TRUE)
+
+    # All sample sequences
+        samplesBTN=c("C_pei1","C_pei2","C_pei3","C_usa1","C_usa2","C_usa3","C_usa4","C_usa5")
+        for(sample in samplesBTN){
+            write(paste0(">", sample), file="variants_concat.fasta",append=TRUE)
+            min_depth <- get(paste0(sample, "_avg"))/weak_depth
+            realSNVs %>%
+                mutate(seq = case_when(get(paste0(sample,"_NV")) > min_depth ~ as.character(ALT),
+                                        get(paste0(sample,"_NV")) <= min_depth ~ as.character(REF))) %>%
+                .$seq %>%
+                paste(collapse = '') %>%
+                write(file="variants_concat.fasta",append=TRUE)
         }
-        for(B in samplesBTN){
-            if(B != "genome"){
-                # altB1= get(paste0(B,"_avg"))/stringent_depth # high threshold
-                altB1= get(paste0(B,"_avg"))/weak_depth # high threshold
-                altB2= get(paste0(B,"_avg"))/weak_depth # low threshold
-            }
-            if(A == "genome"){
-                if(B != "genome"){ 
-                    count <- filter(realSNVs, get(paste0(B,"_NV"))>altB1) %>% nrow()
-                            # filter(realSNVs, get(paste0(B,"_NV"))>altB1) %>% helmsmanfile(A,B)
-                }
-            if(B == "genome"){ 
-                    count <- 0
-                }
-            }
-            if(B == "genome"){
-                if(A != "genome"){
-                    count <- filter(realSNVs, get(paste0(A,"_NV"))>altA1) %>% nrow()
-                             #filter(realSNVs, get(paste0(A,"_NV"))>altA1) %>% helmsmanfile(A,B)
-                }
-            }
-            if(A != "genome" & B != "genome"){
-                count <- filter(realSNVs, (get(paste0(A,"_NV"))>altA1 & get(paste0(B,"_NV"))<altB2) |
-                                            (get(paste0(A,"_NV"))<altA2 & get(paste0(B,"_NV"))>altB1)
-                                            ) %>% nrow()
-                        #  filter(realSNVs, (get(paste0(A,"_NV"))>altA1 & get(paste0(B,"_NV"))<altB2) |
-                        #                     (get(paste0(A,"_NV"))<altA2 & get(paste0(B,"_NV"))>altB1)
-                        #                     ) %>% helmsmanfile(A,B)
-            }
-        pairwise[nrow(pairwise) + 1,] = c(A,B,count)
-        print(paste("   ",B,count,"done"))
+
+    # Convert to phylip format file
+        read.dna("variants_concat.fasta", format="fasta") %>%
+            write.dna("variants_concat.phy", format="interleaved", nbcol=-1,colsep="")
+
+
+
+
+    # Just sample sequences
+        samplesBTN=c("C_pei1","C_pei2","C_pei3","C_usa1","C_usa2","C_usa3","C_usa4","C_usa5")
+        for(sample in samplesBTN){
+            write(paste0(">", sample), file="variants_concat_BTN.fasta",append=TRUE)
+            min_depth <- get(paste0(sample, "_avg"))/weak_depth
+            realSNVs %>%
+                mutate(seq = case_when(get(paste0(sample,"_NV")) > min_depth ~ as.character(ALT),
+                                        get(paste0(sample,"_NV")) < min_depth ~ as.character(REF))) %>%
+                .$seq %>%
+                paste(collapse = '') %>%
+                write(file="variants_concat_BTN.fasta",append=TRUE)
         }
+      
+    # Convert to phylip format file
+        read.dna("variants_concat_BTN.fasta", format="fasta") %>%
+            write.dna("variants_concat_BTN.phy", format="interleaved", nbcol=-1,colsep="")
+
+####################################################
+
+# https://a-little-book-of-r-for-bioinformatics.readthedocs.io/en/latest/src/chapter5.html
+
+setwd("/ssd3/Mar_genome_analysis/revision/phylogeny")
+
+# Phylogeny building fuctions
+    rootedNJtree <- function(alignment, theoutgroup)
+    {
+        # load the ape and seqinR packages:
+        require("ape")
+        require("seqinr")
+        # define a function for making a tree:
+        makemytree <- function(alignmentmat, outgroup=`theoutgroup`)
+        {
+            alignment <- ape::as.alignment(alignmentmat)
+            alignmentbin <- as.DNAbin(alignment)
+            mydist <- dist.dna(alignmentbin, model = "raw")
+            mytree <- nj(mydist)
+            mytree <- makeLabel(mytree, space="") # get rid of spaces in tip names.
+            myrootedtree <- root(mytree, outgroup, r=TRUE)
+            return(myrootedtree)
+        }
+        # infer a tree
+        mymat  <- as.matrix.alignment(alignment)
+        myrootedtree <- makemytree(mymat, outgroup=theoutgroup)
+        # bootstrap the tree
+        myboot <- boot.phylo(myrootedtree, mymat, makemytree)
+        # plot the tree:
+        plot.phylo(myrootedtree, type="p")  # plot the rooted phylogenetic tree
+        nodelabels(myboot,cex=0.7)          # plot the bootstrap values
+        myrootedtree$node.label <- myboot   # make the bootstrap values be the node labels
+        return(myrootedtree)
     }
-    #head(pairwise)
-    col1 <- filter(pairwise, A =="C_pei1") %>% .$count
-    col2 <- filter(pairwise, A =="C_pei2") %>% .$count
-    col3 <- filter(pairwise, A =="C_pei3") %>% .$count
-    # col4 <- filter(pairwise, A =="C_pei4") %>% .$count
-    col5 <- filter(pairwise, A =="C_usa1") %>% .$count
-    col6 <- filter(pairwise, A =="C_usa2") %>% .$count
-    col7 <- filter(pairwise, A =="C_usa3") %>% .$count
-    col8 <- filter(pairwise, A =="C_usa4") %>% .$count
-    col9 <- filter(pairwise, A =="C_usa5") %>% .$count
-    # col10 <- filter(pairwise, A =="C_usa6") %>% .$count
-    # col11 <- filter(pairwise, A =="C_usa7") %>% .$count
-    col12 <- filter(pairwise, A =="genome") %>% .$count
-    pairwise_table <- data.frame(Cpei1 = as.numeric(col1), Cpei2 = as.numeric(col2), Cpei3 = as.numeric(col3), # Cpei4 = as.numeric(col4),
-                                Cusa1 = as.numeric(col5), Cusa2 = as.numeric(col6), Cusa3 = as.numeric(col7),
-                                Cusa4 = as.numeric(col8), Cusa5 = as.numeric(col9), genome = as.numeric(col12)) # , Cusa6 = as.numeric(col10), Cusa7 = as.numeric(col11)
-    rownames(pairwise_table) <- samplesBTN
-    pairwise_table_nogenome <- pairwise_table[1:8,1:8]
-    pairwise_table
+    unrootedNJtree <- function(alignment)
+    {
+        # this function requires the ape and seqinR packages:
+        require("ape")
+        require("seqinr")
+        # define a function for making a tree:
+        makemytree <- function(alignmentmat)
+        {
+            alignment <- ape::as.alignment(alignmentmat)
+            alignmentbin <- as.DNAbin(alignment)
+            mydist <- dist.dna(alignmentbin)
+            mytree <- nj(mydist)
+            mytree <- makeLabel(mytree, space="") # get rid of spaces in tip names.
+            return(mytree)
+        }
+        # infer a tree
+        mymat  <- as.matrix.alignment(alignment)
+        mytree <- makemytree(mymat)
+        # bootstrap the tree
+        myboot <- boot.phylo(mytree, mymat, makemytree)
+        # plot the tree:
+        plot.phylo(mytree,type="u")   # plot the unrooted phylogenetic tree
+        nodelabels(myboot,cex=0.7)    # plot the bootstrap values
+        mytree$node.label <- myboot   # make the bootstrap values be the node labels
+        return(mytree)
+    }
 
-# Print output
-    #pdf("BTN.tree.pdf")
-    pdf("BTN.noLOH.tree.pdf")
-        njtree <- root(nj(as.dist(pairwise_table)), outgroup = "genome", resolve.root = TRUE)
-        plot.phylo(root(njtree, outgroup = "genome"))
+
+# Run alignments
+    loaddata <- read.alignment(file = "variants_concat_BTN.fasta", format = "fasta")
+    loaddata2 <- read.alignment(file = "variants_concat.fasta", format = "fasta")
+
+    pdf("nj.tree3.pdf")
+    #datatree <- unrootedNJtree(loaddata)
+    datatree <- rootedNJtree(loaddata2, "genome")
     dev.off()
-    #write.tree(njtree, file = "BTN.tree")
-    #njtree_nogenome <- nj(as.dist(pairwise_table_nogenome))
-    saveRDS(pairwise_table, file="BTN.pairwise_table.phy.rds")
-    saveRDS(njtree, file="BTN.tree.phy.rds")
-    #saveRDS(njtree_nogenome , file="BTNnogenome.tree.phy.rds")
-    write.tree(njtree, file = "BTN.noLOH2.tree")
+    saveRDS(datatree, file="BTN.tree.phy.rds")
+    write.tree(datatree, file = "BTN.noLOH.coorectboots.tree")
 
-# NEW bootstrapping phylogeny
-    #tree_build <- function(x){nj(as.dist(x))}
-    tree_build <- function(x) root(nj(as.dist(x)), outgroup = "genome", resolve.root = TRUE)
-    for(i in 1:10){
-        boot.phylo(tree_build(pairwise_table), pairwise_table, tree_build, B=1000) %>% print()
-        #Example output
-        # Calculating bootstrap values... done.
-        # [1] 1000   31   49   94   51   69  103 1000
-    }
+    pdf("nj.treeBTN.pdf")
+    datatree <- unrootedNJtree(loaddata)
+    #datatree <- rootedNJtree(loaddata2, "genome")
+    dev.off()
 
-
-# plot in a grid 
-    # p <- list()
-    # i=0
-    # for(A in samplesBTN){
-    #     for(B in samplesBTN){
-    #         if(A != B & A != "genome" & B != "genome" ){
-    #             i=i+1
-    #         # assign thresholds
-    #             altA1= get(paste0(A,"_avg"))/stringent_depth # high threshold
-    #             altB2= get(paste0(B,"_avg"))/weak_depth # low threshold
-    #             plot1 <- filter(realSNVs, (get(paste0(A,"_NV"))>altA1 & get(paste0(B,"_NV"))<altB2))
-    #         # plot
-    #             plotalt(plot1, A, B) %>% print()
-    #             p[[i]] <- plotalt(plot1, A, B)
-    #             print(paste(A,"not",B,"done"))
-    #         }
-    #     }
-    # }
-
-    # pdf("pairwise_histograms.pdf", height=20, width=20)
-    #     #grid.arrange(p[1:4], ncol=2) #length(samplesBTN))
-    #     do.call(grid.arrange,p)
-    # dev.off()
 
 
 #################################################################################

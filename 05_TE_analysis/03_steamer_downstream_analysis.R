@@ -48,45 +48,70 @@ library(ape) # for pairwise phylogeny
     nrow(merge_all)
     nrow(merge_all_updown)
 
-# PAIRWISE ANALYSIS
-    samplesALL=c("MELC_2E11","MELC_A9","PEI_DF490","FFM_19G1","FFM_20B2","FFM_22F10","MELC_A11_S1","NYTC_C9_S2","DF_488","DN_HL03","PEI_DN08_S3")
-    #samplesBTN=c("MELC_2E11","FFM_19G1","FFM_20B2","FFM_22F10","MELC_A11_S1","NYTC_C9_S2","DF_488","DN_HL03","PEI_DN08_S3")
-    pairwise=data.frame(A=character(), B=character(), count=numeric(), stringsAsFactors = FALSE)
-    for(A in samplesALL){
-        print(paste(A,"started"))
-        for(B in samplesALL){
-            count <- filter(merge_all, (get(A)>0 & get(B)==0) | (get(A)==0 & get(B)>0)) %>% nrow()
-        pairwise[nrow(pairwise) + 1,] = c(A,B,count)
-        print(paste("   ",B,count,"done"))
-        }
-    }
-    #head(pairwise)
-    col1 <- filter(pairwise, A =="MELC_2E11") %>% .$count
-    col2 <- filter(pairwise, A =="MELC_A9") %>% .$count
-    col3 <- filter(pairwise, A =="PEI_DF490") %>% .$count
-    col4 <- filter(pairwise, A =="FFM_19G1") %>% .$count
-    col5 <- filter(pairwise, A =="FFM_20B2") %>% .$count
-    col6 <- filter(pairwise, A =="FFM_22F10") %>% .$count
-    col7 <- filter(pairwise, A =="MELC_A11_S1") %>% .$count
-    col8 <- filter(pairwise, A =="NYTC_C9_S2") %>% .$count
-    col9 <- filter(pairwise, A =="DF_488") %>% .$count
-    col10 <- filter(pairwise, A =="DN_HL03") %>% .$count
-    col11 <- filter(pairwise, A =="PEI_DN08_S3") %>% .$count
-    pairwise_table <- data.frame(MELC_2E11 = as.numeric(col1), MELC_A9 = as.numeric(col2), PEI_DF490 = as.numeric(col3),
-                                FFM_19G1 = as.numeric(col4), FFM_20B2 = as.numeric(col5), FFM_22F10 = as.numeric(col6), MELC_A11_S1 = as.numeric(col7), NYTC_C9_S2 = as.numeric(col8), 
-                                DF_488 = as.numeric(col9), DN_HL03 = as.numeric(col10), PEI_DN08_S3 = as.numeric(col11))
-    rownames(pairwise_table) <- samplesALL
-    pairwise_table
-    # Print output
-        pdf("steamer.tree.pdf")
-            njtree <- root(nj(as.dist(pairwise_table)), outgroup = "MELC_A9")
-            plot.phylo(root(njtree, outgroup = "MELC_A9"))
-            # njtree <- root(nj(as.dist(pairwise_table)), outgroup = "MELC_2E11")
-            # plot.phylo(root(njtree, outgroup = "MELC_2E11"))
-            # njtree <- root(nj(as.dist(pairwise_table)), outgroup = "PEI_DF490")
-            # plot.phylo(root(njtree, outgroup = "PEI_DF490"))
-        dev.off()
-        write.tree(njtree, file = "steamer.tree")
+
+## Phylogeny using correct bootstrapping
+
+samplesALL
+sites_binary <- merge_all %>%
+    mutate(MELC_2E11 = case_when(MELC_2E11 > 0 ~ 1, MELC_2E11 == 0 ~ 0),
+           MELC_A9 = case_when(MELC_A9 > 0 ~ 1, MELC_A9 == 0 ~ 0),
+           PEI_DF490 = case_when(PEI_DF490 > 0 ~ 1, PEI_DF490 == 0 ~ 0),
+           FFM_19G1 = case_when(FFM_19G1 > 0 ~ 1, FFM_19G1 == 0 ~ 0),
+           FFM_20B2 = case_when(FFM_20B2 > 0 ~ 1, FFM_20B2 == 0 ~ 0),
+           FFM_22F10 = case_when(FFM_22F10 > 0 ~ 1, FFM_22F10 == 0 ~ 0),
+           MELC_A11 = case_when(MELC_A11_S1 > 0 ~ 1, MELC_A11_S1 == 0 ~ 0),
+           NYTC_C9 = case_when(NYTC_C9_S2 > 0 ~ 1, NYTC_C9_S2 == 0 ~ 0),
+           DF_488 = case_when(DF_488 > 0 ~ 1, DF_488 == 0 ~ 0),
+           DN_HL03 = case_when(DN_HL03 > 0 ~ 1, DN_HL03 == 0 ~ 0),
+           PEI_DN08 = case_when(PEI_DN08_S3 > 0 ~ 1, PEI_DN08_S3 == 0 ~ 0)
+    ) %>%
+    select(MELC_2E11,MELC_A9,PEI_DF490,FFM_19G1,FFM_20B2,FFM_22F10,MELC_A11,NYTC_C9,DF_488,DN_HL03,PEI_DN08)
+
+sites_binary_input <- sites_binary[rowSums(sites_binary)>0,] %>% t() %>% as.matrix()
+colnames(sites_binary_input)<-NULL
+
+
+
+  rootedNJtree <- function(alignment, theoutgroup)
+  {
+     # this function requires the ape and seqinR packages:
+     require("ape")
+     require("seqinr")
+     # define a function for making a tree:
+     makemytree <- function(alignmentmat, outgroup=`theoutgroup`)
+     {
+        mydist <- dist.gene(alignmentmat)
+        mytree <- nj(mydist)
+        mytree <- makeLabel(mytree, space="") # get rid of spaces in tip names.
+        myrootedtree <- root(mytree, outgroup, r=TRUE)
+        return(myrootedtree)
+     }
+     # infer a tree
+     mymat  <- alignment
+     mytree <- makemytree(mymat)
+     # bootstrap the tree
+     myboot <- boot.phylo(mytree, mymat, makemytree)
+     # plot the tree:
+     plot.phylo(mytree, type="p")   # plot the unrooted phylogenetic tree
+     nodelabels(myboot,cex=0.7)    # plot the bootstrap values
+     mytree$node.label <- myboot   # make the bootstrap values be the node labels
+     return(mytree)
+  }                                       
+
+    setwd("/ssd3/Mar_genome_analysis/revision/phylogeny/steamer")
+    pdf("nj.steamer.tree.pdf")
+    steamer_tree = nj(dist.gene(sites_binary_input)) 
+    plot.phylo(steamer_tree, type="u")
+    dev.off()
+
+    pdf("nj.steamer.tree.pdf")
+    datatree <- rootedNJtree(sites_binary_input, "MELC_A9")
+    dev.off()
+    saveRDS(datatree, file="nj.steamer.tree.rds")
+    write.tree(datatree, file = "nj.steamer.tree")
+                                
+
+
 
 # Count healthys
     filter(merge_all, MELC_2E11 > 0) %>% nrow()
@@ -206,7 +231,7 @@ library(ape) # for pairwise phylogeny
 
     print_steamer_bed(somatic,"allCnoH_allPEI_allUSA.bed")
     print_steamer_bed(all_cancer,"allCnoH.bed")
-    print_steamer_bed(no_healthy,"anyCnoH.bed")
+    print_steamer_bed(any_cancer,"anyCnoH.bed")
     print_steamer_bed(all_usa,"allUSA.bed")
     print_steamer_bed(all_pei,"allPEI.bed")
     print_steamer_bed(merge_all,"all_sites.bed")
@@ -291,4 +316,91 @@ all_pei_freq <- mutate(all_pei,
             #ggtitle("USA_somaticSNV_CN_comparison")
         #print(plot1)
     dev.off()
-          
+
+#### NEW BELOW
+# Steamer pileups
+# LOAD INPUTS - just those supported by both up and down
+    setwd("/ssd3/Mar_genome_analysis/steamer/final_pipeline/merge")
+    sample1 <- "MELC-2E11" # Healthy REFERENCE
+    sample2 <- "MELC-A9" # Healthy
+    sample3 <- "PEI-DF490" # Healthy
+    sample4 <- "FFM-19G1" # Cancerous
+    sample5 <- "FFM-20B2" # Cancerous
+    sample6 <- "FFM-22F10" # Cancerous
+    sample7 <- "MELC-A11_S1" # Cancerous
+    sample8 <- "NYTC-C9_S2" # Cancerous
+    sample9 <- "DF-488" # Cancerous
+    sample10 <- "DN-HL03" # Cancerous
+    sample11 <- "PEI-DN08_S3" # Cancerous
+    for(mult in c("updown","multiple")){
+        for(i in 1:11){
+            # Steamer insertion sites
+                sample <- paste0("/ssd3/Mar_genome_analysis/steamer/final_pipeline/", get(paste0("sample",i)), "_",mult,".bed")
+                sample_file <- read.delim(sample) %>%
+                    filter((up > 0 & down>0)) %>%
+                    select(contig,start,end, strand, name, total)
+                names(sample_file) <- c("contig", "min", "max", "strand", "name", str_replace(get(paste0("sample",i)), "-", "_"))
+            # Depth of reads info
+                depth <- paste0("/ssd3/Mar_genome_analysis/steamer/final_pipeline/coverage/",get(paste0("sample",i)),"_",mult,"_depth.bed")
+                depth_file <- read.delim(depth, header = FALSE, col.names = c("name", paste0(str_replace(get(paste0("sample",i)), "-", "_"),"_cov")))
+                col_name <- paste0(str_replace(i, "-", "_"),"cov")
+            # Merge the two
+                merged <- right_join(sample_file, depth_file, by = "name") #%>%
+                    #mutate(!!col_name := get(str_replace(get(paste0("sample",i)), "-", "_")) / get(str_replace(get(paste0("sample",i)), "-", "_cov_")))
+                assign(paste0("sample",i,"_premerge"),merged)
+            }
+        # MERGE INTO ONE FILE
+            merge_all <- full_join(sample1_premerge, sample2_premerge, by = c("contig", "min", "max", "strand", "name")) 
+            for(i in 3:11){
+                merge_all <- full_join(merge_all, get(paste0("sample",i,"_premerge")), by = c("contig", "min", "max", "strand", "name"))
+            }
+            merge_all[is.na(merge_all)] <- 0
+            nrow(merge_all)
+            if(mult == "updown"){ merge_all_updown <- merge_all}
+    }
+
+# other bins
+    no_healthy <- filter(merge_all, MELC_2E11 == 0 & MELC_A9 == 0 & PEI_DF490 == 0 )
+    all_cancer <- filter(no_healthy,
+                            FFM_19G1 > 0 & FFM_20B2 > 0 & MELC_A11_S1 > 0 & FFM_22F10 > 0 & NYTC_C9_S2 > 0 &
+                            DF_488 > 0 & DN_HL03 > 0 & PEI_DN08_S3 > 0)%>%
+                    mutate(score = (FFM_19G1+FFM_20B2+MELC_A11_S1+FFM_22F10+NYTC_C9_S2+DF_488+DN_HL03+PEI_DN08_S3)/
+                                (FFM_19G1_cov+FFM_20B2_cov+MELC_A11_S1_cov+FFM_22F10_cov+
+                                NYTC_C9_S2_cov+DF_488_cov+DN_HL03_cov+PEI_DN08_S3))
+    all_cancer2 <- filter(no_healthy,
+                            (FFM_19G1 > 0 | FFM_20B2 > 0 | MELC_A11_S1 > 0 | FFM_22F10 > 0 | NYTC_C9_S2 > 0) &
+                            (DF_488 > 0 | DN_HL03 > 0 | PEI_DN08_S3 > 0))
+    any_cancer <- filter(no_healthy,
+                            (FFM_19G1 > 0 | FFM_20B2 > 0 | MELC_A11_S1 > 0 | FFM_22F10 > 0 | NYTC_C9_S2 > 0 |
+                            DF_488 > 0 | DN_HL03 > 0 | PEI_DN08_S3 > 0))
+    no_pei <- filter(no_healthy,
+                            DF_488 == 0 & DN_HL03 == 0 & PEI_DN08_S3 == 0)
+    no_usa <- filter(no_healthy,
+                            FFM_19G1 == 0 & FFM_20B2 == 0 & MELC_A11_S1 == 0 & FFM_22F10 == 0 & NYTC_C9_S2 == 0)
+
+    all_pei <- filter(no_usa,
+                            DF_488 > 0 & DN_HL03 > 0 & PEI_DN08_S3 > 0)%>%
+                    mutate(score = (DF_488+DN_HL03+PEI_DN08_S3)/(DF_488_cov+DN_HL03_cov+PEI_DN08_S3))                  
+    all_usa <- filter(no_pei,
+                            FFM_19G1 > 0 & FFM_20B2 > 0 & MELC_A11_S1 > 0 & FFM_22F10 > 0 & NYTC_C9_S2 > 0)%>%
+                    mutate(score = (FFM_19G1+FFM_20B2+MELC_A11_S1+FFM_22F10+NYTC_C9_S2)/
+                                (FFM_19G1_cov+FFM_20B2_cov+MELC_A11_S1_cov+FFM_22F10_cov+NYTC_C9_S2_cov))
+
+
+    steamer_ins <- rbind(mutate(all_cancer, bin = "allBTN"),mutate(all_usa, bin = "allUSA"),mutate(all_pei, bin = "allPEI")) %>% 
+        separate(col = contig, into = c(NA, "contig"), sep = "scaffold") %>% # contig to scaffold number so that I can sort, note it is still a character until changed
+        arrange(contig,min) %>% # sort
+        mutate(lead = lead(min) - min,
+               lag = min - lag(min)) # find how close to surrounding insertions
+
+    select(steamer_ins, contig, min, lead, lag)
+    filter(steamer_ins, contig == 11)
+
+    filter(steamer_ins, lead > 0 & lag > 0 & (lead < 10000 | lag < 10000)) %>%
+        select(name, contig, min, lead, lag, bin)
+        # Manually found in /ssd3/Mar_genome_analysis/steamer/final_pipeline/genes/allCnoH_allPEI_allUSA.proximity ->
+        # /ssd3/Mar_genome_analysis/steamer/final_pipeline/merge/pileups_manual.txt
+
+    filter(steamer_ins, lead > 0 & lag > 0 & (lead < 100000 & lag < 100000)) %>%
+        select(name, contig, min, lead, lag, bin)
+    

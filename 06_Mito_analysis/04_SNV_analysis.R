@@ -3,6 +3,7 @@
     # R
     library(tidyverse)
     library(ape)
+    library(seqinr)
     library(Biostrings)
     library(gridExtra)
     library(devtools)
@@ -277,77 +278,112 @@ purity
             ylab("Fraction DNA from disseminated cancer")
     dev.off()
 
-# comparison for pairwise differences
-    # set cutoff parameters
-        top=0.6
-        bottom=0.1
-    # samples
-        samplesBTN=c("Cpei0", "Cpei1", "Cpei3", "Cusa0a", "Cusa0b", "Cusa2", "Cusa4", "Cusa5", "Href", "Husa", "Hpei", "genome") # Host cont to exclude: "Cusa1", "Cusa3", "Cpei2"
-    # calculate differences
-        pairwise=data.frame(A=character(), B=character(), count=numeric(), stringsAsFactors = FALSE)
-        for(A in samplesBTN){
-            if(A != "genome"){
-                altA1=top
-                altA2=bottom
-            }
-            for(B in samplesBTN){
-                if(B != "genome"){
-                    altB1=top
-                    altB2=bottom
-                }
-                if(A == "genome"){
-                    if(B != "genome"){ 
-                        count <- filter(snvs2, get(paste0(B,"_f"))>altB1) %>% nrow()
-                    }
-                }
-                if(B == "genome"){
-                    if(A != "genome"){
-                        count <- filter(snvs2, get(paste0(A,"_f"))>altA1) %>% nrow()
-                    }
-                }
-                if(A != "genome" & B != "genome"){
-                    count <- filter(snvs2, (get(paste0(A,"_f"))>altA1 & get(paste0(B,"_f"))<altB2) |
-                                                (get(paste0(A,"_f"))<altA2 & get(paste0(B,"_f"))>altB1)
-                                                ) %>% nrow()
-                }
-                if(A == "genome" & B == "genome"){
-                    count=0
-                }
-            pairwise[nrow(pairwise) + 1,] = c(A,B,count)
-            #print(paste(A,B,count,"done"))
-            }
+
+# MITOCHONDRIAL PHYLOGENY
+# From original file:C:\Users\shart\Metzger Lab Dropbox\Sam_data\Mya_genome\revision\BTN_phylogeny.R
+
+setwd("/ssd3/Mar_genome_analysis/revision/phylogeny/mito")
+
+# Phylogeny building fuctions
+    rootedNJtree <- function(alignment, theoutgroup)
+    {
+        # load the ape and seqinR packages:
+        require("ape")
+        require("seqinr")
+        # define a function for making a tree:
+        makemytree <- function(alignmentmat, outgroup=`theoutgroup`)
+        {
+            alignment <- ape::as.alignment(alignmentmat)
+            alignmentbin <- as.DNAbin(alignment)
+            mydist <- dist.dna(alignmentbin, model = "raw")
+            mytree <- nj(mydist)
+            mytree <- makeLabel(mytree, space="") # get rid of spaces in tip names.
+            myrootedtree <- root(mytree, outgroup, r=TRUE)
+            return(myrootedtree)
         }
-    # Combine into single table
-        #head(pairwise)
-        col1 <- filter(pairwise, A =="Cpei0") %>% .$count
-        col2 <- filter(pairwise, A =="Cpei1") %>% .$count
-        col3 <- filter(pairwise, A =="Cpei3") %>% .$count
-        col4 <- filter(pairwise, A =="Cusa0a") %>% .$count
-        col5 <- filter(pairwise, A =="Cusa0b") %>% .$count
-        col6 <- filter(pairwise, A =="Cusa2") %>% .$count
-        col7 <- filter(pairwise, A =="Cusa4") %>% .$count
-        col8 <- filter(pairwise, A =="Cusa5") %>% .$count
-        col9 <- filter(pairwise, A =="Href") %>% .$count
-        col10 <- filter(pairwise, A =="Husa") %>% .$count
-        col11 <- filter(pairwise, A =="Hpei") %>% .$count
-        col12 <- filter(pairwise, A =="genome") %>% .$count
-        #extras
-        col13 <- filter(pairwise, A =="Cpei2") %>% .$count
-        col14 <- filter(pairwise, A =="Cusa1") %>% .$count
-        col15 <- filter(pairwise, A =="Cusa3") %>% .$count
-        pairwise_table <- data.frame(Cpei0 = as.numeric(col1), Cpei1 = as.numeric(col2), Cpei3 = as.numeric(col3),
-                                    Cusa0a = as.numeric(col4), Cusa0b = as.numeric(col5), Cusa2 = as.numeric(col6), Cusa4 = as.numeric(col7), Cusa5 = as.numeric(col8), 
-                                    Href = as.numeric(col9), Husa = as.numeric(col10), Hpei = as.numeric(col11), genome = as.numeric(col12))
-    # label with real aliases
-        samplesBTN_alias=c("DF-488", "DN-HL03", "PEI-DN08", "FFM-19G1", "FFM-20B2", "FFM-22F10", "MELC-A11", "NYTC-C9", "Href", "Husa", "Hpei", "genome") # Host cont to exclude: "Cusa1", "Cusa3", "Cpei2"
-        rownames(pairwise_table) <- samplesBTN_alias
-        colnames(pairwise_table) <- samplesBTN_alias
-        pairwise_table
-    # print tree to plot with FigTree
-        njtree <- root(nj(as.dist(pairwise_table)), outgroup = "genome")
-        write.tree(njtree, file = "BTN_mt.tree")
-        njtree2 <- root(nj(as.dist(pairwise_table)), outgroup = "Href")
-        write.tree(njtree2, file = "BTN_mt2.tree")
+        # infer a tree
+        mymat  <- as.matrix.alignment(alignment)
+        myrootedtree <- makemytree(mymat, outgroup=theoutgroup)
+        # bootstrap the tree
+        myboot <- boot.phylo(myrootedtree, mymat, makemytree)
+        # plot the tree:
+        plot.phylo(myrootedtree, type="p")  # plot the rooted phylogenetic tree
+        nodelabels(myboot,cex=0.7)          # plot the bootstrap values
+        myrootedtree$node.label <- myboot   # make the bootstrap values be the node labels
+        return(myrootedtree)
+    }
+    unrootedNJtree <- function(alignment)
+    {
+        # this function requires the ape and seqinR packages:
+        require("ape")
+        require("seqinr")
+        # define a function for making a tree:
+        makemytree <- function(alignmentmat)
+        {
+            alignment <- ape::as.alignment(alignmentmat)
+            alignmentbin <- as.DNAbin(alignment)
+            mydist <- dist.dna(alignmentbin)
+            mytree <- nj(mydist)
+            mytree <- makeLabel(mytree, space="") # get rid of spaces in tip names.
+            return(mytree)
+        }
+        # infer a tree
+        mymat  <- as.matrix.alignment(alignment)
+        mytree <- makemytree(mymat)
+        # bootstrap the tree
+        myboot <- boot.phylo(mytree, mymat, makemytree)
+        # plot the tree:
+        plot.phylo(mytree,type="u")   # plot the unrooted phylogenetic tree
+        nodelabels(myboot,cex=0.7)    # plot the bootstrap values
+        mytree$node.label <- myboot   # make the bootstrap values be the node labels
+        return(mytree)
+    }
+
+
+# fasta file of sequences to align
+
+    # Reference genome sequence
+        write(">genome", file="variants_mt.fasta")
+        sequence <- snvs2 %>%
+            mutate(seq = as.character(ref)) %>%
+            .$seq %>%
+            paste(collapse = '') %>%
+            write(file="variants_mt.fasta",append=TRUE)
+
+    # All sample sequences
+        samples=c("Href","Hpei","Husa","Cpei1","Cpei0","Cpei3","Cusa0a","Cusa2","Cusa0b","Cusa4","Cusa5")
+        for(sample in samples){
+            write(paste0(">", sample), file="variants_mt.fasta",append=TRUE)
+            snvs2 %>%
+                mutate(seq = case_when(get(paste0(sample,"_f")) > 0.5 ~ as.character(alt),
+                                        get(paste0(sample,"_f")) < 0.5 ~ as.character(ref))) %>%
+                .$seq %>%
+                paste(collapse = '') %>%
+                write(file="variants_mt.fasta",append=TRUE)
+        }
+
+loaddata <- read.alignment(file = "variants_mt.fasta", format = "fasta")
+
+    pdf("nj.mt.tree.pdf")
+    #datatree <- unrootedNJtree(loaddata)
+    datatree <- rootedNJtree(loaddata, "genome")
+    dev.off()
+    saveRDS(datatree, file="nj.mt.tree.rds")
+    write.tree(datatree, file = "nj.mt.tree")
+
+    pdf("nj.mt.treeK80.pdf")
+    #datatree <- unrootedNJtree(loaddata)
+    datatree <- rootedNJtreeK80(loaddata, "genome")
+    dev.off()
+    saveRDS(datatree, file="nj.mt.treeK80.rds")
+    write.tree(datatree, file = "nj.mtK80.tree")
+    pdf("nj.mt.treeTN93.pdf")
+    #datatree <- unrootedNJtree(loaddata)
+    datatree <- rootedNJtreeTN93(loaddata, "genome")
+    dev.off()
+    saveRDS(datatree, file="nj.mt.treeTN93.rds")
+    write.tree(datatree, file = "nj.mtTN93.tree")
+
 
 
 # MUTATIONAL BIASES AND CODING MUTATIONS
