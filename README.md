@@ -16,13 +16,10 @@ Hart S. F. M., Yonemitsu, M. A., Giersch, R. M., Beal B. F., Arriagada G., Davis
 
 <br/><br/>
 
-### Raw data files are available here: *(will update upon publication of paper)*
-
-### Key output files are available here: *(will update upon publication of paper)*
+### Raw sequence data and the assembled genome are available via NCBI BioProject PRJNA874712 (available upon publication)
 
 ### Software installations used:
 
-* R (3.6.0)
 * bedtools (2.29.1)
 * BBTools (38.86)
 * trimmomatic (0.36)
@@ -49,7 +46,7 @@ Hart S. F. M., Yonemitsu, M. A., Giersch, R. M., Beal B. F., Arriagada G., Davis
 * MAKER (2.31.10)
 * exonerate (2.2.0)
 
-### R packages used
+### R packages used (R v3.6.0)
 
 * Biostrings (2.54.0) 
 * sigfit (2.0.0)
