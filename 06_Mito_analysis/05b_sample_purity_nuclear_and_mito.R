@@ -229,37 +229,40 @@ allCnoH_homoz2 <- filter(allCnoH,
                             usa5T_VAF < homozT_cutoff)
 
 samplesALL <- c("Href", " Husa", "Hpei", "usa1","usa2","usa3","usa4","usa5","usa6","usa7","pei1","pei2","pei3","pei4")
-samplesC <- c("usa1","usa2","usa3","usa4","usa5","pei1","pei2","pei3")
-samplesU <- c("usa1","usa2","usa3","usa4","usa5")
-samplesP <- c("pei1","pei2","pei3")
+# samplesC <- c("usa1","usa2","usa3","usa4","usa5","pei1","pei2","pei3")
+# samplesU <- c("usa1","usa2","usa3","usa4","usa5")
+# samplesP <- c("pei1","pei2","pei3")
+samplesC <- c("usa1","usa2","usa3","usa4","usa5","usa6","usa7","pei1","pei2","pei3") # ,"pei4"
+samplesU <- c("usa1","usa2","usa3","usa4","usa5","usa6","usa7")
+samplesP <- c("pei1","pei2","pei3") #,"pei4"
 samplesH <- c("Husa", "Hpei")
 samplesT <- c("usa3","usa4","usa5","pei2","pei3")
 samplesTU <- c("usa3","usa4","usa5")
 
 for(sample in samplesC){
     print(sample)
-    median(allCnoH_homoz[,(paste0(sample,"_VAF"))]) %>%  print()
+    median(allCnoH_homoz[,(paste0(sample,"_VAF"))],  na.rm = TRUE) %>%  print()
 }
 for(sample in samplesC){
     print(sample)
-    mean(allCnoH_homoz[,(paste0(sample,"_VAF"))]) %>%  print()
-    mean(allCnoH_homoz2[,(paste0(sample,"_VAF"))]) %>%  print()
+    mean(allCnoH_homoz[,(paste0(sample,"_VAF"))],  na.rm = TRUE) %>%  print()
+    mean(allCnoH_homoz2[,(paste0(sample,"_VAF"))],  na.rm = TRUE) %>%  print()
 }
 
 for(sample in samplesC){
     print(sample)
-    median(allCnoH_homoz[,(paste0(sample,"_VAF"))]) %>%  print()
-    median(allCnoH_homoz2[,(paste0(sample,"_VAF"))]) %>%  print()
+    median(allCnoH_homoz[,(paste0(sample,"_VAF"))],  na.rm = TRUE) %>%  print()
+    median(allCnoH_homoz2[,(paste0(sample,"_VAF"))],  na.rm = TRUE) %>%  print()
 }
 
 mean_corr <- (mean(filter(anyH, Husa_VAF > 0.8)[,"Husa_VAF"]) + mean(filter(anyH, Hpei_VAF > 0.8)[,"Hpei_VAF"])) / 2
 
 for(sample in samples){
     print(sample)
-    median(allCnoH_homoz[,paste0(sample, "_VAF")]) %>% print()
-    mean(allCnoH_homoz[,paste0(sample, "_VAF")]) %>% print()
-    sd(allCnoH_homoz[,paste0(sample, "_VAF")]) %>% print()
-    (mean(allCnoH_homoz[,paste0(sample, "_VAF")]) + mean_corr) %>% print()
+    median(allCnoH_homoz[,paste0(sample, "_VAF")],  na.rm = TRUE) %>% print()
+    mean(allCnoH_homoz[,paste0(sample, "_VAF")],  na.rm = TRUE) %>% print()
+    sd(allCnoH_homoz[,paste0(sample, "_VAF")],  na.rm = TRUE) %>% print()
+    (mean(allCnoH_homoz[,paste0(sample, "_VAF")],  na.rm = TRUE) + mean_corr) %>% print()
 }
 
 for(sample in samplesH){
@@ -293,7 +296,7 @@ for(sample in samplesH){
     }
     purity <- data.frame(vafs,vafnames) 
         head(purity, n=10)
-    purity_labs  <-group_by(purity, vafnames) %>% summarize(median = median(vafs))
+    purity_labs <- group_by(purity, vafnames) %>% summarize(median = median(vafs,  na.rm = TRUE))
 
     vafnames <- NULL
     vafs <- NULL
@@ -306,7 +309,7 @@ for(sample in samplesH){
         vafnames <- c(vafnames, vafnames1)
     }
     purityT <- data.frame(vafs,vafnames) 
-    purityT_labs  <-group_by(purityT, vafnames) %>% summarize(median = median(vafs))
+    purityT_labs  <-group_by(purityT, vafnames) %>% summarize(median = median(vafs,  na.rm = TRUE))
 
 # pdf("purity_plot_tests.pdf")
 # ggplot(purity, aes(x = vafnames, y = vafs))+
@@ -362,9 +365,12 @@ for(sample in samplesH){
     snvsmt <- read.delim("/ssd3/Mar_genome_analysis/bwa_mapping/mito/all_samples/somatypus/Somatypus_SNVs_final.counts", header = TRUE)
 
 #not in dloop region, correct for name differences
+    # snvsmt <- filter(snvsmt, pos < 12060 | pos > 12971) %>%
+    #     select(Href_f,Husa_f,Hpei_f,Cpei0_f,Cpei1_f,Cpei3_f,Cusa0a_f,Cusa0b_f,Cusa2_f,Cusa4_f,Cusa5_f,Tpei1_f,Tpei3_f,Tusa2_f,Tusa4_f,Tusa5_f)
+    # colnames(snvsmt) <- c("Href_f","Husa_f","Hpei_f","pei1_f","pei2_f","pei3_f","usa1_f","usa2_f","usa3_f","usa4_f","usa5_f","pei2T_f","pei3T_f","usa3T_f","usa4T_f","usa5T_f")
     snvsmt <- filter(snvsmt, pos < 12060 | pos > 12971) %>%
-        select(Href_f,Husa_f,Hpei_f,Cpei0_f,Cpei1_f,Cpei3_f,Cusa0a_f,Cusa0b_f,Cusa2_f,Cusa4_f,Cusa5_f,Tpei1_f,Tpei3_f,Tusa2_f,Tusa4_f,Tusa5_f)
-    colnames(snvsmt) <- c("Href_f","Husa_f","Hpei_f","pei1_f","pei2_f","pei3_f","usa1_f","usa2_f","usa3_f","usa4_f","usa5_f","pei2T_f","pei3T_f","usa3T_f","usa4T_f","usa5T_f")
+        select(Href_f,Husa_f,Hpei_f,Cpei0_f,Cpei1_f,Cpei2_f,Cpei3_f,Cusa0a_f,Cusa0b_f,Cusa1_f,Cusa2_f,Cusa3_f,Cusa4_f,Cusa5_f,Tpei1_f,Tpei3_f,Tusa2_f,Tusa4_f,Tusa5_f)
+    colnames(snvsmt) <- c("Href_f","Husa_f","Hpei_f","pei1_f","pei2_f","pei4_f","pei3_f","usa1_f","usa2_f","usa6_f","usa3_f","usa7_f","usa4_f","usa5_f","pei2T_f","pei3T_f","usa3T_f","usa4T_f","usa5T_f")
 # Filter for snvs not found in healthies
     snvs_noH <- filter(snvsmt, Href_f < 0.5, Husa_f < 0.5, Hpei_f < 0.5)
 
@@ -406,11 +412,14 @@ purityMT_labs
 
 
 p1 <- ggplot(purity, aes(x = vafnames, y = vafs))+
-        geom_boxplot(outlier.shape = NA, fill = c(rep("black",2),rep("red",3),rep("blue",5)))+
+        #geom_boxplot(outlier.shape = NA, fill = c(rep("black",2),rep("red",3),rep("blue",7)))+
+        geom_boxplot(outlier.shape = NA, fill = c(rep("black",2),rep("red",3),rep("blue",5),rep("grey",2)))+
         geom_text(data = purity_labs, aes(x=vafnames, y=1, label=round(median, digits=3)), vjust = -0.75, size=2)+
-        ylim(0.79,1) +
+        #ylim(0.79,1) +
+        coord_cartesian(ylim=c(0.59, 1)) +
         xlab(NA)+
-        ylab("SAMPLE PURITY\n(VAF for homozygous CN2\ncancer-specific SNVs)")+
+        ylab("Sample purity\n(VAF for homozygous CN2 SNVs)")+
+        #ylab("Sample purity\n(VAF for homozygous CN2\nsample-specific SNVs)")+
         theme_classic()+
         theme(axis.title.x=element_blank(),
             axis.text=element_text(size=6)
@@ -421,17 +430,19 @@ p2 <-ggplot(purityT, aes(x = vafnames, y = vafs))+
         geom_text(data = purityT_labs, aes(x=vafnames, y=median, label=round(median, digits=3)), vjust = -1.5, size=2)+
         ylim(0,1) +
         xlab(NA)+
-        ylab("CANCER DISSEMINATION\n(VAF for homozygous CN2\ncancer-specific SNVs in paired tissue)")+
+        ylab("Cancer dissemination in tissue\n(VAF for homozygous CN2 SNVs)")+
+        #ylab("Cancer dissemination in tissue\n(VAF for homozygous CN2\ncancer-specific SNVs)")+
         theme_classic()+
         theme(axis.title.x=element_blank(),
             axis.text=element_text(size=6)
         )
 p3 <-ggplot(purityM, aes(x = vafnames, y = vafs))+
-        geom_boxplot(outlier.shape = NA, fill = c(rep("black",3),rep("red",3),rep("blue",5)))+
+        geom_boxplot(outlier.shape = NA, fill = c(rep("black",3),rep("red",3),rep("blue",5),rep("grey",2)))+
         geom_text(data = purityM_labs, aes(x=vafnames, y=1, label=round(median, digits=3)), vjust = -0.75, size=2)+
         ylim(0.79,1) +
         xlab(NA)+
-        ylab("SAMPLE PURITY\n(VAF for mitochondrial\ncancer-specific SNVs)")+
+        ylab("Sample purity\n(VAF for mitochondrial SNVs)")+
+        #ylab("Sample purity\n(VAF for mitochondrial\nsample-specific SNVs)")+
         theme_classic()+
         theme(axis.title.x=element_blank(),
             axis.text=element_text(size=6)
@@ -442,13 +453,22 @@ p4 <-ggplot(purityMT, aes(x = vafnames, y = vafs))+
         geom_text(data = purityMT_labs, aes(x=vafnames, y=median, label=round(median, digits=3)), vjust = -1.5, size=2)+
         ylim(0,1) +
         xlab(NA)+
-        ylab("CANCER DISSEMINATION\n(VAF for mitochondrial\ncancer-specificSNVs in paired tissue)")+
+        ylab("Cancer dissemination in tissue\n(VAF for mitochondrial SNVs)")+
+        #ylab("Cancer dissemination in tissue\n(VAF for mitochondrial\ncancer-specific SNVs)")+
         theme_classic()+
         theme(axis.title.x=element_blank(),
             axis.text=element_text(size=6)
         )
-pdf("purity_plots.pdf")
-grid.arrange(p3,p4,p1,p2, nrow = 2, widths=c(2,1))
+
+pdf("purity_plots4.pdf")
+plots <- list(p3,p4,p1,p2)
+grid.arrange(
+    grobs = plots,
+#grid.arrange(p3,p4,p1,p2, nrow = 2,
+    widths=c(3,1),
+    layout_matrix = rbind(c(NA,NA),c(1,2),c(1,2),c(1,2),c(1,2),c(1,2),c(1,2),c(1,2),
+                          c(NA,NA),c(3,4),c(3,4),c(3,4),c(3,4),c(3,4),c(3,4),c(3,4))
+)
 dev.off()
 
 # pdf("purity_tissue_hists.pdf")
@@ -498,6 +518,3 @@ dev.off()
     genome_vs_mt <- data.frame(samples = colnames(snvsmt2), mt_cov = colMeans(snvsmt2), g_cov = genome_cov) %>%
         mutate(mt_vs_g = mt_cov / g_cov) %>%
         print()
-
-
-

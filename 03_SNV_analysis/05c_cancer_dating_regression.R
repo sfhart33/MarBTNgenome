@@ -1,3 +1,6 @@
+# Original file here: C:\Users\shart\Metzger Lab Dropbox\Sam_data\Mya_genome\SNPs\somatypus_output_dating2withLOH.r
+
+# Back in R: sigfit
     library(tidyverse)
     library(ape)
     library(sigfit)
@@ -12,7 +15,7 @@
 
 ##############################
 # Data WITH and without LOH
-for(run in c("withLOH","noLOH")){
+for(run in c("noLOH")){ #"withLOH",
     # Load data
         setwd(paste0("/ssd3/Mar_genome_analysis/somatypus/Mar.3.4.6.p1/final_run/pairwise/",run))
         helmsman_output_file <- paste0("/ssd3/Mar_genome_analysis/somatypus/Mar.3.4.6.p1/final_run/pairwise/",run,"/helmsman_div_output/subtype_count_matrix.txt")
@@ -90,9 +93,127 @@ for(run in c("withLOH","noLOH")){
 
 
 
-#specify to save plots in 2x2 grid
+# New 2023 revision supp figure
+    setwd(paste0("/ssd3/Mar_genome_analysis/somatypus/Mar.3.4.6.p1/final_run/pairwise/","withLOH"))
+    pdf("new_supp_fig_regression.pdf",width=3,height=3)
+      perGbcorrection = nonLOH_genome_size/1000000000
+        
+          data_colors <- c("red", "blue")
+          datasubset <- get(paste0("exp_",run)) %>% 
+            filter(sub == "USA")
+        for(sig in c("sigS","sig1","sig5","sig40","sigALL")){
+          sig_regression <- lm(get(sig) ~ dates, data=datasubset)
+          #assign(paste("regression", dataset, run, sig, sep = "_"), regression)
+          sig_rsquared <- summary(sig_regression)$r.squared
+          sig_p_value <- summary(sig_regression)$coefficients[2,4]
+          sig_intercept <- summary(sig_regression)$coefficients[1,1]
+          sig_rate <- summary(sig_regression)$coefficients[2,1]
+          #sig_rate_sd <- summary(sig_regression)$coefficients[2,2]
+          sig_rate_ci <- confint(sig_regression)[2,2]-sig_rate 
+          div_estimate <- round(sig_intercept/sig_rate)
+          div_estimate_lower95 <- round(sig_intercept/(sig_rate+sig_rate_ci))
+          if((-sig_rate)<sig_rate_ci & sig_rate<0){div_estimate_lower95 <- "-Inf"}
+          div_estimate_upper95 <- round(sig_intercept/(sig_rate-sig_rate_ci))
+          if(sig_rate<sig_rate_ci & sig_rate>0){div_estimate_upper95 <- "Inf"}
+          plot1 <- ggplot(datasubset, aes(x = jitter(dates+2021.73), y = get(sig)/perGbcorrection/1000, ymin=get(paste0(sig, "_L"))/perGbcorrection/1000, ymax=get(paste0(sig, "_U"))/perGbcorrection/1000)) + 
+            scale_color_manual(values=data_colors)+
+            stat_smooth(method = "lm",color="blue",fullrange = T) + 
+            geom_pointrange(data = exp_noLOH, aes(x = jitter(dates+2021.73), y = get(sig)/perGbcorrection/1000, ymin=get(paste0(sig, "_L"))/perGbcorrection/1000, ymax=get(paste0(sig, "_U"))/perGbcorrection/1000, color=sub))+ # , size=1, fatten = 5
+            scale_x_continuous(breaks=seq(2010,2022,2))+
+            xlab("Year sampled")+
+            ylab("Mutations per Mb\n(since USA-PEI split)")+   
+            scale_fill_manual(values=data_colors)+
+            ggtitle(paste0(#"Regression: ", run, " ", sig, "\n",
+              "R^2 = ",round(sig_rsquared,3),", p = ",round(sig_p_value,3), "\n",
+              #round(sig_rate/perGbcorrection)," +/- ",round(2*sig_rate_sd/perGbcorrection)," mu/Gb/year", "\n",
+              round(sig_rate/perGbcorrection)," mu/Gb/year (95%CI: ",round((sig_rate-sig_rate_ci)/perGbcorrection)," - ",round((sig_rate+sig_rate_ci)/perGbcorrection), ")\n",
+              "Split: ",div_estimate," years ago (95%CI: ",div_estimate_lower95," - ",div_estimate_upper95,")")
+            ) +
+            theme_classic() +
+            theme(axis.text=element_text(size=8,face="bold"),
+                  axis.title=element_text(size=8,face="bold"),
+                  #axis.title=element_blank(),
+                  text=element_text(size=8,face="bold"),
+                  #title=element_text(size=8, face='bold'),
+                  plot.title = element_text(size=8, face='bold'),
+                  legend.position = "none")
+          print(plot1) 
+          assign(paste0(sig, "_plot"), plot1)
+        }
+        # grid.arrange(grobs=gs, ncol=4, 
+        #        top="top label", bottom="bottom\nlabel", 
+        #        left="left label", right="right label")
+        # grid.rect(gp=gpar(fill=NA))
+    dev.off()
 
 
+
+    # as a function
+    
+    plot_sig_regression <- function(sig){
+        if(sig == "sigS"){name <- "SigS mutations"}
+        if(sig == "sig1"){name <- "Sig1' mutations"}
+        if(sig == "sig5"){name <- "Sig5' mutations"}
+        if(sig == "sig40"){name <- "Sig40' mutations"}
+        if(sig == "sigALL"){name <- "All mutations"}
+        perGbcorrection = nonLOH_genome_size/1000000000
+        data_colors <- c("red", "blue")
+        datasubset <- get(paste0("exp_",run)) %>% 
+            filter(sub == "USA")
+          sig_regression <- lm(get(sig) ~ dates, data=datasubset)
+          #assign(paste("regression", dataset, run, sig, sep = "_"), regression)
+          sig_rsquared <- summary(sig_regression)$r.squared
+          sig_p_value <- summary(sig_regression)$coefficients[2,4]
+          sig_intercept <- summary(sig_regression)$coefficients[1,1]
+          sig_rate <- summary(sig_regression)$coefficients[2,1]
+          #sig_rate_sd <- summary(sig_regression)$coefficients[2,2]
+          sig_rate_ci <- confint(sig_regression)[2,2]-sig_rate 
+          div_estimate <- round(sig_intercept/sig_rate)
+          div_estimate_lower95 <- round(sig_intercept/(sig_rate+sig_rate_ci))
+          if((-sig_rate)<sig_rate_ci & sig_rate<0){div_estimate_lower95 <- "-Inf"}
+          div_estimate_upper95 <- round(sig_intercept/(sig_rate-sig_rate_ci))
+          if(sig_rate<sig_rate_ci & sig_rate>0){div_estimate_upper95 <- "Inf"}
+          plot1 <- ggplot(datasubset, aes(x = jitter(dates+2021.73), y = get(sig)/perGbcorrection/1000, ymin=get(paste0(sig, "_L"))/perGbcorrection/1000, ymax=get(paste0(sig, "_U"))/perGbcorrection/1000)) + 
+            scale_color_manual(values=data_colors)+
+            stat_smooth(method = "lm",color="blue",fullrange = T) + 
+            geom_pointrange(data = exp_noLOH, aes(x = jitter(dates+2021.73), y = get(sig)/perGbcorrection/1000, ymin=get(paste0(sig, "_L"))/perGbcorrection/1000, ymax=get(paste0(sig, "_U"))/perGbcorrection/1000, color=sub))+ # , size=1, fatten = 5
+            scale_x_continuous(breaks=seq(2010,2022,2))+
+            xlab("Year sampled")+
+            ylab("Mutations per Mb\n(since USA-PEI split)")+   
+            scale_fill_manual(values=data_colors)+
+            ggtitle(paste0(name, "\n",
+              "R^2 = ",round(sig_rsquared,3),", p = ",round(sig_p_value,3), "\n",
+              #round(sig_rate/perGbcorrection)," +/- ",round(2*sig_rate_sd/perGbcorrection)," mu/Gb/year", "\n",
+              round(sig_rate/perGbcorrection)," mu/Gb/year (95%CI: ",round((sig_rate-sig_rate_ci)/perGbcorrection)," - ",round((sig_rate+sig_rate_ci)/perGbcorrection), ")\n",
+              "Split: ",div_estimate," years ago (95%CI: ",div_estimate_lower95," - ",div_estimate_upper95,")")
+            ) +
+            theme_classic() +
+            theme(axis.text=element_text(size=8,face="bold"),
+                  #axis.title=element_text(size=8,face="bold"),
+                  axis.title=element_blank(),
+                  text=element_text(size=8,face="bold"),
+                  #title=element_text(size=8, face='bold'),
+                  plot.title = element_text(size=8, face='bold'),
+                  legend.position = "none")
+        return(plot1)
+    }
+    sigS_plot <- plot_sig_regression("sigS")
+    sig1_plot <- plot_sig_regression("sig1")
+    sig5_plot <- plot_sig_regression("sig5")
+    sig40_plot <- plot_sig_regression("sig40")
+    sigALL_plot <- plot_sig_regression("sigALL")
+    pdf("new_supp_fig_regression2.pdf",width=9,height=6)
+        plots <- list(sigS_plot,sig1_plot,sig5_plot,sig40_plot,sigALL_plot)
+        grid.arrange(
+            grobs = plots,
+            #ncol=3,
+            widths = c(1,1,1),
+            layout_matrix = rbind(c(1,2,3), c(4,5,NA)),
+            bottom="Year sampled", 
+            left="Mutations per Mb\n(since USA-PEI split)"
+        )
+    dev.off()
+    
 
 # regressions and plots
     setwd(paste0("/ssd3/Mar_genome_analysis/somatypus/Mar.3.4.6.p1/final_run/pairwise/","withLOH"))
@@ -327,5 +448,3 @@ t.test(filter(exp_noLOH, sub == "USA")$sigS, filter(exp_noLOH, sub == "PEI")$sig
 group_by(exp_noLOH, sub) %>% summarize(mean = mean(sigS))
 
 group_by(exp_noLOH, sub) %>% summarize(mean = mean(sig5))
-
-
