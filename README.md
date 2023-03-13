@@ -45,6 +45,7 @@ Hart S. F. M., Yonemitsu, M. A., Giersch, R. M., Beal B. F., Arriagada G., Davis
 * Trinity (2.8.5)
 * MAKER (2.31.10)
 * exonerate (2.2.0)
+* STAR (2.7.5a_2020-06-29)
 
 ### R packages used (R v3.6.0)
 
@@ -66,5 +67,10 @@ Hart S. F. M., Yonemitsu, M. A., Giersch, R. M., Beal B. F., Arriagada G., Davis
 * mixtools (1.2.0)
 * bedr (1.0.7)
 * ggseqlogo (0.1)
+* DESeq2 (1.26.0)
+* pheatmap (1.0.12)
+* RColorBrewer (1.1.3)
+* viridis (0.5.1)
+* scales (1.2.1)
 
 Note that paths were designed for our institutes working environment: paths will need to be altered manually to reproduce this analysis
