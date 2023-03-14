@@ -74,8 +74,8 @@ regions2["upstream2000",]/regions2["genome",]
 regions2["fiveprime",]/regions2["genome",]  
 genome_correction <- regions2["genome",]  
 
-# regions_tests <- read.table("regions_intersect_tests.txt" ,sep="\t",row.names = 1, header=T) %>% t()
-# regions_tests2 <- regions_tests[,1]/regions_tests[,2]
+regions_tests <- read.table("regions_intersect_tests.txt" ,sep="\t",row.names = 1, header=T) %>% t()
+regions_tests2 <- regions_tests[,1]/regions_tests[,2]
 mapping_correction <- regions_tests2/regions_tests2["genome"]
 
 # Make bar charts comparing regions by steamer insertions (normalize by both bp and read mapping)
