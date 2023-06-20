@@ -45,6 +45,8 @@ Hart S. F. M., Yonemitsu, M. A., Giersch, R. M., Beal B. F., Arriagada G., Davis
 * Trinity (2.8.5)
 * MAKER (2.31.10)
 * exonerate (2.2.0)
+* BUSCO (v3)
+* telseq (v0.0.2)
 * STAR (2.7.5a_2020-06-29)
 
 ### R packages used (R v3.6.0)
