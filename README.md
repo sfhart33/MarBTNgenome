@@ -12,7 +12,7 @@ Michael Metzger, Pacific Northwest Research Institute
 
 If you use any of these methods or data for your own research, please use the following citation:
 
-Hart S. F. M., Yonemitsu, M. A., Giersch, R. M., Beal B. F., Arriagada G., Davis B. W., Ostrander E. A., Goff S. P., Metzger M. J. (2022). [*Centuries of genome instability and evolution in soft-shell clam transmissible cancer*](https://www.biorxiv.org/content/10.1101/2022.08.07.503107v1). bioRxiv, doi.org/10.1101/2022.08.07.503107.
+Hart S. F. M., Yonemitsu, M. A., Giersch, R. M., Garrett F. E. S., Beal B. F., Arriagada G., Davis B. W., Ostrander E. A., Goff S. P., Metzger M. J. (2023). [*Centuries of genome instability and evolution in soft-shell clam, Mya arenaria, bivalve transmissible neoplasia*]([https://www.biorxiv.org/content/10.1101/2022.08.07.503107v1](https://www.nature.com/articles/s43018-023-00643-7)). Nature Cancer, doi:10.1038/s43018-023-00643-7.
 
 <br/><br/>
 
