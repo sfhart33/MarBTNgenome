@@ -16,7 +16,7 @@ If you use any of these methods or data for your own research, please use the fo
 
 <br/><br/>
 
-### Raw sequence data and the assembled genome are available via NCBI BioProject PRJNA874712 (available upon publication)
+### Raw sequence data and the assembled genome are available via NCBI BioProject PRJNA874712
 
 ### Software installations used:
 
